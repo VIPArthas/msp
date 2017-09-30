@@ -1,0 +1,776 @@
+package com.wh.controller.msp;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.wh.base.AjaxJson;
+import com.wh.base.PageBounds;
+import com.wh.controller.common.BaseController;
+import com.wh.mspentity.MspDepartment;
+import com.wh.mspentity.MspPlatform;
+import com.wh.mspentity.MspUser;
+import com.wh.service.msp.MspDepartmentService;
+import com.wh.service.msp.MspPlatformService;
+import com.wh.service.msp.MspUserService;
+import com.wh.util.HttpClient;
+import com.wh.util.StringUtil;
+import com.wh.util.UUIDUtil;
+import com.wh.util.base.SerializeUtil;
+import com.wh.util.msp.Constants;
+import com.wh.util.msp.EnumMethod;
+import com.wh.util.msp.HttpRequestUtil;
+import com.wh.util.msp.MspUtil;
+import com.wh.xyfentity.XyfUser;
+
+import net.sf.json.JSONObject;
+
+/**
+ * 企业号用户管理
+ * 
+ * @author Administrator Leo
+ *
+ */
+@Controller
+@RequestMapping("/msp/mspUser")
+public class MspUserController extends BaseController {
+
+	@Resource
+	private MspPlatformService mspPlatformService;
+	@Resource
+	private MspUserService mspUserService;
+
+	@Resource
+	private MspDepartmentService mspDepartmentService;
+
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+
+	/**
+	 * 获取组织架构 本地
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/web/DepList.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson DepList(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		// order 为特殊关键字,需去除,要不无法执行sql语句
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		String depID = req.getParameter("depID");
+		if (StringUtil.isEmpty(depID)) {
+			depID = "1";
+		}
+		map.put("id", depID);
+
+		List<MspDepartment> mspDepartmentList = mspDepartmentService.findList(map, new PageBounds());
+		json.setObj(mspDepartmentList);
+		return json;
+	}
+
+	/**
+	 * 获取组织架构 企业号
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/web/DepListFromQY.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson DepListFromQY(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		JSONObject jsonObject = null;
+		MspPlatform mspPlatform = mspPlatformService.load(Constants.ALPLATFORMID);
+		String requestUrl = Constants.DEPARTMENT_LIST_URL;
+		String accessToken = mspPlatform.getAccessToken();
+		if (StringUtil.isNotEmpty(accessToken)) {
+			requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken);
+
+			jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.GET.name(), null);
+
+			if (jsonObject == null) {
+				jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.GET.name(), null);
+			}
+			// 如果请求成功
+			if (null != jsonObject) {
+
+				int errcode = jsonObject.getInt("errcode");
+				if (errcode == 0) {
+					Gson gson = new GsonBuilder().create();
+					List<MspDepartment> departmentList = gson.fromJson(jsonObject.get("department").toString(),
+							new TypeToken<List<MspDepartment>>() {
+							}.getType());
+					json.setObj(departmentList);
+				} else {
+					log.error("获取部门list errcode:{} errmsg:{}", jsonObject.getInt("errcode"),
+							jsonObject.getString("errmsg"));
+				}
+			}
+		} else {
+			log.info("根据accesstoken获取部门list:accessToken获取为空!");
+		}
+
+		return json;
+	}
+
+	public List<MspDepartment> DepListFromQY1(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		JSONObject jsonObject = null;
+		List<MspDepartment> departmentList = null;
+		MspPlatform mspPlatform = mspPlatformService.load(Constants.ALPLATFORMID);
+		String requestUrl = Constants.DEPARTMENT_LIST_URL;
+		String accessToken = mspPlatform.getAccessToken();
+
+		if (StringUtil.isNotEmpty(accessToken)) {
+			requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken);
+			jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.GET.name(), null);
+			if (jsonObject == null) {
+				jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.GET.name(), null);
+			}
+			// 如果请求成功
+			if (null != jsonObject) {
+
+				int errcode = jsonObject.getInt("errcode");
+				if (errcode == 0) {
+					Gson gson = new GsonBuilder().create();
+					departmentList = gson.fromJson(jsonObject.get("department").toString(),
+							new TypeToken<List<MspDepartment>>() {
+							}.getType());
+
+					json.setObj(departmentList);
+				} else {
+					log.error("获取部门list errcode:{} errmsg:{}", jsonObject.getInt("errcode"),
+							jsonObject.getString("errmsg"));
+				}
+			}
+		} else {
+			log.info("根据accesstoken获取部门list:accessToken获取为空!");
+		}
+
+		return departmentList;
+	}
+
+	/**
+	 * 获取某个部门下用户数据 企业号
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param map
+	 * @return
+	 */
+
+	public List<Map<String, Object>> GetDepMemberListFromQiYe(HttpServletRequest req, HttpServletResponse resp) {
+		String depID = req.getParameter("depID");
+		if (StringUtil.isEmpty(depID)) {
+			depID = "1";
+		}
+
+		JSONObject jsonObject = null;
+		List<Map<String, Object>> userlist = null;
+		MspPlatform mspPlatform = mspPlatformService.load(Constants.ALPLATFORMID);
+		String accessToken = mspPlatform.getAccessToken();
+		String requestUrl = Constants.GET_DEPMEMBER_LIST_URL;
+		if (StringUtil.isNotEmpty(accessToken)) {
+			requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken).replace("DEPARTMENT_ID", depID)
+					.replace("FETCH_CHILD", "1");
+
+			jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.GET.name(), null);
+
+			if (jsonObject == null) {
+				jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.GET.name(), null);
+			}
+			// 如果请求成功
+			if (null != jsonObject) {
+
+				int errcode = jsonObject.getInt("errcode");
+				if (errcode == 0) {
+					userlist = (List<Map<String, Object>>) jsonObject.get("userlist");
+
+				} else {
+					log.error("企业号获取某个部门下用户数据 errcode:{} errmsg:{}", jsonObject.getInt("errcode"),
+							jsonObject.getString("errmsg"));
+
+				}
+			}
+		} else {
+			log.info("根据accesstoken企业号获取某个部门下用户数据:accessToken获取为空!");
+		}
+		return userlist;
+	}
+
+	/**
+	 * 根据部门id获取部门下用户数据 多条件筛选模糊查询(如手机号,人名)
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param start
+	 *            起始页码
+	 * @param length
+	 *            每页条数
+	 * @return
+	 */
+	@RequestMapping(value = "/web/GetDepMemberList.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson GetDepMemberList(HttpServletRequest req, HttpServletResponse resp,
+			@RequestParam(required = true) Integer start, @RequestParam(required = true) Integer length) {
+		AjaxJson json = new AjaxJson();
+		Map<String, Object> map = new HashMap<String, Object>();
+		String depID = req.getParameter("depID");
+		if (StringUtil.isEmpty(depID)) {
+			depID = "1";
+		}
+		// 搜索条件
+		String search = req.getParameter("search");
+		if (StringUtil.isNotEmpty(search)) {
+			map.put("search", search);
+		}
+
+		// 根据部门id获取用户数据
+		if (!"1".equals(depID)) {
+			map.put("departmentId", depID);
+		}
+
+		List<MspUser> muList = mspUserService.findList(map, new PageBounds(start, length));
+		if (muList != null && muList.size() > 0) {
+			json.setObj(muList);
+		}
+		return json;
+	}
+
+	/**
+	 * 同步部门下数据 不支持删除 数据以三楼自研中心 数据为准,所以在微信端是不可编辑,新增,删除的,只支持查看,及自有字段的编辑修改
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/web/syncMemberList.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson syncMemberList(HttpServletRequest req, HttpServletResponse resp) {
+
+		AjaxJson json = new AjaxJson();
+		String depID = req.getParameter("depID");
+		if (StringUtil.isEmpty(depID)) {
+			depID = "1";
+		}
+		boolean flag = true;
+		// 根据部门id获取用户数据
+		Map<String, Object> map = new HashMap<String, Object>();
+		if ("1".equals(depID)) {
+		} else {
+			map.put("departmentId", depID);
+		}
+
+		// 获取本地数据库数据
+		List<MspUser> muList = mspUserService.findList(map, new PageBounds());
+
+		// 获取企业号数据
+		List<Map<String, Object>> userlist = GetDepMemberListFromQiYe(req, resp);
+		// 对数据库数据进行新增及更新
+		if (userlist != null && userlist.size() > 0) {
+			for (Map<String, Object> user : userlist) {
+				String userid = user.get("userid").toString();
+				String name = user.get("name").toString();
+				String department = user.get("department").toString();
+
+				String avatar = user.get("avatar").toString();
+				String gender = user.get("gender").toString();
+				String mobile = user.get("mobile").toString();
+				String email = user.get("email").toString();
+
+				department = department.replace("[", "").replace("]", "");
+				if (StringUtil.isEmpty(department)) {
+					department = "1";
+				}
+				int size = muList.size();
+
+				for (int i = 0; i < size; i++) {
+					MspUser mspuser = muList.get(i);
+					if (mspuser != null) {
+
+						String mspUserId = mspuser.getUserId();
+						String mspName = mspuser.getName();
+						String mspdepartment = mspuser.getDepartmentId();
+
+						String mspAvatar = mspuser.getAvatar();
+						String mspGender = mspuser.getGender();
+						String mspEmail = mspuser.getEmail();
+						String mspMobile = mspuser.getMobile();
+
+						if (userid.equals(mspUserId)) {
+							// id相同,查看部门及姓名是否变化,若变化,需进行调整
+							if (!name.equals(mspName) || !department.equals(mspdepartment) || !avatar.equals(mspAvatar)
+									|| !gender.equals(mspGender) || !email.equals(mspEmail)
+									|| !mobile.equals(mspMobile)) {
+
+								mspuser.setName(name);
+								mspuser.setDepartmentId(department);
+								mspuser.setCreateTime(new Date());
+								mspuser.setAvatar(avatar);
+								mspuser.setGender(gender);
+								mspuser.setEmail(email);
+								mspuser.setMobile(mobile);
+								flag = mspUserService.update(mspuser);
+								if (!flag) {
+									json.setSuccess(flag);
+									json.setMsg("同步失败!");
+									return json;
+								}
+							}
+
+							muList.remove(i);
+							break;
+						}
+					}
+				}
+				// 如何没有重复,则新增
+				if (size == muList.size()) {
+
+					MspUser mspUser = new MspUser();
+					mspUser.setUserId(userid);
+					mspUser.setId(UUIDUtil.getUUID());
+					mspUser.setCreateTime(new Date());
+					mspUser.setName(name);
+					mspUser.setDepartmentId(department);
+					mspUser.setAvatar(avatar);
+					mspUser.setGender(gender);
+					mspUser.setEmail(email);
+					mspUser.setMobile(mobile);
+					flag = mspUserService.save(mspUser);
+					if (!flag) {
+						json.setSuccess(flag);
+						json.setMsg("同步失败!");
+						return json;
+					}
+				}
+			}
+		}
+
+		return json;
+	}
+
+	/**
+	 * 更新用户信息 只支持父母姓名,父母手机号编辑
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param mspUser
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/updateUser.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson updateUser(HttpServletRequest req, HttpServletResponse resp, MspUser mspUser) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		String id = req.getParameter("id");
+
+		/*
+		 * id="e394f34c9acf45b8831b01afca648899"; mspUser.setId(id);
+		 * mspUser.setFatherName("刘四"); mspUser.setMotherName("刘好好");
+		 * mspUser.setFatherPhone("13592575511");
+		 */
+
+		if (StringUtil.isNotEmpty(id)) {
+			if (mspUser != null) {
+				// 获取用户主键id,在登录时会存入数据库
+
+				flag = mspUserService.update(mspUser);
+				if (!flag) {
+					json.setMsg("编辑失败!");
+				}
+			} else {
+				json.setMsg("未传递参数或参数名称不对");
+			}
+		} else {
+			json.setMsg("用户id不存在!");
+		}
+
+		json.setSuccess(flag);
+		return json;
+	}
+
+	/**
+	 * 解绑功能
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/web/unBindUser.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson unBindUser(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		String id = MspUtil.getMspId(req);
+
+		// id="3c6ab5a0509d4972aaf31e22b674ba0f";
+
+		if (StringUtil.isNotEmpty(id)) {
+			MspUser mspUser = mspUserService.load(id);
+			if (mspUser != null) {
+				if (mspUser.getUserId() != null && mspUser.getMemeberId() != null) {
+					mspUser.setUserId(null);
+					flag = mspUserService.updateUserIdNull(id);
+				} else {
+					json.setMsg("用户userId不存在或工号不存在!");
+				}
+			} else {
+				json.setMsg("用户不存在!");
+				log.error("用户不存在!--------->id:" + id);
+			}
+		} else {
+			json.setMsg("用户id不存在!");
+		}
+
+		json.setSuccess(flag);
+		return json;
+	}
+
+	/**
+	 * 绑定用户
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param mspUser
+	 * @return
+	 */
+	@RequestMapping(value = "/web/bindUser.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson bindUser(HttpServletRequest req, HttpServletResponse resp, MspUser mspUser) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		// 参数 id, userId
+		/*
+		 * mspUser.setId("3c6ab5a0509d4972aaf31e22b674ba0f");
+		 * mspUser.setUserId("lixiaofei");
+		 */
+		String id = req.getParameter("id");
+
+		/*
+		 * id="e394f34c9acf45b8831b01afca648899"; mspUser.setId(id);
+		 * mspUser.setFatherName("刘四"); mspUser.setMotherName("刘好好");
+		 * mspUser.setFatherPhone("13592575511");
+		 */
+
+		if (StringUtil.isNotEmpty(id)) {
+			if (mspUser != null) {
+				// 获取用户主键id,在登录时会存入数据库
+
+				flag = mspUserService.update(mspUser);
+				if (!flag) {
+					json.setMsg("编辑失败!");
+				}
+			} else {
+				json.setMsg("未传递参数或参数名称不对");
+			}
+		} else {
+			json.setMsg("用户id不存在!");
+		}
+
+		json.setSuccess(flag);
+		return json;
+	}
+
+	/**
+	 * 展示通讯录管理页面
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param start
+	 *            起始页
+	 * @param length
+	 *            每页页数
+	 * @return
+	 */
+	@RequestMapping(value = "/web/showAddressBook.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson showAddressBook(HttpServletRequest req, HttpServletResponse resp,
+			@RequestParam(required = true) Integer start, @RequestParam(required = true) Integer length) {
+		AjaxJson json = new AjaxJson();
+		Map<String, Object> map = new HashMap<String, Object>();
+		String depID = req.getParameter("depID");
+		if (StringUtil.isEmpty(depID)) {
+			depID = "1";
+		}
+		map.put("id", depID);
+		// 获取本地组织架构
+		List<MspDepartment> mspDepartmentList = mspDepartmentService.findList(map, new PageBounds());
+		json.setObj(mspDepartmentList);
+
+		Map<String, Object> muMap = new HashMap<String, Object>();
+
+		Map<String, Object> map1 = new HashMap<String, Object>();
+
+		if (!"1".equals(depID)) {
+			map1.put("departmentId", depID);
+		}
+		// 获取本地人员
+		List<MspUser> muList = mspUserService.findList(map1, new PageBounds(start, length));
+		if (muList != null && muList.size() > 0) {
+			muMap.put("muList", muList);
+
+		}
+		int count = mspUserService.countList(map1);
+		if (count != 0) {
+			muMap.put("count", count);
+		}
+		json.setAttributes(muMap);
+		return json;
+	}
+
+	/**
+	 * 从本地向企业号导入人员数据
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param mspUser
+	 * @return
+	 */
+	@RequestMapping(value = "/web/MemberToQiye.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson MemberToQiye(HttpServletRequest req, HttpServletResponse resp, List<MspUser> muList) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+
+		json.setSuccess(flag);
+		return json;
+	}
+
+	/**
+	 * 定时保持组织架构一直(本地---->企业号)
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param muList
+	 * @return
+	 */
+	@RequestMapping(value = "/web/departToQiye.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson departToQiye(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		// 获取本地组织架构
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<MspDepartment> localDepList = mspDepartmentService.findList(map, new PageBounds());
+
+		// 获取企业号组织架构
+
+		List<MspDepartment> qyDepList = DepListFromQY1(req, resp);
+
+		// 如果企业号有则去除
+
+		for (int i = 0; i < localDepList.size(); i++) {
+			MspDepartment localDep = localDepList.get(i);
+			for (int j = 0; j < qyDepList.size(); j++) {
+			MspDepartment	qyDep=qyDepList.get(j);
+				// 如果有相同的,则去除,剩余的是需要新增的
+				if (localDep.getName().equals(qyDep.getName()) && localDep.getParentid() == qyDep.getParentid()
+						&& localDep.getId() == qyDep.getId()) {
+					localDepList.remove(i);
+					qyDepList.remove(j);
+					i = i - 1;
+					j=j-1;
+					break;
+				}
+			}
+		}
+		//对本地的进行新增,更新
+		for (MspDepartment localDep : localDepList) {
+			System.out.println(localDep.getName());
+			flag = addDepart(localDep);
+			if (!flag) {
+				flag = updateDepart(localDep);
+			}
+
+		}
+		
+		
+		//先对企业号未删除的排序.大的在前,小的在后,否则有子部门无法删除
+		if (qyDepList!=null &&qyDepList.size()>1) {
+			try {
+				listSortById(qyDepList);
+			} catch (Exception e) {
+				
+				e.printStackTrace();
+			}
+		}
+		
+		//对企业号的进行删除
+		for (MspDepartment qyDep : qyDepList) {
+			System.out.println(qyDep.getName());
+			flag = deleteDepart(qyDep);
+			
+		}
+		
+		
+		json.setSuccess(flag);
+		return json;
+	}
+	
+	/**
+	 * 对部门按id倒序排列
+	 * @param qyDepList
+	 * @throws Exception
+	 */
+	public void listSortById(List<MspDepartment> qyDepList ) throws Exception {
+		// 返回的结果集
+		Collections.sort(qyDepList, new Comparator<MspDepartment>() {
+			public int compare(MspDepartment o1, MspDepartment o2) {
+				// o1，o2，可以在其内取得值，按其排序，此例为降序，s1和s2是排序字段值
+				    Integer s1=o1.getId();
+				    Integer s2=o2.getId();
+
+					if (s1 < s2) {
+						return 1;
+					} else {
+						return -1;
+					}
+			
+			}
+		});
+
+	}
+	
+	
+	
+
+	/**
+	 * 添加部门
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	public boolean addDepart(MspDepartment mspDepartment) {
+		JSONObject jsonObject = null;
+		MspPlatform mspPlatform = mspPlatformService.load(Constants.ALPLATFORMID);
+		String requestUrl = Constants.CREATE_DEPARTMENT_URL;
+		String accessToken = mspPlatform.getAccessToken();
+		if (StringUtil.isNotEmpty(accessToken)) {
+			requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken);
+			String PostData = "{\"name\":\"%s\",\"parentid\":%s,\"id\":%s}";
+			// %s 文本替代
+			String outputStr = String.format(PostData, mspDepartment.getName(), mspDepartment.getParentid(),
+					mspDepartment.getId());
+			jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.POST.name(), outputStr);
+			if (jsonObject == null) {
+				jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.POST.name(), outputStr);
+			}
+			// 如果请求成功
+			if (null != jsonObject) {
+
+				int errcode = jsonObject.getInt("errcode");
+				if (errcode == 0) {
+					log.info("添加部门成功!部门名称---->" + mspDepartment.getName() + "部门id----->" + mspDepartment.getId());
+					return true;
+				} else {
+					log.error("添加部门失败 errcode:{} errmsg:{}", jsonObject.getInt("errcode"),
+							jsonObject.getString("errmsg"));
+				}
+			}
+		} else {
+			log.info("添加多个部门:accessToken获取为空!");
+		}
+
+		return false;
+	}
+
+	/**
+	 * 更新部门
+	 * 
+	 * @param mspDepartment
+	 * @return
+	 */
+	public boolean updateDepart(MspDepartment mspDepartment) {
+
+		JSONObject jsonObject = null;
+		MspPlatform mspPlatform = mspPlatformService.load(Constants.ALPLATFORMID);
+		String requestUrl = Constants.UPDATE_DEPARTMENT_URL;
+		String accessToken = mspPlatform.getAccessToken();
+		if (StringUtil.isNotEmpty(accessToken)) {
+			requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken);
+			String PostData = "{\"name\":\"%s\",\"parentid\":%s,\"id\":%s}";
+			// %s 文本替代
+			String outputStr = String.format(PostData, mspDepartment.getName(), mspDepartment.getParentid(),
+					mspDepartment.getId());
+			jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.POST.name(), outputStr);
+			if (jsonObject == null) {
+				jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.POST.name(), outputStr);
+			}
+			// 如果请求成功
+			if (null != jsonObject) {
+				int errcode = jsonObject.getInt("errcode");
+				if (errcode == 0) {
+					log.info("更新部门成功!部门名称---->" + mspDepartment.getName() + "部门id----->" + mspDepartment.getId());
+					return true;
+				} else {
+					log.error("更新部门失败 errcode:{} errmsg:{}", jsonObject.getInt("errcode"),
+							jsonObject.getString("errmsg"));
+				}
+			}
+		} else {
+			log.info("添加多个部门:accessToken获取为空!");
+		}
+		return false;
+	}
+	
+	/**
+	 * 删除部门(有人员或子部门时无法删除)
+	 * @param mspDepartment
+	 * @return
+	 */
+	public boolean deleteDepart(MspDepartment mspDepartment) {
+
+		JSONObject jsonObject = null;
+		MspPlatform mspPlatform = mspPlatformService.load(Constants.ALPLATFORMID);
+		String requestUrl = Constants.DELETE_DEPARTMENT_URL;
+		String accessToken = mspPlatform.getAccessToken();
+		if (StringUtil.isNotEmpty(accessToken)) {
+			requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken).replace("ID", mspDepartment.getId().toString());
+			log.info("删除部门(有人员或子部门时无法删除) requestUrl----->"+requestUrl);
+			jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.GET.name(), null);
+			if (jsonObject == null) {
+				jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.GET.name(), null);
+			}
+			// 如果请求成功
+			if (null != jsonObject) {
+				int errcode = jsonObject.getInt("errcode");
+				if (errcode == 0) {
+					log.info("删除部门成功!部门名称---->" + mspDepartment.getName() + "部门id----->" + mspDepartment.getId());
+					return true;
+				} else {
+					log.error("删除部门失败 errcode:{} errmsg:{}", jsonObject.getInt("errcode"),
+							jsonObject.getString("errmsg"));
+				}
+			}
+		} else {
+			log.info("添加多个部门:accessToken获取为空!");
+		}
+		return false;
+	}
+	
+
+}

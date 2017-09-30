@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color: #f3f3f3">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <title>个人详情</title>
+    <script type="text/javascript" src="../../js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="../../js/style.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../css/font/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+
+</head>
+<body>
+<header class="header-img"></header>
+<div class="icon iconfont icon-iconwohover"></div>
+<section class="msg-content">
+    <div><i class="icon iconfont icon-wo1"></i><div>姓名<span>孙文豪</span></div></div>
+    <div><i class="icon iconfont icon-shouji"></i><div>手机号<span>18522214578<a tel="18522214578" class="icon iconfont icon-boda"></a></span></div></div>
+    <div><i class="icon iconfont icon-banjiguanlixuanfu-"></i><div>班级<span>软件工程</span></div></div>
+    <div><i class="icon iconfont icon-youxiang"></i><div>邮箱<span>无</span></div></div>
+</section>
+<section class="msg-family">
+    <div><i class="icon iconfont icon-jiating"></i>家庭联系方式</div>
+    <div class="family-message">
+        <div class="family-name"><span>孙连城</span><span>父亲</span></div>
+        <div class="family-phone"><span>18522214578</span><a tel="18522214578" class="icon iconfont icon-boda"></a></div>
+    </div>
+    <div class="family-message">
+        <div class="family-name"><span>吴月</span><span>母亲</span></div>
+        <div class="family-phone"><span>18212314111</span><a tel="18522214578" class="icon iconfont icon-boda"></a></div>
+    </div>
+</section>
+</body>
+</html>
+

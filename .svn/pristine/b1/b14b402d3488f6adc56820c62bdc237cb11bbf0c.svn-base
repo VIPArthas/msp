@@ -1,0 +1,1203 @@
+package com.wh.controller.wmh;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.wh.entity.WmhUser;
+import com.wh.service.wmh.WmhUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.wh.base.AjaxJson;
+import com.wh.base.PageBounds;
+import com.wh.constants.Constants;
+import com.wh.controller.common.BaseController;
+import com.wh.entity.SmsVerify;
+import com.wh.entity.TbWchatuser;
+import com.wh.entity.User;
+import com.wh.entity.UserPay;
+import com.wh.entity.WmhNews;
+import com.wh.framework.MethodLog;
+import com.wh.framework.OAuthRequired;
+import com.wh.mspentity.MspPlatform;
+import com.wh.mspentity.MspUser;
+import com.wh.service.msp.MspPlatformService;
+import com.wh.service.msp.MspUserService;
+import com.wh.service.rgpp.WchatuserPlatService;
+import com.wh.service.wmh.WmhNewsService;
+import com.wh.service.wmh.WmhUserTagService;
+import com.wh.service.xlwapp.SmsService;
+import com.wh.service.xlwapp.UserPayService;
+import com.wh.service.xlwapp.UserService;
+import com.wh.util.ControllerUtils;
+import com.wh.util.DateUtil;
+import com.wh.util.MessageCode;
+import com.wh.util.StringUtil;
+import com.wh.util.UUIDUtil;
+import com.wh.util.WebUtil;
+import com.wh.util.msp.EnumMethod;
+import com.wh.util.msp.HttpRequestUtil;
+import com.wh.util.msp.QiYeUtil;
+import com.wh.util.msp.Result;
+import com.wh.xyfentity.XyfUser;
+
+import net.sf.json.JSONObject;
+
+/**
+ * @param
+ * @author 王鹏翔
+ * @date 2017年3月7日 下午2:45:01
+ * @return
+ */
+@Controller
+@RequestMapping("/wmh/wmhUser")
+public class WmhUserController extends BaseController {
+	@Autowired
+	private WmhUserService wmhUserService;
+	@Autowired
+	private WchatuserPlatService wchatuserPlatService;
+	@Autowired
+	private SmsService smsService;
+	@Autowired
+	private WmhNewsService wmhNewsService;
+	@Autowired
+	private UserPayService wserPayService;
+	@Autowired
+	private UserPayService userPayService;
+	@Autowired
+	private WmhUserTagService wmhUserTagService;
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private MspPlatformService platformService;
+
+	@Resource
+	private MspUserService mspUserService;
+
+	/**
+	 * 跳转到个人中心页面
+	 *
+	 * @param request
+	 * @param map
+	 * @return
+	 * @author
+	 * @Date 2017年3月15日 上午9:56:42
+	 */
+	@RequestMapping("/wx/userInfo.htm")
+	public String goIndex(HttpServletRequest request, ModelMap map) {
+
+		String returnUrl = "wmh/wx/my/user_reg";
+		HttpSession session = request.getSession();
+		String openId = (String) session.getAttribute("openId");
+		try {
+			/* String openId ="okLTXtwoaTMypE7lsLGeu0BIyu3E"; */
+			if (!StringUtils.isEmpty(openId) && !("".equals(openId))) {
+				TbWchatuser wchatUsers = this.wchatuserPlatService.findWchatUserByOpenId(openId);
+				if (wchatUsers != null && wchatUsers.getUserId() != null) {
+					String userId = wchatUsers.getUserId();
+					WmhUser user = this.wmhUserService.selectUserById(userId);
+					if (null != user) {
+
+						String realName = user.getRealName();
+						String phone = user.getPhone();
+
+						// 注册手机号后,不正常退出,用户名为null
+						if (StringUtil.isEmpty(realName) && StringUtil.isNotEmpty(phone)) {
+							// 根据手机号删除wmhuser信息
+							boolean flag = wmhUserService.deleteByPhone(phone);
+							if (flag) {
+								returnUrl = "wmh/wx/my/user_reg";
+							} else {
+								request.getSession().setAttribute("wmhUser", user);
+								// 根据userId查询该用户下面的标签
+								List<Map<String, Object>> userTags = this.wmhUserTagService.selectUserTagList(userId);
+								map.put("userTags", userTags);
+								map.put("user", user);
+								returnUrl = "wmh/wx/my/user_info";
+							}
+						} else {
+							request.getSession().setAttribute("wmhUser", user);
+							// 根据userId查询该用户下面的标签
+							List<Map<String, Object>> userTags = this.wmhUserTagService.selectUserTagList(userId);
+							map.put("userTags", userTags);
+							map.put("user", user);
+							returnUrl = "wmh/wx/my/user_info";
+						}
+
+					} else {
+						returnUrl = "wmh/wx/my/user_reg";
+					}
+
+				} else {
+					returnUrl = "wmh/wx/my/user_reg";
+				}
+			}
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		return returnUrl;
+	}
+
+	/**
+	 * 个人数据服务页面
+	 * 
+	 * @author 王鹏翔
+	 * @Date 2017年3月28日 下午6:05:18
+	 * @return
+	 */
+	@RequestMapping("/wx/goDataServicePage.htm")
+	public String goDataServicePage() {
+		return "/wmh/wx/wlogin";
+	}
+
+	@RequestMapping("/wx/goContentPage.htm")
+	public String goContentPage(HttpServletRequest request, ModelMap map, String type) {
+		map.put("type", type);
+		return "/wmh/wx/content";
+	}
+
+	/**
+	 * 到输入口令页面
+	 * 
+	 * @author 王鹏翔
+	 * @Date 2017年3月28日 下午5:06:18
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/wx/goWriteWordPage.htm")
+	public String goWriteWordPage(HttpServletRequest request) {
+		return "/wmh/wx/my/kl";
+	}
+
+	/**
+	 * 验证口令，验证成功进入后台管理页面
+	 * 
+	 * @author 王鹏翔
+	 * @Date 2017年3月28日 下午5:07:33
+	 * @param response
+	 * @param word
+	 */
+	@RequestMapping("/wx/checkWord.htm")
+	public void checkWord(HttpServletRequest request, HttpServletResponse response, String word) {
+		JSONObject js = new JSONObject();
+		if (WmhUserService.PASSWORD_XINLIAN.equals(word)) {
+			request.getSession().setAttribute("sign", WmhUserService.SIGN_TYPE_XINLIAN);
+			js.put("code", 0);
+			js.put("msg", "验证通过！");
+		} else if (WmhUserService.PASSWORD_HEZHI.equals(word)) {
+			request.getSession().setAttribute("sign", WmhUserService.SIGN_TYPE_HEZHI);
+			js.put("code", 0);
+			js.put("msg", "验证通过！");
+		} else {
+			js.put("code", 1);
+			js.put("msg", "请输入正确的口令！");
+		}
+		WebUtil.write(response, js.toString());
+
+	}
+
+	/**
+	 * 绑定手机号
+	 *
+	 * @param request
+	 * @param response
+	 * @author 李杰
+	 * @Date 2017年03月13日 下午1:55:58
+	 */
+	@RequestMapping("/wx/bandingPhone.htm")
+	@MethodLog(logKey = "我的", logTag = "绑定手机号", logRemark = "到手机号码展示页面")
+	public void bandingPhone(HttpServletRequest request, HttpServletResponse response) {
+		JSONObject js = new JSONObject();
+		HttpSession session = request.getSession();
+		/* String openId = "okLTXtwoaTMypE7lsLGeu0BIyu3E"; */
+		String openId = (String) session.getAttribute("openId");
+		String s_phone = (String) session.getAttribute("new_phone");
+		String s_code = (String) session.getAttribute("codeMsg");
+
+		String phone = request.getParameter("phone");
+		String code = request.getParameter("code");
+		WmhUser user = new WmhUser();
+		user.setPhone(phone);
+		try {
+			if (phone.equals(s_phone)) {
+				if (code.equals(s_code)) {
+					TbWchatuser wchatuser = this.wchatuserPlatService.findWchatUserByOpenId(openId);
+					WmhUser user1 = new WmhUser();
+					user1.setPhone(phone);
+					List<WmhUser> userList = this.wmhUserService.selectUserByPhone(user);
+					String userId = "";
+					if (userList.size() > 0) {
+						user1 = userList.get(0);
+						userId = user1.getId();
+						TbWchatuser bindWchat = this.wchatuserPlatService.searchByUserId(userId);
+						if (bindWchat != null) {
+							// 如果openId为空,说明此号已解绑,新号继承其一切
+							if (StringUtil.isEmpty(bindWchat.getOpenid())) {
+								bindWchat.setOpenid(openId);
+								// 每次重新进来的时候,tbwchatuser内再次插入一条用户的信息,所以,需要先删除本身的那条信息,才可继承
+								// 微信服务器记录关注，数据库没有及时获取的用户
+								wchatuserPlatService.deleteUserByOpenId(openId);
+								wchatuserPlatService.update(bindWchat);
+								js.put("code", 0);
+								js.put("msg", "绑定成功");
+							} else {
+								js.put("code", 1);
+								js.put("msg", "该手机号微信端已绑定");
+
+							}
+						} else {
+							WebUtil.setWmhUser(request, user1);
+							wchatuser.setUserId(userId);
+							this.wchatuserPlatService.update(wchatuser);
+							js.put("code", 0);
+							js.put("msg", "绑定成功");
+						}
+						js.put("exist", 0);// 0代表后台导入过用户信息，跳转到用户详情页面的标识
+						/* js.put("userId", userId); */
+
+					} else {
+						User user2 = new User();
+						user2.setPhone(user.getPhone());
+						List<User> list = this.userService.selectUserByPhone(user2);
+						if (list.size() == 0) {
+							userId = UUIDUtil.getUUID();
+							user1.setId(userId);
+						} else {
+							user1.setId(list.get(0).getId());
+						}
+						user1.setCreateTime(new Date());
+						this.wmhUserService.insertUserByJzOwner(user1);
+						WebUtil.setWmhUser(request, user1);
+						wchatuser.setUserId(user1.getId());
+						this.wchatuserPlatService.update(wchatuser);
+						js.put("code", 0);
+						js.put("msg", "绑定成功");
+						js.put("exist", 1);// 1代表后台没有导入用户信息，跳转到填写信息页面的标识
+						js.put("userId", user1.getId());
+					}
+
+				} else {
+					js.put("code", 1);
+					js.put("msg", "验证码不正确");
+				}
+			} else {
+				js.put("code", 1);
+				js.put("msg", "手机号不正确");
+			}
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		WebUtil.write(response, js.toString());
+	}
+
+	/**
+	 * 解绑手机号,本人openId去除 本人相当于新用户 ,进入重新注册页面 若有其他人注册本人手机号,验证码正确后替换之
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/jiebangPhone.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson jiebangPhone(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		String openId = (String) req.getSession().getAttribute("openId");
+
+		log.info("进入解绑手机号: openId" + openId);
+		// openId="o2wGDwMpe6vySfShqeXdA7XKUiUk";
+		if (StringUtil.isNotEmpty(openId)) {
+			TbWchatuser wchatUsers = this.wchatuserPlatService.findWchatUserByOpenId(openId);
+			if (wchatUsers != null) {
+				/*
+				 * wchatUsers.setOpenid("");
+				 * wchatuserPlatService.update(wchatUsers);
+				 */
+
+				// 设置为null,注意不是空字符串,另写方法 .null 对唯一索引 无影响 openId不能为null,暂时不用
+				wchatuserPlatService.updateOpenIdNull(openId);
+
+				log.info("解绑成功");
+				flag = true;
+			} else {
+				json.setMsg("用户不存在!");
+			}
+		}
+		// log.info("进入解绑手机号: 4444444444444444");
+		json.setSuccess(flag);
+		return json;
+	}
+
+	/**
+	 * 到修改QQ号页面
+	 *
+	 * @param request
+	 * @param map
+	 * @return
+	 * @author 李杰
+	 * @Date 2017年3月13日 下午3:22:13
+	 */
+	@RequestMapping("/wx/goChangeQQ.htm")
+	@MethodLog(logKey = "我的", logTag = "跳转到修改QQ号页面", logRemark = "跳转到修改QQ号页面")
+	public String goChangeQq(HttpServletRequest request, ModelMap map) {
+		WmhUser user = WebUtil.getWmhUser(request);
+		if (user.getQq() != null && user.getQq() != "") {
+			map.put("user", user);
+		}
+		return "/wmh/wx/my/myQQ";
+	}
+
+	/**
+	 * 跳转到修改手机号页面
+	 *
+	 * @param request
+	 * @param map
+	 * @return
+	 * @author 李杰
+	 * @Date 2017年3月17日 上午11:22:13
+	 */
+	@RequestMapping("/wx/goChangePhone.htm")
+	@MethodLog(logKey = "我的", logTag = "跳转到修改手机号页面", logRemark = "跳转到修改手机号页面")
+	public String goChangePhone(HttpServletRequest request, ModelMap map) {
+		WmhUser user = WebUtil.getWmhUser(request);
+		if (user.getPhone() != null && user.getPhone() != "") {
+			map.put("phone", user.getPhone());
+		}
+		return "/wmh/wx/my/my_yzphone";
+	}
+
+	/**
+	 * 验证手机号
+	 *
+	 * @param response
+	 * @param session
+	 * @param request
+	 * @author 王鹏翔
+	 * @Date 2017年3月17日 下午3:13:44
+	 */
+	@RequestMapping("/wx/yzPhone.htm")
+	public void yzPhone(HttpServletResponse response, HttpSession session, HttpServletRequest request) {
+		JSONObject js = new JSONObject();
+		String code = (String) session.getAttribute("codeMsg");
+		WmhUser user = WebUtil.getWmhUser(request);
+		String phone = user.getPhone();
+		// 根据登陆用户手机号和验证手机号做对比、验证码做对比，验证是否是同一个手机号码
+		String oldPhone = request.getParameter("phone");
+		String oldCode = request.getParameter("code");
+		if (phone.equals(oldPhone)) {
+			if (code.equals(oldCode)) {
+				js.put("code", 0);
+				js.put("msg", "验证通过");
+			} else {
+				js.put("code", 1);
+				js.put("msg", "验证码不正确");
+			}
+		} else {
+			js.put("code", 1);
+			js.put("msg", "原手机号码不正确");
+		}
+		WebUtil.write(response, js.toString());
+
+	}
+
+	/**
+	 * 到修改手机号页面
+	 *
+	 * @return
+	 * @author 王鹏翔
+	 * @Date 2017年3月17日 下午3:15:31
+	 */
+	@RequestMapping("/wx/goUpdatePhonePage.htm")
+	public String goUpdatePhonePage() {
+
+		return "/wmh/wx/my/my_update_phone";
+	}
+
+	/**
+	 * 更换手机号
+	 *
+	 * @param response
+	 * @param session
+	 * @param request
+	 * @author 王鹏翔
+	 * @Date 2017年3月17日 下午3:30:53
+	 */
+	@RequestMapping("/wx/changPhone.htm")
+	public void changPhone(HttpServletResponse response, HttpSession session, HttpServletRequest request) {
+		JSONObject js = new JSONObject();
+		String s_code = (String) session.getAttribute("codeMsg");
+		String s_phone = (String) session.getAttribute("new_phone");
+
+		String new_code = request.getParameter("code");
+		String new_phone = request.getParameter("phone");
+		String openId = request.getSession().getAttribute("openId").toString();
+		WmhUser s_user = (WmhUser) WebUtil.getWmhUser(request);
+		try {
+			// 验证接收验证码的手机号和输入的手机号是否相同、验证码是否相同，相同则修改user表数据，跳转到已绑定页面
+			if (s_phone.equals(new_phone)) {
+				if (s_code.equals(new_code)) {
+					WmhUser user = new WmhUser();
+					user.setPhone(new_phone);
+					List<WmhUser> userList = this.wmhUserService.selectUserByPhone(user);
+					if (userList.size() != 0) {
+						/*
+						 * //解绑后其他人可绑定此手机号,同时用于其所有信息 WmhUser
+						 * wmhUser=userList.get(0); String
+						 * userId=wmhUser.getId(); TbWchatuser wchatuser =
+						 * wchatuserPlatService.searchByUserId(userId);
+						 * 
+						 * if (wchatuser!=null
+						 * &&StringUtil.isEmpty(wchatuser.getOpenid())) {
+						 * 
+						 * //自己的那个openId变为空 TbWchatuser wchatuser1=
+						 * wchatuserPlatService.findWchatUserByOpenId(openId);
+						 * wchatuser1.setOpenid("");
+						 * 
+						 * wchatuserPlatService.update(wchatuser1);
+						 * //自身替换原用户openId wchatuser.setOpenid(openId);
+						 * wchatuserPlatService.update(wchatuser);
+						 * WebUtil.setWmhUser(request, wmhUser); js.put("code",
+						 * 0); js.put("msg", "绑定成功"); }else{ js.put("code", 1);
+						 * js.put("msg", "手机号已被注册"); }
+						 */
+						js.put("code", 1);
+						js.put("msg", "手机号已被注册");
+					} else {
+						WmhUser user1 = new WmhUser();
+						user1.setId(s_user.getId());
+						user1.setPhone(new_phone);
+						this.wmhUserService.updateUser(user1);
+						WebUtil.setWmhUser(request, user1);
+						js.put("code", 0);
+						js.put("msg", "绑定成功");
+					}
+				} else {
+					js.put("code", 1);
+					js.put("msg", "验证码不正确");
+				}
+			} else {
+				js.put("code", 1);
+				js.put("msg", "手机号码不正确");
+			}
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		WebUtil.write(response, js.toString());
+
+	}
+
+	@RequestMapping("/wx/goChangeEmail.htm")
+	@MethodLog(logKey = "我的", logTag = "跳转到修改邮箱号页面", logRemark = "跳转到修改邮箱号页面")
+	public String goChangeEmail(HttpServletRequest request, ModelMap map) {
+
+		WmhUser user = WebUtil.getWmhUser(request);
+		if (user != null) {
+			if (user.getMail() != null && user.getMail() != "") {
+				map.put("user", user);
+			}
+		} else {
+			user = new WmhUser();
+			user.setMail("2394704234@qq.com");
+			map.put("user", user);
+		}
+
+		return "/wmh/wx/my/myEmail";
+	}
+
+	/**
+	 * 更换QQ号
+	 *
+	 * @param
+	 * @param request
+	 * @author 李杰
+	 * @Date 2017年3月13日 下午4:02:31
+	 */
+	@RequestMapping("/wx/updateUserQq.htm")
+	@MethodLog(logKey = "更换QQ号", logTag = "更换QQ号", logRemark = "更换成功页面")
+	public void changeQq(HttpServletResponse response, HttpServletRequest request) {
+		JSONObject js = new JSONObject();
+		String qq = request.getParameter("qq");
+		WmhUser user = (WmhUser) WebUtil.getWmhUser(request);
+		try {
+			// 验证接收验证码的手机号和输入的手机号是否相同、验证码是否相同，相同则修改user表数据，跳转到已绑定页面
+			if (user != null) {
+				user.setQq(qq);
+				this.wmhUserService.updateUser(user);
+				WebUtil.setWmhUser(request, user);
+
+			} else {
+				user = new WmhUser();
+				user.setId("d7d2b2769b9f4561bf9880b6ee29f2c2");
+				user.setRealName("李杰");
+				user.setQq(qq);
+				user.setPhone("18236910189");
+				this.wmhUserService.updateUser(user);
+				WebUtil.setWmhUser(request, user);
+			}
+			js.put("code", 0);
+			js.put("msg", "QQ号修改成功");
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		js.put("user", user);
+		WebUtil.write(response, js.toString());
+	}
+
+	/**
+	 * 到用户详情页
+	 *
+	 * @param request
+	 * @return
+	 * @author 李杰
+	 * @Date 2017年03月13日 下午1:14:16
+	 */
+	@RequestMapping("/wx/goPhoneDeatil.htm")
+	@MethodLog(logKey = "我的", logTag = "跳转到号码展示页面", logRemark = "跳转到号码展示页面")
+	public String goPhoneDeatil(HttpServletRequest request, ModelMap map) {
+		WmhUser user = WebUtil.getWmhUser(request);
+
+		if (user.getPhone() != null && user.getPhone() != "") {
+			map.put("user", user);
+		}
+		return "/wmh/wx/my/user_info";
+	}
+
+	/**
+	 * 填写个人信息
+	 * 
+	 * @author 王鹏翔
+	 * @Date 2017年3月28日 下午1:31:44
+	 * @param request
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/wx/goWriteInfoPage.htm")
+	@MethodLog(logKey = "个人中心", logTag = "跳转到个人信息填写页面", logRemark = "个人信息填写页面")
+	public String goWriteInfoPage(HttpServletRequest request, ModelMap map) {
+		String userId = request.getParameter("userId");
+		map.put("userId", userId);
+		return "/wmh/wx/my/write_info";
+	}
+
+	/**
+	 * 保存个人信息
+	 * 
+	 * @author 王鹏翔
+	 * @Date 2017年3月28日 下午2:05:07
+	 * @param response
+	 * @param user
+	 */
+	@RequestMapping("/wx/updateWmhUserInfo.htm")
+	@MethodLog(logKey = "个人中心", logTag = "个人信息展示页面", logRemark = "跳转到个人信息展示页面")
+	public void updateWmhUserInfo(HttpServletRequest request, HttpServletResponse response, WmhUser user) {
+		JSONObject js = new JSONObject();
+		if (user != null) {
+			if (StringUtils.isEmpty(user.getRealName())) {
+				js.put("code", 1);
+				js.put("msg", "请输入姓名");
+				WebUtil.write(response, js.toString());
+				return;
+			} else {
+				if (StringUtils.isEmpty(user.getMail())) {
+					js.put("code", 1);
+					js.put("msg", "请输入邮箱");
+					WebUtil.write(response, js.toString());
+					return;
+				} else {
+					if (!StringUtil.checkEmail(user.getMail())) {
+						js.put("code", 1);
+						js.put("msg", "邮箱格式不正确");
+						WebUtil.write(response, js.toString());
+						return;
+					}
+				}
+				if (!StringUtils.isEmpty(user.getQq())) {
+					Pattern p = Pattern.compile("^[1-9][0-9]{5,14}$");
+					Matcher m = p.matcher(user.getQq());
+					boolean s = m.matches();
+					if (!s) {
+						js.put("code", 1);
+						js.put("msg", "qq号格式不正确");
+						WebUtil.write(response, js.toString());
+						return;
+					}
+				}
+				try {
+					this.wmhUserService.updateUser(user);
+					WebUtil.setWmhUser(request, user);
+					js.put("code", 0);
+					js.put("msg", "保存成功");
+				} catch (Exception e) {
+					log.error("异常日志：", e);
+				}
+			}
+		} else {
+			js.put("code", 1);
+			js.put("msg", "用户信息不能为空");
+		}
+		WebUtil.write(response, js.toString());
+	}
+
+	/**
+	 * 发送邮箱验证码
+	 *
+	 * @param session
+	 * @param response
+	 * @param request
+	 */
+	@RequestMapping("/wx/sendEmailCode.htm")
+	public void sendEmailCode(HttpSession session, HttpServletResponse response, HttpServletRequest request) {
+		try {
+			String result = sendVerifyCode(session, request);
+			ControllerUtils.outputContent(response, result);
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+	}
+
+	/**
+	 * wx端短信发送私有方法，待与手机端的合并
+	 *
+	 * @param session
+	 * @param request
+	 * @return
+	 * @author 徐优优
+	 * @date 2016年8月4日
+	 */
+	private String sendVerifyCode(HttpSession session, HttpServletRequest request) {
+		String result = "{\"code\":404}";
+		try {
+			String new_mail = request.getParameter("mail");
+			String flag = request.getParameter("flag");
+
+			WmhUser user = new WmhUser();
+			if ("1".equals(flag)) { // 修改邮箱号
+				user.setMail(new_mail);
+			}
+			String code = MessageCode.genVerifyCode();
+			WebUtil.sendMailMethod(new_mail, "", "修改邮箱验证", code);
+			session.setAttribute("codeMail", code);
+			session.setAttribute("mail", new_mail);
+			result = "{'code':'1', 'msg':'发送成功'}";
+
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		return result;
+	}
+
+	/**
+	 * 由修改邮箱页面跳转到用户详情页
+	 *
+	 * @param request
+	 * @return
+	 * @author 李杰
+	 * @Date 2017年03月13日 下午1:14:16
+	 */
+	@RequestMapping("/wx/goEmailDeatil.htm")
+	@MethodLog(logKey = "我的", logTag = "跳转到个人中心页面", logRemark = "跳转到个人中心页面")
+	public String goEmailDeatil(HttpServletRequest request, ModelMap map) {
+		WmhUser user = WebUtil.getWmhUser(request);
+		if (user.getMail() != null && user.getMail() != "") {
+			map.put("user", user);
+		}
+		return "/wmh/wx/my/user_info";
+	}
+
+	/**
+	 * 更改mail号
+	 *
+	 * @param response
+	 * @param request
+	 * @author 李杰
+	 * @Date 2017年3月13日 下午4:02:31
+	 */
+	@RequestMapping("/wx/updateUserMail.htm")
+	@MethodLog(logKey = "更改邮箱号", logTag = "更改邮箱号", logRemark = "更改成功页面")
+	public void updateMail(HttpServletRequest request, HttpServletResponse response) {
+		JSONObject js = new JSONObject();
+		HttpSession session = request.getSession();
+		// String openId = (String) session.getAttribute("openId");
+		String s_mail = (String) session.getAttribute("mail");
+		String s_code = (String) session.getAttribute("codeMail");
+		String mail = request.getParameter("mail");
+		String code = request.getParameter("code");
+		WmhUser user = WebUtil.getWmhUser(request);
+		user.setMail(mail);
+		try {
+			if (s_mail.equals(mail)) {
+				if (s_code.equals(code)) {
+
+					this.wmhUserService.updateUser(user);
+					;
+					WebUtil.setWmhUser(request, user);
+					js.put("code", 0);
+					js.put("msg", "邮箱修改成功");
+				}
+			} else {
+				js.put("code", 1);
+				js.put("msg", "验证码不正确");
+			}
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		WebUtil.write(response, js.toString());
+	}
+
+	/**
+	 * 发送手机验证码
+	 *
+	 * @param session
+	 * @param response
+	 * @param request
+	 */
+	@RequestMapping("/wx/sendMsgCode.htm")
+	public void sendMsgCode(HttpSession session, HttpServletResponse response, HttpServletRequest request) {
+		try {
+			String result = sendPhoneVerifyCode(session, request);
+			ControllerUtils.outputContent(response, result);
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+	}
+
+	private String sendPhoneVerifyCode(HttpSession session, HttpServletRequest request) {
+		String result = "{\"code\":404}";
+		try {
+			String new_phone = request.getParameter("new_phone");
+			if (new_phone.length() == 11) {
+				String userId = WebUtil.getFrontUserId(request);
+				// String code = "12345";
+				String code = MessageCode.genVerifyCode();
+				String ip = WebUtil.getIp(request);
+				Integer operateTerminal = WebUtil.getRequestTerminal(request.getRequestURI());
+				SmsVerify smsVerify = new SmsVerify(userId, new_phone, code, null, null, ip, operateTerminal);
+				smsVerify = MessageCode.sendCode(smsVerify);
+				if (smsVerify != null) {// 发送成功
+					smsService.saveSms(smsVerify);
+					session.setAttribute("codeMsg", code);
+					session.setAttribute("new_phone", new_phone);
+					result = "{'code':'1', 'msg':'发送成功'}";
+				}
+			}
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		return result;
+	}
+
+	/**
+	 * 发送邮箱验证码
+	 *
+	 * @param session
+	 * @param response
+	 * @param request
+	 */
+	@RequestMapping("/wx/sendMailCode.htm")
+	public void sendMailCode(HttpSession session, HttpServletResponse response, HttpServletRequest request) {
+		try {
+			String result = sendMailVerifyCode(session, request);
+			ControllerUtils.outputContent(response, result);
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+	}
+
+	private String sendMailVerifyCode(HttpSession session, HttpServletRequest request) {
+		String result = "{\"code\":404}";
+		try {
+			String mail = request.getParameter("mail");
+			if (StringUtil.checkEmail(mail)) {
+				String code = MessageCode.genVerifyCode();
+				WebUtil.sendMailMethod(mail, "微门户", "邮箱验证", code);
+				session.setAttribute("codeMail", code);
+				session.setAttribute("mail", mail);
+				result = "{'code':'1', 'msg':'发送成功'}";
+			}
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		return result;
+	}
+
+	/**
+	 * MSP企业号入口 sign 默认3
+	 * 
+	 * @param request
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/wx/goIndex.htm")
+	public String goHomePage(HttpServletRequest request, HttpServletResponse resp, ModelMap map, WmhNews news) {
+
+		news.setSign(3);
+		String wxid = (String) request.getSession().getAttribute("wxid");
+		log.info("--------MSP企业号入口 -----------wxid:"+wxid);
+		if (StringUtil.isNotEmpty(wxid)) {
+			String url=goUrl(request, resp, map, wxid);
+			if (StringUtil.isNotEmpty(url)) {
+				return url;
+			}
+		}else{
+			/*request.getSession().setAttribute("wxid", "lixiaofeiaili");
+			wxid = (String) request.getSession().getAttribute("wxid");*/
+	
+			wxid=getWxid(request, resp);
+			String url=goUrl(request, resp, map, wxid);
+			if (StringUtil.isNotEmpty(url)) {
+				return url;
+			}
+		}
+
+		// 继续原先的方法
+		log.info("----------- 继续原先的方法-----------");
+		try {
+			// 查询新闻列表
+			List<Object> list = this.wmhNewsService.selectNewsByCrateTimeMobileListPage(news);
+			log.info("----------- 继续原先的方法---------- 1   -");
+			List<Map<String, Object>> newsList = (List<Map<String, Object>>) list.get(0);
+			log.info("----------- 继续原先的方法---------- 2   -");
+			for (Map<String, Object> map2 : newsList) {
+				String createTime = ((String) map2.get("create_time")).replaceAll("-", ".");
+				map2.put("yearMonth", createTime.substring(0, 7));
+				map2.put("day", createTime.substring(8, 10));
+			}
+			Long newsCount = this.wmhNewsService.selectNewsCount(news);
+			log.info("----------- 继续原先的方法---------- 3   -");
+			map.put("newsCount", newsCount);
+			map.put("list", list);
+			map.put("searchContent", news.getSearchContent());
+			map.put("sign", news.getSign());
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+
+		// 保存session
+		log.info("----------- 继续原先的方法----------4   -");
+		return "/wmh/wx/index";
+
+	}
+
+	public String getWxid(HttpServletRequest request, HttpServletResponse resp) {
+
+		String wxid = "";
+		MspPlatform mspPlatform = platformService.load(com.wh.util.msp.Constants.MSPPLATFORMID);
+
+		String code = request.getParameter("code");
+		if (StringUtil.isNotEmpty(code)) {
+			log.info("MSP项目首页用户code:" + code);
+			Result result = QiYeUtil.oAuth2GetUserByCode(mspPlatform.getAccessToken(), code,
+					com.wh.util.msp.Constants.MSPAGENTID);
+			wxid = (String) result.getObj();
+			// 获取到用户的应用内userid 看是否绑定有用户 有直接继续,没有就跳转
+			if (StringUtil.isNotEmpty(wxid)) {
+				request.getSession().setAttribute("wxid", wxid);
+				return wxid;
+			} else {
+				log.error("MSP项目用户wxid未获取成功!");
+			}
+		} else {
+			// 继续跳转到此方法
+			log.error("MSP项目首页未获取到用户code:" + code);
+			QiYeUtil.getCode(request, resp);
+		
+		}
+
+		return wxid;
+	}
+
+	/**
+	 * 获取wxid,存入session ,或跳转至登陆页面
+	 * 
+	 * @param request
+	 * @param resp
+	 * @param map
+	 * @return
+	 */
+	public String goUrl(HttpServletRequest req, HttpServletResponse resp, ModelMap map, String wxid) {
+
+		Map<String, Object> userMap = new HashMap<String, Object>();
+		userMap.put("userId", wxid);
+		List<MspUser> muList = mspUserService.findList(userMap, new PageBounds());
+		// 已绑定
+		if (muList != null & muList.size() > 0) {
+			MspUser mspUser = muList.get(0);
+			
+			//处理一下头像是否获取
+			String avatar=mspUser.getAvatar();
+			log.info("------------处理一下头像是否获取---------------老avatar:"+avatar +"--------------wxid:"+wxid);
+			if (StringUtil.isEmpty(avatar)) {
+				avatar=getAvatar(wxid);
+				log.info("------------处理一下头像是否获取---------------新avatar:"+avatar);
+				if (StringUtil.isNotEmpty(avatar)) {
+					mspUser.setAvatar(avatar);
+					boolean flag=mspUserService.update(mspUser);
+					if (flag) {
+						log.info("更新头像成功!----->wxid:"+wxid);
+					}
+				}
+			}
+			
+			map.put("wxid", wxid); // 企业号userid
+			map.put("userid", mspUser.getId()); // 主键id
+			map.put("myname", mspUser.getName());
+			map.put("type", mspUser.getType());
+			
+			req.getSession().setAttribute("wxid", mspUser.getUserId());
+			req.getSession().setAttribute("userid", mspUser.getId());
+			req.getSession().setAttribute("mspUser", mspUser);
+			
+			if (StringUtil.isNotEmpty(mspUser.getMemeberId())) {
+				return "";
+			} else {
+				log.error("Msp项目数据库中此用户无工号id,数据有误----->wxid:" + wxid);
+				// 未绑定,可绑定,跳至登陆页面
+				return "wmh/wx/wxlogin";
+			}
+		} else {
+			// 未绑定,可绑定,跳至登陆页面
+			return "wmh/wx/wxlogin";
+		}
+
+	}
+	
+	
+	public  String  getAvatar(String userid) {
+		String avatar="";
+		String url =com.wh.util.msp.Constants.GET_USER_URL;
+		MspPlatform mspPlatform = platformService.load(com.wh.util.msp.Constants.ALPLATFORMID);
+		String accessToken=mspPlatform.getAccessToken();
+		url=url.replace("ACCESS_TOKEN", accessToken).replace("USERID", userid);
+		JSONObject jsonObject = HttpRequestUtil.httpRequest(url, EnumMethod.GET.name(), null);
+		if (jsonObject!=null) {
+			Integer errcode=jsonObject.getInt("errcode");
+			if (errcode!=null &&errcode==0) {
+				avatar=jsonObject.getString("avatar");
+			}
+		}
+		return avatar;
+	}
+	
+	
+
+	/**
+	 * 首页新闻展示分页
+	 * 
+	 * @author 王鹏翔
+	 * @Date 2017年4月6日 上午10:22:18
+	 * @param request
+	 * @param map
+	 * @param news
+	 * @return
+	 */
+	@RequestMapping("/wx/goIndexTable.htm")
+	public String goHomePageTable(HttpServletRequest request, ModelMap map, WmhNews news) {
+
+		Integer sign = 3;
+		news.setSign(sign);
+
+		try {
+			List<Object> list = this.wmhNewsService.selectNewsByCrateTimeMobileListPage(news);
+			List<Map<String, Object>> newsList = (List<Map<String, Object>>) list.get(0);
+			for (Map<String, Object> map2 : newsList) {
+				String createTime = ((String) map2.get("create_time")).replaceAll("-", ".");
+				map2.put("yearMonth", createTime.substring(0, 7));
+				map2.put("day", createTime.substring(8, 10));
+			}
+			Long newsCount = this.wmhNewsService.selectNewsCount(news);
+			map.put("newsCount", newsCount);
+			map.put("list", list);
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		return "/wmh/wx/index_table";
+	}
+
+	/**
+	 * 在线支付跳转
+	 *
+	 * @param session
+	 * @param request
+	 * @param map
+	 * @return
+	 * @author 王鹏翔
+	 * @Date 2017年3月15日 上午10:32:05
+	 */
+	@RequestMapping("/wx/goPayPage.htm")
+	public String goPayPage(HttpSession session, HttpServletRequest request, ModelMap map) {
+		String url = "";
+		WmhUser user = (WmhUser) session.getAttribute("wmhUser");
+		if (null == user) {
+			url = "/wmh/wx/my/user_reg";
+		} else {
+			url = "/wmh/wx/pay/choosePayType";
+		}
+		return url;
+	}
+
+	/**
+	 * 支付详情页
+	 *
+	 * @param session
+	 * @param request
+	 * @param map
+	 * @param type
+	 * @return
+	 * @author 王鹏翔
+	 * @Date 2017年3月15日 上午11:13:03
+	 */
+	@RequestMapping("/wx/orderDetail.htm")
+	public String orderDetail(HttpSession session, HttpServletRequest request, ModelMap map, Integer payType) {
+		String url = "";
+		/*
+		 * Integer payType = null; if(!StringUtils.isEmpty(type)){ payType =
+		 * Integer.parseInt(type); }
+		 */
+		WmhUser user = (WmhUser) session.getAttribute("wmhUser");
+		double money = 0;
+		if (payType != 15) {
+			money = Double.parseDouble(request.getParameter("money"));
+		}
+		Map<String, Object> orderInfo = new HashMap<String, Object>();
+		try {
+
+			// 根据type生成订单号： 年月日+编号（根据type来判断）+4位流水号
+			Long payNum = this.wserPayService.getPayNumbyPayType(payType);
+
+			UserPay userPay = new UserPay();
+			userPay.setId(UUIDUtil.getUUID());
+			userPay.setPayNum(payNum);
+			userPay.setUserId(user.getId());
+			userPay.setReceiverId(Constants.xlwAdminSchoolMoney);
+			userPay.setSchoolMoney(user.getSchoolMoney());
+			userPay.setPaySchoolMoney(money * 100);
+			userPay.setPayTime(new Date());
+			userPay.setOrderInfo("资金托管");
+			userPay.setPayType(payType);
+			userPay.setPayStatus(Constants.PAY_STATUS_FAIL);
+			userPay.setPayNote("微信支付");
+			userPayService.insertWmhUserPay(userPay);
+
+			orderInfo.put("orderId", userPay.getId());
+			orderInfo.put("payNum", payNum);
+			orderInfo.put("submitTime", DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			orderInfo.put("realName", user.getRealName());
+			orderInfo.put("userId", user.getId());
+			orderInfo.put("type", payType);
+			orderInfo.put("money", money);
+			// orderInfo.put("successUrl",
+			// "/wmh/wmhUser/wx/goPaySuccessPage.htm?userPayId=" +
+			// userPay.getId());
+			// orderInfo.put("successUrl",
+			// "/wmh/wmhUser/wx/orderDetail.htm?payType="+payType);
+			orderInfo.put("successUrl", "/wmh/wmhUser/wx/goIndex.htm?paySuccess=ok");
+			orderInfo.put("failedUrl", "/wmh/wmhUser/wx/goPayFailPage.htm?msg=");
+			map.put("orderInfo", orderInfo);
+			if (payType == 12) {// 考试费
+				url = "/wmh/wx/pay/pay_ks";
+			} else if (payType == 13) {// 学费
+				url = "/wmh/wx/pay/pay_xf";
+			} else if (payType == 14) {// 资料费
+				url = "/wmh/wx/pay/pay_zlf";
+			} else {// 爱心捐助
+				url = "/wmh/wx/pay/pay_axjz";
+			}
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		return url;
+	}
+
+	/**
+	 * 支付成功页面
+	 *
+	 * @param request
+	 * @param map
+	 * @return
+	 * @author 王鹏翔
+	 * @Date 2017年3月16日 下午4:49:08
+	 */
+	@RequestMapping("/wx/goPaySuccessPage.htm")
+	public String goPaySuccessPage(HttpServletRequest request, ModelMap map, String userPayId, ModelMap modelMap) {
+		if (StringUtils.isEmpty(userPayId)) {
+			return "";
+		} else {
+			try {
+				UserPay userPay = userPayService.searchById(userPayId);
+				if (null != userPay) {
+					modelMap.put("rechargeNum", userPay.getPayNum());
+					Date t = userPay.getPayTime();
+					String time = DateUtil.format(t, "yyyy-MM-dd HH:mm:ss");
+					modelMap.put("time", time);
+					String userId = userPay.getUserId();
+					String realName = "";
+					if (!StringUtils.isEmpty(userId)) {
+						WmhUser u = wmhUserService.selectUserById(userId);
+						realName = u.getRealName();
+						modelMap.put("name", realName);
+					} else {
+						modelMap.put("name", realName);
+					}
+					int type = userPay.getPayType();
+					String typeName = "";
+					if (type != 0) {
+						if (type == 12) {
+							typeName = "缴纳考试费";
+						} else if (type == 13) {
+							typeName = "缴纳学费";
+						} else if (type == 14) {
+							typeName = "缴纳资料费";
+						} else if (type == 15) {
+							typeName = "爱心捐助";
+						}
+					}
+					modelMap.put("typeName", typeName);
+					double money = 0.0;
+					if (null != userPay.getPaySchoolMoney()) {
+						money = userPay.getPaySchoolMoney() / 100;
+					}
+					modelMap.put("money", money);
+					if (userPay.getPayStatus() == 1) {
+						modelMap.put("status", "支付成功");
+					} else if (userPay.getPayStatus() == 0) {
+						modelMap.put("status", "支付失败");
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return "/wmh/wx/pay/pay_success";
+	}
+
+	/**
+	 * 支付失败页面
+	 *
+	 * @param request
+	 * @param map
+	 * @return
+	 * @author 王鹏翔
+	 * @Date 2017年3月16日 下午4:51:30
+	 */
+	@RequestMapping("/wx/goPayFailPage.htm")
+	public String goPayFailPage(HttpServletRequest request, ModelMap map, String msg) {
+		map.put("msg", msg);
+		return "/wmh/wx/pay/pay_fail";
+	}
+}

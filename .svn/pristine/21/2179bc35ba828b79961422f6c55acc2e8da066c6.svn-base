@@ -1,0 +1,14 @@
+package com.wh.service.xyf;
+
+
+import com.wh.service.base.BaseService;
+import com.wh.xyfentity.XyfAttachements;
+
+/**
+ * 图片保存service
+ * @author Administrator
+ *
+ */
+public interface XyfAttachementsService extends BaseService<XyfAttachements, Integer>{
+
+}

@@ -1,0 +1,48 @@
+package com.wh.dao.xyf;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import com.wh.base.BaseMapper;
+
+import com.wh.xyfentity.XyfGz;
+
+@Repository
+public interface XyfGzMapper extends BaseMapper<XyfGz, Integer> {
+	int deleteByPrimaryKey(Integer id);
+
+	int insert(XyfGz record);
+
+	int insertSelective(XyfGz record);
+
+	XyfGz selectByPrimaryKey(Integer id);
+
+	int updateByPrimaryKeySelective(XyfGz record);
+
+	int updateByPrimaryKey(XyfGz record);
+
+	/**
+	 * 根据用户id及被关注者id删除关注信息
+	 * 
+	 * @param userId
+	 * @param gzUserId
+	 * @return
+	 */
+	int deleteByUserIdAndGzUserId(@Param(value = "userId") String userId, @Param(value = "gzUserId") String gzUserId);
+
+	/**
+	 * 关注用户
+	 * @param userId
+	 * @param gzUserId
+	 * @return
+	 */
+	int GzUser(@Param(value = "userId") String userId, @Param(value = "gzUserId") String gzUserId);
+	
+	/**
+	 * 获取我是否关注她状态
+	 * @param userId
+	 * @param otherId
+	 * @return
+	 */
+	int getGzStatus(@Param(value = "userId")String userId,@Param(value = "otherId")String otherId);
+}

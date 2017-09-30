@@ -1,0 +1,20 @@
+package com.wh.dao.xyf;
+
+import org.springframework.stereotype.Repository;
+import com.wh.base.BaseMapper;
+import com.wh.xyfentity.XyfAttachements;
+
+@Repository
+public interface XyfAttachementsMapper extends BaseMapper<XyfAttachements, Integer> {
+	int deleteByPrimaryKey(String id);
+
+	int insert(XyfAttachements record);
+
+	int insertSelective(XyfAttachements record);
+
+	XyfAttachements selectByPrimaryKey(String id);
+
+	int updateByPrimaryKeySelective(XyfAttachements record);
+
+	int updateByPrimaryKey(XyfAttachements record);
+}

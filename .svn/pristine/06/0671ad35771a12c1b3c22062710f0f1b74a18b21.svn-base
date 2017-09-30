@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.xyf.XyfUserMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.xyfentity.XyfUser" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="DATE" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="headimage" property="headimage" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="INTEGER" />
+    <result column="goals" property="goals" jdbcType="INTEGER" />
+    <result column="wangyi_id" property="wangyiId" jdbcType="VARCHAR" />
+    <result column="wangyi_account" property="wangyiAccount" jdbcType="VARCHAR" />
+    <result column="wangyi_password" property="wangyiPassword" jdbcType="VARCHAR" />
+    <result column="wangyi_status" property="wangyiStatus" jdbcType="INTEGER" />
+    <result column="xiami_id" property="xiamiId" jdbcType="VARCHAR" />
+    <result column="xiami_account" property="xiamiAccount" jdbcType="VARCHAR" />
+    <result column="xiami_password" property="xiamiPassword" jdbcType="VARCHAR" />
+    <result column="xiami_status" property="xiamiStatus" jdbcType="INTEGER" />
+    <result column="addr_lng" property="addrLng" jdbcType="DOUBLE" />
+    <result column="addr_lat" property="addrLat" jdbcType="DOUBLE" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="user_status" property="userStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, nick_name, open_id, address, birthday, province, city, headimage, gender, 
+    goals, wangyi_id, wangyi_account, wangyi_password, wangyi_status, xiami_id, xiami_account, 
+    xiami_password, xiami_status, addr_lng, addr_lat,phone,password,create_time,user_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from xyf_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from xyf_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wh.xyfentity.XyfUser" >
+    insert into xyf_user (id, user_id, nick_name, 
+      open_id, address, birthday, 
+      province, city, headimage, 
+      gender, goals, wangyi_id,  
+      wangyi_account, wangyi_password, wangyi_status, 
+      xiami_id, xiami_account, xiami_password, 
+      xiami_status, addr_lng, addr_lat,phone,password,create_time,user_status
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, 
+      #{openId,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{headimage,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=INTEGER}, #{goals,jdbcType=INTEGER}, #{wangyiId,jdbcType=VARCHAR}, 
+      #{wangyiAccount,jdbcType=VARCHAR}, #{wangyiPassword,jdbcType=VARCHAR}, #{wangyiStatus,jdbcType=INTEGER}, 
+      #{xiamiId,jdbcType=VARCHAR}, #{xiamiAccount,jdbcType=VARCHAR}, #{xiamiPassword,jdbcType=VARCHAR}, 
+      #{xiamiStatus,jdbcType=INTEGER}, #{addrLng,jdbcType=DOUBLE}, #{addrLat,jdbcType=DOUBLE},
+      #{phone,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},#{userStatus,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.xyfentity.XyfUser" >
+    insert into xyf_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="openId != null" >
+        open_id,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="headimage != null" >
+        headimage,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="goals != null" >
+        goals,
+      </if>
+      <if test="wangyiId != null" >
+        wangyi_id,
+      </if>
+      <if test="wangyiAccount != null" >
+        wangyi_account,
+      </if>
+      <if test="wangyiPassword != null" >
+        wangyi_password,
+      </if>
+      <if test="wangyiStatus != null" >
+        wangyi_status,
+      </if>
+      <if test="xiamiId != null" >
+        xiami_id,
+      </if>
+      <if test="xiamiAccount != null" >
+        xiami_account,
+      </if>
+      <if test="xiamiPassword != null" >
+        xiami_password,
+      </if>
+      <if test="xiamiStatus != null" >
+        xiami_status,
+      </if>
+      <if test="addrLng != null" >
+        addr_lng,
+      </if>
+      <if test="addrLat != null" >
+        addr_lat,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="userStatus != null" >
+        user_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="headimage != null" >
+        #{headimage,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="goals != null" >
+        #{goals,jdbcType=INTEGER},
+      </if>
+      <if test="wangyiId != null" >
+        #{wangyiId,jdbcType=VARCHAR},
+      </if>
+      <if test="wangyiAccount != null" >
+        #{wangyiAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="wangyiPassword != null" >
+        #{wangyiPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="wangyiStatus != null" >
+        #{wangyiStatus,jdbcType=INTEGER},
+      </if>
+      <if test="xiamiId != null" >
+        #{xiamiId,jdbcType=VARCHAR},
+      </if>
+      <if test="xiamiAccount != null" >
+        #{xiamiAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="xiamiPassword != null" >
+        #{xiamiPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="xiamiStatus != null" >
+        #{xiamiStatus,jdbcType=INTEGER},
+      </if>
+      <if test="addrLng != null" >
+        #{addrLng,jdbcType=DOUBLE},
+      </if>
+      <if test="addrLat != null" >
+        #{addrLat,jdbcType=DOUBLE},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userStatus != null" >
+        #{userStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.xyfentity.XyfUser" >
+    update xyf_user
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        open_id = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="headimage != null" >
+        headimage = #{headimage,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="goals != null" >
+        goals = #{goals,jdbcType=INTEGER},
+      </if>
+      <if test="wangyiId != null" >
+        wangyi_id = #{wangyiId,jdbcType=VARCHAR},
+      </if>
+      <if test="wangyiAccount != null" >
+        wangyi_account = #{wangyiAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="wangyiPassword != null" >
+        wangyi_password = #{wangyiPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="wangyiStatus != null" >
+        wangyi_status = #{wangyiStatus,jdbcType=INTEGER},
+      </if>
+      <if test="xiamiId != null" >
+        xiami_id = #{xiamiId,jdbcType=VARCHAR},
+      </if>
+      <if test="xiamiAccount != null" >
+        xiami_account = #{xiamiAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="xiamiPassword != null" >
+        xiami_password = #{xiamiPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="xiamiStatus != null" >
+        xiami_status = #{xiamiStatus,jdbcType=INTEGER},
+      </if>
+      <if test="addrLng != null" >
+        addr_lng = #{addrLng,jdbcType=DOUBLE},
+      </if>
+      <if test="addrLat != null" >
+        addr_lat = #{addrLat,jdbcType=DOUBLE},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userStatus != null" >
+        user_status = #{userStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.xyfentity.XyfUser" >
+    update xyf_user
+    set user_id = #{userId,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      open_id = #{openId,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=DATE},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      headimage = #{headimage,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=INTEGER},
+      goals = #{goals,jdbcType=INTEGER},
+      wangyi_id = #{wangyiId,jdbcType=VARCHAR},
+      wangyi_account = #{wangyiAccount,jdbcType=VARCHAR},
+      wangyi_password = #{wangyiPassword,jdbcType=VARCHAR},
+      wangyi_status = #{wangyiStatus,jdbcType=INTEGER},
+      xiami_id = #{xiamiId,jdbcType=VARCHAR},
+      xiami_account = #{xiamiAccount,jdbcType=VARCHAR},
+      xiami_password = #{xiamiPassword,jdbcType=VARCHAR},
+      xiami_status = #{xiamiStatus,jdbcType=INTEGER},
+      addr_lng = #{addrLng,jdbcType=DOUBLE},
+      addr_lat = #{addrLat,jdbcType=DOUBLE},
+      
+      phone = #{phone,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      user_status = #{userStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <!-- 根据用户id获取用户主页信息 -->
+   <select id="getUserByUserId" resultType="java.util.Map" parameterType="java.lang.String" >
+
+  SELECT 
+  *,
+  (SELECT 
+    COUNT(1) 
+  FROM
+    xyf_gz 
+  WHERE user_id = #{userId,jdbcType=VARCHAR}) AS gznum,
+  (SELECT 
+    COUNT(1) 
+  FROM
+    xyf_gz 
+  WHERE gzed_user_id = #{userId,jdbcType=VARCHAR}) AS ungznum
+FROM
+  xyf_user xu 
+WHERE xu.user_id = #{userId,jdbcType=VARCHAR}
+  
+   
+
+   </select>
+   
+   
+   
+    <update id="updateByUserId" parameterType="com.wh.xyfentity.XyfUser" >
+    update xyf_user
+	    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        open_id = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="headimage != null" >
+        headimage = #{headimage,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="goals != null" >
+        goals = #{goals,jdbcType=INTEGER},
+      </if>
+      <if test="wangyiId != null" >
+        wangyi_id = #{wangyiId,jdbcType=VARCHAR},
+      </if>
+      <if test="wangyiAccount != null" >
+        wangyi_account = #{wangyiAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="wangyiPassword != null" >
+        wangyi_password = #{wangyiPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="wangyiStatus != null" >
+        wangyi_status = #{wangyiStatus,jdbcType=INTEGER},
+      </if>
+      <if test="xiamiId != null" >
+        xiami_id = #{xiamiId,jdbcType=VARCHAR},
+      </if>
+      <if test="xiamiAccount != null" >
+        xiami_account = #{xiamiAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="xiamiPassword != null" >
+        xiami_password = #{xiamiPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="xiamiStatus != null" >
+        xiami_status = #{xiamiStatus,jdbcType=INTEGER},
+      </if>
+      <if test="addrLng != null" >
+        addr_lng = #{addrLng,jdbcType=DOUBLE},
+      </if>
+      <if test="addrLat != null" >
+        addr_lat = #{addrLat,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+   
+   <!-- 我的关注list -->
+ <select id="getMyGzList" resultMap="BaseResultMap" parameterType="java.lang.String" >
+   SELECT 
+  xu.`user_id`,
+  xu.`nick_name`,
+  xu.`gender`,
+  xu.`birthday`,
+  xu.`headimage` 
+FROM
+  xyf_gz xg 
+  LEFT JOIN xyf_user xu 
+    ON xg.`gzed_user_id` = xu.`user_id` 
+WHERE xg.user_id = #{userId,jdbcType=VARCHAR}
+
+
+  </select>
+  
+    <!-- 根据用户openId获取userId -->
+   <select id="getUserIdByOpenId" resultType="java.lang.String" parameterType="java.lang.String" >
+   
+     SELECT user_id FROM xyf_user WHERE open_id=#{openId,jdbcType=VARCHAR}
+   
+
+   </select>
+   
+       <!-- 根据用户openId获取user -->
+   <select id="getUserByOpenId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+   
+     SELECT * FROM xyf_user WHERE open_id=#{openId,jdbcType=VARCHAR}
+   
+
+   </select>
+   
+      <!-- 关注我的list -->
+ <select id="getGzMeList" resultMap="BaseResultMap" parameterType="java.lang.String" >
+   SELECT 
+  xu.`user_id`,
+  xu.`nick_name`,
+  xu.`gender`,
+  xu.`birthday`,
+  xu.`headimage` 
+FROM
+  xyf_gz xg 
+  LEFT JOIN xyf_user xu  
+  ON xg.`user_id` = xu.`user_id` 
+
+WHERE xg.gzed_user_id = #{userId,jdbcType=VARCHAR}
+
+
+  </select>
+   
+   
+   <!-- 根据有缘人的音乐id获取其user,包括userId,经纬度等信息 -->
+   <select id="getUserByMusicId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+   
+	select * from xyf_user where wangyi_id=#{musicId,jdbcType=VARCHAR} or xiami_id =#{musicId,jdbcType=VARCHAR}
+   </select>
+   	
+   	<!-- 删除用户按openId -->
+   	 <delete id="deleteByOpenId" parameterType="java.lang.String" >
+    delete from xyf_user
+    where open_id = #{openId,jdbcType=VARCHAR}
+  </delete>
+  
+  
+    
+   <select id="getAllUser" resultMap="BaseResultMap" >
+   
+	SELECT * FROM `xyf_user` WHERE nick_name IS NOT NULL AND wangyi_id IS NOT NULL
+   </select>
+  
+  <!-- 删除数据不全的用户 -->
+    <delete id="deleteNullUser" parameterType="java.lang.Integer" >
+DELETE FROM xyf_user
+    WHERE nick_name IS NULL OR wangyi_id IS NULL
+  </delete>
+  
+  
+  
+    <!-- 根据手机号，密码查询用户 -->
+   <select id="getByPhoneAndPassword" resultMap="BaseResultMap" parameterType="java.lang.String" >
+
+	select * from xyf_user  where phone =#{phone,jdbcType=VARCHAR} and password =#{password,jdbcType=VARCHAR}
+   </select>
+  
+    <!-- 根据手机号查询用户 -->
+   <select id="getUserByPhone" resultMap="BaseResultMap" parameterType="java.lang.String" >
+
+	select * from xyf_user  where phone =#{phone,jdbcType=VARCHAR} limit 1
+   </select>
+   
+       <!-- 根据手机号查询用户 -->
+   <select id="findUserByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+
+	select * from xyf_user  where user_id =#{userId,jdbcType=VARCHAR} limit 1
+   </select>
+  
+</mapper>

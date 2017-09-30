@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+			<link rel="stylesheet" href="../commons/css/appcenter.css">
+    <link rel="stylesheet" href="../commons/css/font3/font_5y12bci07sbdquxr/iconfont.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+
+		<title>应用中心</title>
+	</head>
+	<body>
+		<div class="wrap">
+			<div class="content" style="margin-top: 0.1rem;">
+				<p class="top">
+					<span class="icon iconfont icon-sousuo2"></span>
+					<span>常用查询</span>
+				</p>
+				<div class="liuge">
+					<div></div>
+					<div class="one one1">课表查询<span></span></div>
+					<div class="one2">成绩查询<span></span></div>
+					<div>考勤查询</div>
+					<div>通讯录</div>
+					<div class="one3">查空教室<span></span></div>
+					<div>工资查询</div>
+				</div>
+			</div>
+			<!--教学活动-->
+			<div class="content">
+				<p class="top">
+					<span class="icon iconfont icon-jiaoxuekeyan" style="background: #6BA2F0;"></span>
+					<span style="color: #6BA2F0;">教学活动</span>
+				</p>
+				<div class="liuge">
+					<div style="background: #6BA2F0;"></div>
+					<div class="one">课堂点名</div>
+					<div>顶岗实习</div>
+					<div>随堂评教</div>
+					<div>移动办公</div>
+					<div></div>
+					<div></div>
+				</div>
+			</div>
+			<!--校园生活-->
+			<div class="content">
+				<p class="top">
+					<span class="icon iconfont icon-jiaoxuekeyan" style="background: #13CFA9;"></span>
+					<span style="color: #13CFA9;">校园生活</span>
+				</p>
+				<div class="liuge" style="height: 0.74rem;">
+					<div style="background: #13CFA9;"></div>
+					<div class="one">随手拍</div>
+					<div>图书借阅</div>
+					<div></div>
+				</div>
+			</div>
+			<!--校园管理-->
+			<div class="content">
+				<p class="top">
+					<span class="icon iconfont icon-jiaoxuekeyan" style="background: #fec04e;"></span>
+					<span style="color: #fec04e;">教学活动</span>
+				</p>
+				<div class="liuge liuge1" style="height: 2.22rem;">
+					<div style="background: #fec04e;"></div>
+					<div class="one one4">故障报修<span></span></div>
+					<div>智慧党建</div>
+					<div>数字迎新</div>
+					<div>组织架构<span style="background: white;"></span></div>
+					<div>校友会</div>
+					<div>校历</div>
+					<div>校园地图<span style="background: white;"></span></div>
+					<div></div>
+					<div></div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script src="../commons/js/jquery-3.1.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="../commons/js/rem.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	$(".one1").click(function(){
+		window.location.href = "kebiaochaxun.html";
+	})
+	$(".one2").on("click",function(){
+		window.location.href = "performance.html";
+	})
+	$(".one3").click(function(){
+		window.location.href = "emptyClass.html";
+	})
+	$(".one4").click(function(){
+		window.location.href = "/wmh/faultRepair/web/toFaultRepair.htm";
+	})
+</script>

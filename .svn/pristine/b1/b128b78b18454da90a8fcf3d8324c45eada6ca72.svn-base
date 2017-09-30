@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>重置参数口令</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../../css/font/iconfont.css">
+    <script type="text/javascript" src="../../js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="../../js/rem.js"></script>
+	    <link rel="stylesheet" href="../../css/ceshi.css">
+    <script type="text/javascript" src="../../js/path.js"></script>
+</head>
+<body>
+<p>请输入重置参数口令</p>
+<input type="password" id="kouling" placeholder="请输入口令">
+<div class="koulingsubmit">提交</div>
+</body>
+</html>
+<script>
+    $('.koulingsubmit').click(function () {
+        if($('#kouling').val() == 'xlw666'){
+            console.log('666');
+            window.location.href = 'canshubiao.html';
+        }else {
+            alert('口令输入错误');
+        }
+    })
+</script>

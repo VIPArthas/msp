@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.xlwapp.UserLoginMapper" >
+	<resultMap type="java.util.Map" id="userLoginMap"></resultMap>
+  <resultMap id="BaseResultMap" type="com.wh.entity.UserLogin" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="lastlogin_ip" property="lastloginIp" jdbcType="VARCHAR" />
+    <result column="lastlogin_time" property="lastloginTime" jdbcType="TIMESTAMP" />
+    <result column="lastuse_source" property="lastuseSource" jdbcType="VARCHAR" />
+    <result column="lastlogin_terminal" property="lastloginTerminal" jdbcType="INTEGER" />
+    <result column="lastuse_source_time" property="lastuseSourceTime" jdbcType="TIMESTAMP" />
+    <result column="extend1" property="extend1" jdbcType="VARCHAR" />
+    <result column="extend2" property="extend2" jdbcType="VARCHAR" />
+    <result column="extend3" property="extend3" jdbcType="VARCHAR" />
+    <result column="extend4" property="extend4" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, lastlogin_ip, lastlogin_time, lastuse_source, lastlogin_terminal, lastuse_source_time, extend1, 
+    extend2, extend3, extend4, create_time, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_login
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from user_login
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_login
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.UserLogin" >
+    insert into user_login (id, user_id, lastlogin_ip, 
+      lastlogin_time, lastuse_source, lastlogin_terminal, lastuse_source_time, 
+      extend1, extend2, extend3, 
+      extend4, create_time, status
+      )
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{lastloginIp,jdbcType=VARCHAR}, 
+      #{lastloginTime,jdbcType=TIMESTAMP}, #{lastuseSource,jdbcType=VARCHAR}, #{lastloginTerminal,jdbcType=INTEGER}, #{lastuseSourceTime,jdbcType=TIMESTAMP}, 
+      #{extend1,jdbcType=VARCHAR}, #{extend2,jdbcType=VARCHAR}, #{extend3,jdbcType=VARCHAR}, 
+      #{extend4,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.UserLogin" >
+    insert into user_login
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="lastloginIp != null" >
+        lastlogin_ip,
+      </if>
+      <if test="lastloginTime != null" >
+        lastlogin_time,
+      </if>
+      <if test="lastuseSource != null" >
+        lastuse_source,
+      </if>
+      <if test="lastloginTerminal != null" >
+        lastlogin_terminal,
+      </if>
+      <if test="lastuseSourceTime != null" >
+        lastuse_source_time,
+      </if>
+      <if test="extend1 != null" >
+        extend1,
+      </if>
+      <if test="extend2 != null" >
+        extend2,
+      </if>
+      <if test="extend3 != null" >
+        extend3,
+      </if>
+      <if test="extend4 != null" >
+        extend4,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="lastloginIp != null" >
+        #{lastloginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="lastloginTime != null" >
+        #{lastloginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastuseSource != null" >
+        #{lastuseSource,jdbcType=VARCHAR},
+      </if>
+      <if test="lastloginTerminal != null" >
+        #{lastloginTerminal,jdbcType=INTEGER},
+      </if>
+      <if test="lastuseSourceTime != null" >
+        #{lastuseSourceTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extend1 != null" >
+        #{extend1,jdbcType=VARCHAR},
+      </if>
+      <if test="extend2 != null" >
+        #{extend2,jdbcType=VARCHAR},
+      </if>
+      <if test="extend3 != null" >
+        #{extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="extend4 != null" >
+        #{extend4,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.UserLogin" >
+    update user_login
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="lastloginIp != null" >
+        lastlogin_ip = #{lastloginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="lastloginTime != null" >
+        lastlogin_time = #{lastloginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastuseSource != null" >
+        lastuse_source = #{lastuseSource,jdbcType=VARCHAR},
+      </if>
+      <if test="lastloginTerminal != null" >
+        lastlogin_terminal = #{lastloginTerminal,jdbcType=INTEGER},
+      </if>
+      <if test="lastuseSourceTime != null" >
+        lastuse_source_time = #{lastuseSourceTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extend1 != null" >
+        extend1 = #{extend1,jdbcType=VARCHAR},
+      </if>
+      <if test="extend2 != null" >
+        extend2 = #{extend2,jdbcType=VARCHAR},
+      </if>
+      <if test="extend3 != null" >
+        extend3 = #{extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="extend4 != null" >
+        extend4 = #{extend4,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByUserIdSelective" parameterType="com.wh.entity.UserLogin" >
+    update user_login
+    <set >
+      <if test="userId != null and userId != ''" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="lastloginIp != null and lastloginIp != ''" >
+        lastlogin_ip = #{lastloginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="lastloginTime != null" >
+        lastlogin_time = #{lastloginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastuseSource != null and lastuseSource != ''" >
+        lastuse_source = #{lastuseSource,jdbcType=VARCHAR},
+      </if>
+      <if test="lastloginTerminal != null" >
+        lastlogin_terminal = #{lastloginTerminal,jdbcType=INTEGER},
+      </if>
+      <if test="lastuseSourceTime != null" >
+        lastuse_source_time = #{lastuseSourceTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extend1 != null and extend1 != ''" >
+        extend1 = #{extend1,jdbcType=VARCHAR},
+      </if>
+      <if test="extend2 != null and extend2 != ''" >
+        extend2 = #{extend2,jdbcType=VARCHAR},
+      </if>
+      <if test="extend3 != null and extend3 != ''" >
+        extend3 = #{extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="extend4 != null and extend4 != ''" >
+        extend4 = #{extend4,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByUserId" parameterType="com.wh.entity.UserLogin" >
+    update user_login
+    <set >
+      <if test="lastloginIp != null and lastloginIp != ''" >
+        lastlogin_ip = #{lastloginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="lastloginTime != null and lastloginTime != ''" >
+        lastlogin_time = #{lastloginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastuseSource != null and lastuseSource != ''" >
+        lastuse_source = #{lastuseSource,jdbcType=VARCHAR},
+      </if>
+      <if test="lastloginTerminal != null and lastloginTerminal != ''" >
+        lastlogin_terminal = #{lastloginTerminal,jdbcType=INTEGER},
+      </if>
+      <if test="lastuseSourceTime != null and lastuseSourceTime != ''" >
+        lastuse_source_time = #{lastuseSourceTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extend1 != null and extend1 != ''" >
+        extend1 = #{extend1,jdbcType=VARCHAR},
+      </if>
+      <if test="extend2 != null and extend2 != ''" >
+        extend2 = #{extend2,jdbcType=VARCHAR},
+      </if>
+      <if test="extend3 != null and extend3 != ''" >
+        extend3 = #{extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="extend4 != null and extend4 != ''" >
+        extend4 = #{extend4,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null and createTime != ''" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null and status != ''" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.UserLogin" >
+    update user_login
+    set user_id = #{userId,jdbcType=VARCHAR},
+      lastlogin_ip = #{lastloginIp,jdbcType=VARCHAR},
+      lastlogin_time = #{lastloginTime,jdbcType=TIMESTAMP},
+      lastuse_source = #{lastuseSource,jdbcType=VARCHAR},
+      lastlogin_terminal = #{lastloginTerminal,jdbcType=INTEGER},
+      lastuse_source_time = #{lastuseSourceTime,jdbcType=TIMESTAMP},
+      extend1 = #{extend1,jdbcType=VARCHAR},
+      extend2 = #{extend2,jdbcType=VARCHAR},
+      extend3 = #{extend3,jdbcType=VARCHAR},
+      extend4 = #{extend4,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!-- 
+  	#当前系统全部用户总数量，6个月活跃用户数量，30天活跃用户数量，24小时活跃用户数量#24小时 60*60*24#30天 60*60*24*30#6个月 60*60*24*30*6
+  	#当前系统实名用户总数量，6个月活跃实名用户数量，30天活跃实名用户数量，24小时活跃实名用户数量
+   -->
+  <select id="queryUserActiveDegree" resultMap="userLoginMap">
+  	SELECT COUNT(1) userCount,'userAllCount' countName FROM user
+	UNION ALL
+	SELECT COUNT(1) userCount,'userCount24h' countName FROM user_login ul WHERE (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(ul.lastuse_source_time)) &lt; 60*60*24
+	UNION ALL
+	SELECT COUNT(1) userCount,'userCount30d' countName FROM user_login ul WHERE (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(ul.lastuse_source_time)) &lt; 60*60*24*30
+	UNION ALL
+	SELECT COUNT(1) userCount,'userCount6m' countName FROM user_login ul WHERE (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(ul.lastuse_source_time)) &lt; 60*60*24*30*6
+	UNION ALL
+	SELECT COUNT(1) userCount,'userRealAllCount' countName FROM user u WHERE u.realname_status IN (1,2)
+	UNION ALL
+	SELECT COUNT(1) userCount,'userRealCount24h' countName FROM user_login ul LEFT JOIN user u ON ul.user_id=u.id AND u.realname_status IN (1,2) WHERE (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(ul.lastuse_source_time)) &lt; 60*60*24
+	UNION ALL
+	SELECT COUNT(1) userCount,'userRealCount30d' countName FROM user_login ul LEFT JOIN user u ON ul.user_id=u.id AND u.realname_status IN (1,2) WHERE (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(ul.lastuse_source_time)) &lt; 60*60*24*30
+	UNION ALL
+	SELECT COUNT(1) userCount,'userRealCount6m' countName FROM user_login ul LEFT JOIN user u ON ul.user_id=u.id AND u.realname_status IN (1,2) WHERE (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(ul.lastuse_source_time)) &lt; 60*60*24*30*6
+  </select>
+  <!-- 30日内月活用户每日数量变化曲线图 -->
+  <select id="queryUserActive30DLine" resultMap="userLoginMap">
+  	SELECT COUNT(1) userCount,'userCount30d' countName,DATE_FORMAT(ul.lastuse_source_time, '%Y/%m/%d') lastUseSourceTime 
+	FROM user_login ul 
+	WHERE UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(ul.lastuse_source_time) &lt; 60*60*24*30
+	GROUP BY DATE_FORMAT(ul.lastuse_source_time, '%Y-%m-%d')
+  </select>
+  <!-- 72小时在线用户每小时数量变化曲线图 -->
+  <select id="queryUserActive72HLine" resultMap="userLoginMap">
+  	SELECT COUNT(1) userCount,'userCount72h' countName,DATE_FORMAT(ul.lastuse_source_time, '%Y/%m/%d%H') lastUseSourceTime FROM user_login ul 
+	WHERE UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(ul.lastuse_source_time) &lt; 60*60*72
+	GROUP BY DATE_FORMAT(ul.lastuse_source_time, '%Y%m%d%H')
+  </select>
+  	
+  	<!-- 两用户最近登陆的时间差 -->
+    <select id="getHourDiff" resultType="int" parameterType="java.lang.String" >
+     SELECT 
+  IFNULL(t.hourDiff, 1000) hourDiff 
+FROM
+  (SELECT 
+    TIMESTAMPDIFF(
+      HOUR,
+      (SELECT 
+        lastlogin_time 
+      FROM
+        `user_login` 
+      WHERE user_id = #{otherUserId,jdbcType=VARCHAR} order by lastlogin_time desc limit 1),
+      (SELECT 
+        lastlogin_time 
+      FROM
+        `user_login` 
+      WHERE user_id = #{myUserId,jdbcType=VARCHAR} ORDER BY lastlogin_time DESC LIMIT 1)
+    ) hourDiff) t  
+    
+  </select>
+</mapper>

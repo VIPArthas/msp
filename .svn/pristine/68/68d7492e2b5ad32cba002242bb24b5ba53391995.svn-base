@@ -1,0 +1,39 @@
+package com.wh.service.xyf.impl;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+import com.wh.dao.xyf.XyfGzMapper;
+import com.wh.service.base.impl.BaseServiceImpl;
+import com.wh.service.xyf.XyfGzService;
+
+import com.wh.xyfentity.XyfGz;
+
+@Service
+public class XyfGzServiceImpl extends BaseServiceImpl<XyfGz, Integer> implements XyfGzService{
+	@Resource
+	XyfGzMapper dao;
+
+	@Resource
+	public void setBaseDAO(XyfGzMapper xyfGzMapper) {
+		this.dao = xyfGzMapper;
+		this.baseDAO = xyfGzMapper;
+	}
+
+	@Override
+	public int deleteByUserIdAndGzUserId(String userId, String gzUserId) {
+		
+		return dao.deleteByUserIdAndGzUserId(userId,gzUserId);
+	}
+
+	@Override
+	public int GzUser(String userId, String gzUserId) {
+	
+		return dao.GzUser(userId,gzUserId);
+	}
+
+	@Override
+	public Boolean getGzStatus(String userId, String otherId) {
+		
+		return dao.getGzStatus(userId,otherId)>0?true:false;
+	}
+}

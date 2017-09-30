@@ -1,0 +1,182 @@
+$(document).ready(function(){
+//初始化部门人员数据
+	$.ajax({
+		type:"get",
+		dataType:"json",
+		cache:false,
+		url:urlPix+"/msp/mspUser/web/showAddressBook.htm",
+		async:false,
+		data:{
+		start:1,
+		length:10
+		},
+	    success:function(data){
+	    $("<li data-id="+data.obj.id+"><i class='fa ud' data-switch='on'>&#xe758;</i><span name='chanel' data-is='on' onclick='selectSend($(this))'><i class='fa'>&#xe60e;</i>"+data.obj.name+"</span></li>").appendTo($("#normal"));
+	    }
+	});
+
+//搜索
+$("#search").click(function(){
+	 var keyWord=$.trim($(this).prev().val());
+	 $(window.parent.document).find("#searchList").html("");
+	 var dataModel={};
+	 if(keyWord!=""){
+		 $.ajax({
+				type:"get",
+				dataType:"json",
+				cache:false,
+				url:urlPix+"/msp/mspMessage/web/searchList.htm",
+				async:false,
+				data:{
+					search:keyWord
+				},
+		       success:function(data){
+		    	   dataModel=data
+		       }
+			});
+       if(dataModel.attributes.depList!=undefined){
+    	   for(var i=0;i<dataModel.attributes.depList.length;i++){
+  			 $("<li data-id='"+dataModel.attributes.depList[i].id+"'><i class='fa ud' data-switch='on'>&#xe758;</i><span name='chanel' data-is='on' onclick='selectSend($(this))'><i class='fa'>&#xe60e;</i>"+dataModel.attributes.depList[i].name+"</span>　（部门）</li>").appendTo($(window.parent.document).find("#searchList"));
+  		 } 
+       }
+		if(dataModel.attributes.userList!=undefined){
+			for(var i=0;i<dataModel.attributes.userList.length;i++){
+				 $("<li data-id='"+dataModel.attributes.userList[i].userId+"'><span name='ren' data-is='on' onclick='selectSend($(this))'><i class='fa'>&#xe60c;</i>"+dataModel.attributes.userList[i].name+"</span>　（人员）</li>").appendTo($(window.parent.document).find("#searchList"));
+			 }	
+		}
+		 $(window.parent.document).find(".loop-tab").animate({marginLeft:"-292px"});
+	 }
+});
+//返回正常列表
+$("#normalList").click(function(){
+	$(window.parent.document).find("#searchList").find("li").remove();
+	 $(window.parent.document).find(".loop-tab").animate({marginLeft:"0"});
+})
+
+
+
+//频道或人员选择操作
+$("#normal li").on("click","i.ud",function(){
+	 $(this).css("transform","rotate(0)");
+	 var parentLi=$(this).parent();
+	 var childId=parentLi.data("id");
+	 var dataModel={};
+		if($(this).data("switch")=="on"){
+			$.ajax({
+				 type:"get",
+				 dataType:"json",
+				 cache:false,
+				 url:urlPix+"/msp/mspUser/web/showAddressBook.htm",
+				 async:false,
+				 data:{
+				 depID:childId,
+				 start:1,
+				 length:10
+				 },
+				 success:function(data){
+					 dataModel=data;
+				 }
+			 });
+		if(dataModel.obj.childDepList!=null){
+			 var ChildList="<ul>"
+			 for(var i=0;i<dataModel.obj.childDepList.length;i++){
+				 ChildList+="<li data-id='"+dataModel.obj.childDepList[i].id+"'><i class='fa ud' data-switch='on'>&#xe758;</i><span name='chanel' data-is='on' onclick='selectSend($(this))'><i class='fa'>&#xe60e;</i>"+dataModel.obj.childDepList[i].name+"</span></li>"
+			 }
+			 ChildList+="</ul>";
+			 $(ChildList).appendTo(parentLi);
+			 $(this).data("switch","off");
+			 }else{
+				 if(dataModel.attributes.muList!=undefined){
+				 var ChildList="<ul>"
+					 for(var i=0;i<dataModel.attributes.muList.length;i++){
+						 ChildList+="<li data-id='"+dataModel.attributes.muList[i].userId+"'><span name='ren' data-is='on' onclick='selectSend($(this))'><i class='fa'>&#xe60c;</i>"+dataModel.attributes.muList[i].name+"</span></li>"
+					 }
+					 ChildList+="</ul>";
+					 $(ChildList).appendTo(parentLi);
+					 $(this).data("switch","off");
+				 }else{
+					 var ChildList="<ul>";
+						 ChildList+="<li>暂无数据</li>";
+						 ChildList+="</ul>";
+						 $(ChildList).appendTo(parentLi);
+						 $(this).data("switch","off");
+				 }
+				 
+			 }
+		}else{
+			$(this).css("transform","rotate(-90deg)");
+			$(this).parent().find("ul").remove();
+			 $(this).data("switch","on");
+		}
+});
+//提交选择范围
+$("#endStep").click(function(){
+	$(window.parent.document).find("#selectList li").each(function(index){
+		$("<mark name='"+$("span",this).attr("name")+"' data-id='"+$(this).data("id")+"'>"+$(this).text().replace(/[^\u4e00-\u9fa5]/gi,"")+"<i class='fa' onclick='removeThis($(this))'>&#xe635;</i></mark>").appendTo(".well");
+	});
+	$(".well mark").each(function(){
+		if($(this).attr("name")=="chanel"){
+			 $(this).addClass("Chanel");
+		 }else if($(this).attr("name")=="ren"){
+			 $(this).addClass("Selected");
+		 }	 
+	})
+	$(window.parent.document).find(".closerange").click();
+})
+
+//发送
+
+$("#endSend").click(function(){
+	 var vals=$(".mytextarea").val();
+	 var depList="";
+	 var userList="";
+	 $(".well mark").each(function(){
+		 if($(this).attr("name")=="chanel"){
+			 if($(this).data("id")==1){
+				 depList="@all";
+				 userList="@all";
+				 return false;
+			 }else{
+				 depList+=$(this).data("id")+"|"; 
+			 }
+		 }else if($(this).attr("name")=="ren"){
+			 userList+=$(this).data("id")+"|"
+		 }
+	 });
+	if(vals!=""){
+	if($(".well mark").length>0){
+		var isObj=false;
+		$(".c-group input[type=checkbox]").each(function(){
+			if($(this).is(":checked")){
+				isObj=true;
+				return false;
+			}
+		})
+	 
+	 $.ajax({
+				 type:"get",
+				 dataType:"json",
+				 cache:false,
+				 url:urlPix+"/msp/mspMessage/web/sendMessage.htm",
+				 async:false,
+				 data:{
+				 touser:userList,
+				 toparty:depList,
+				 content:vals
+				 },
+				 success:function(data){
+					alert(data.msg);
+				 }
+			 });
+		 
+	}else{
+		alert("请选择发送范围!")
+	}
+	 }else{
+		 alert("请输入消息内容!")
+	 }
+})
+
+
+})
+

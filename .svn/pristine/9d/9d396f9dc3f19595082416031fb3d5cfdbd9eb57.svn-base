@@ -1,0 +1,49 @@
+package com.wh.controller.msp;
+
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.wh.base.AjaxJson;
+import com.wh.controller.common.BaseController;
+import com.wh.util.StringUtil;
+import com.wh.util.msp.JdbcTest;
+
+@Controller
+@RequestMapping("/msp/mspOracle")
+public class MspOraclController extends BaseController {
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+
+	/**
+	 * 
+	 * 学生缴费信息
+	 * 
+	 * @param req
+	 * @param resp
+	 */
+	@RequestMapping(value = "/wx/xsjf.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson xsjf(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		JdbcTest jt = new JdbcTest();
+		String xh = (String) req.getSession().getAttribute("wxid");
+		
+		xh="1020161525";
+		
+		if (StringUtil.isNotEmpty(xh)) {
+			List<Map<String, Object>> userList = jt.xsjf(xh);
+			if (userList != null && userList.size() > 0) {
+				json.setObj(userList);
+			}
+		}
+
+		return json;
+	}
+}

@@ -1,0 +1,21 @@
+package com.wh.dao.msp;
+
+import org.springframework.stereotype.Repository;
+
+import com.wh.base.BaseMapper;
+import com.wh.mspentity.MspPhoto;
+
+@Repository
+public interface MspPhotoMapper extends BaseMapper<MspPhoto, Integer>{
+    int deleteByPrimaryKey(String id);
+
+    int insert(MspPhoto record);
+
+    int insertSelective(MspPhoto record);
+
+    MspPhoto selectByPrimaryKey(String id);
+
+    int updateByPrimaryKeySelective(MspPhoto record);
+
+    int updateByPrimaryKey(MspPhoto record);
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>虾米音乐登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../../css/font/iconfont.css">
+    <script type="text/javascript" src="../../js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="../../js/rem.js?v=11"></script>
+	    <link rel="stylesheet" href="../../css/css.css">
+        <script type="text/javascript" src="../../js/path.js"></script>
+    
+</head>
+<body style="height: 100%">
+<section class="xiamiloginbj">
+    <div class="loginmessage">
+        <div class="select-login">
+            <div class="loginactive ZM">账号登录</div>
+            <div class="ID">ID登录</div>
+             <div class="LJ">分享歌曲</div>
+        </div>
+        <section class="logincontent">
+            <input type="text" id="xiamizh" placeholder="请输入账号">
+            <input type="text" id="xiamimm" placeholder="请输入密码">
+            <div class="loginzm">绑定</div>
+        </section>
+        <section class="logincontentid">
+            <input type="text" id="xiamiid" placeholder="请输入ID">
+            <div class="loginid">绑定</div>
+        </section>
+        <section class="logincontentlj">
+            <textarea name="" id="" placeholder="请在此处粘贴你要分享的歌曲链接"></textarea>
+            <div class="loginlj">提交</div>
+        </section>
+    </div>
+</section>
+</body>
+</html>
+<script>
+    $('.select-login div').click(function () {
+   
+        $(this).addClass('loginactive').siblings().removeClass('loginactive');
+        if($('.ZM').hasClass('loginactive')){
+       
+            $('.logincontent').css('display','flex');
+            $('.logincontentid').css('display','none');
+        }else {
+           
+            $('.logincontentid').css('display','flex');
+            $('.logincontent').css('display','none');
+        }
+    })
+
+        $('.loginzm').click(function () {
+        	 console.log('666');
+            var xiamiId = $('#xiamizh').val();
+            var xiamiPassword = $('#xiamimm').val();
+            
+            console.log(xiamiId);
+            if (!xiamiId) {
+                alert('账号不能为空');
+            } else if (!xiamiPassword) {
+                alert('密码不能为空')
+            } else {
+             $.ajax({
+                    type: "GET",
+                    url: SERVER_ROOT_PATH + "/xyf/xyfUser/wx/accountBind.htm",
+                    data: {xiamiAccount: xiamiId, xiamiPassword: xiamiPassword,xiamiStatus:1},
+                    dataType: "json",
+                    success: function (result) {
+                    	if(result.success){
+                    		window.location.href = 'bangding.html';
+                    	}else{
+                    		alert('账号密码不匹配');
+                    	}
+                        
+                    }
+                   
+                }); 
+            }
+        });
+
+   
+</script>

@@ -1,0 +1,118 @@
+input,textarea{font-size: 13px !important;}
+.btn_bg,.btn_bg_f{width:88%;height:36px;color:#fff;font-size: 14px;line-height:36px;text-align: center;display: block;margin: 10px auto;box-sizing: border-box;border-radius: 5px;}
+.btn_green{background-color: #4cb0ff;}
+input[type=datetime-local]{margin-right:0px;}
+input[readonly]{color:#888}
+em{font-style: normal}
+.box{padding:0 1vw;background-color: white;}
+.content{position: relative;font-size: 13px;overflow-x:hidden;width: 100%;}
+input.disc{-webkit-text-security: disc;text-security:disc;}
+a{outline-color: transparent !important;-webkit-tap-highlight-color: transparent;color: #4A4A4A;}
+.addimg{opacity: 0;width:100%;height: 100%;position: absolute;left:0;top:0;}
+.imglist4{/* padding:5px; */}
+.imglist4 img{border:solid 5px #fff;box-sizing: border-box;width:25%}
+.imglist3{display: flex;flex-wrap: wrap;font-size: 0;;margin-bottom: 10px;width:100%;background-color: white;clear: both;text-align:left;overflow: hidden}
+.imglist3>img,.imglist3 .img,.imglist3>img,.imglist3 .aimg{box-sizing: border-box;width:100%;height:328px!important;display: inline-block;overflow: hidden;color: red;position: relative;float: left;}
+.aimg{border: 1px dashed #d8d8d8;}
+.imglist3 .img>img{    width: 100%;position: relative;top: 50%;left:50%;-webkit-transform: translate3d(-50%,50%,0);transform: translate3d(-50%,-50%,0);display: inline-block;-webkit-appearance: none;}
+.imglist3 .img .del:after{
+	content: '\e672';font-family:"iconfont" !important; font-size:20px; font-style:normal;
+	  -webkit-font-smoothing: antialiased;   -webkit-text-stroke-width: 0.2px; 
+	  -moz-osx-font-smoothing: grayscale;position: absolute;   
+	  color: #d8d8d8;
+    border-radius: 50%;
+    border: 1xp solid #d8d8d8;
+    background: #fff;
+    line-height: 1;
+    top: 1vw;
+    right: 1vw;
+    color:#ff0000;
+    cursor:pointer;
+    }
+.imglist3 .img>span{display: inline-block;width:100%;text-align: right;position: absolute;top:0;right:0}
+.imglist3 .img>span>i{font-size: 50px;color:#aaa;text-align: center;line-height: 75px;}
+.imglist3 .aimg>span{display: inline-block;width:100%;text-align: center;height:328px!important;}
+.imglist3 .aimg>span>i{font-size: 30px;color:#aaa;vertical-align: middle;line-height:328px!important;}
+.imglist3+canvas{display: none}
+.clearfix{clear: both ;overflow: hidden;}
+.textarea{padding:4vw 2.3vw;resize: none;border:none;line-height:22px;color:#343434;width:100%;box-sizing: border-box;font-family: 微软雅黑;outline: none;height:56vw;}
+.tabs .row{line-height:50px; border-bottom:1px solid #eaeaea;}
+.tabs .col-md-2{font-family:simhei;color:#1C7ED7;font-size: 15px;font-weight:bold;font-size:21px;}
+.upload-button{width:500px;height:328px;margin:60px auto;background-color:#fff;padding:0;position:relative; text-align:center;line-height:328px;}
+.upload-button i{font-size:50px;vertical-align:middle!important;}
+.upload-button input{opacity:0; cursor:pointer;width:100%;height:328px!important; position:absolute;top:0px;left:0px;z-index:3;}
+.ul-text{width:100%;height:100%; position:absolute;top:0px;left:0px;z-index:2;}
+#submit{ cursor:pointer;}
+#submit:hover,#submit:focus{color:#fff;text-decoration:none;}
+
+/* --- EASYDROPDOWN DEFAULT THEME --- */
+/* PREFIXED CSS */
+.dropdown,
+.dropdown div,
+.dropdown li,
+.dropdown div::after{-webkit-transition: all 150ms ease-in-out;-moz-transition: all 150ms ease-in-out;-ms-transition: all 150ms ease-in-out;transition: all 150ms ease-in-out;}
+.dropdown .selected::after,
+.dropdown.scrollable div::after{-webkit-pointer-events: none;-moz-pointer-events: none;-ms-pointer-events: none;pointer-events: none;}
+/* WRAPPER */
+.dropdown{position: relative;width: 160px;border: 1px solid #ccc;cursor: pointer;background: #fff;border-radius: 3px;-webkit-user-select: none;-moz-user-select: none;user-select: none;}
+.dropdown.open{z-index: 2;}
+.dropdown:hover{box-shadow: 0 0 5px rgba(0,0,0,.15);}
+.dropdown.focus{box-shadow: 0 0 5px rgba(51,102,248,.4);}
+/* CARAT */
+.dropdown .carat{position: absolute;right: 12px;top: 50%;margin-top: -4px;border: 6px solid transparent;border-top: 8px solid #000;}
+.dropdown.open .carat{margin-top: -10px;border-top: 6px solid transparent;border-bottom: 8px solid #000;}
+.dropdown.disabled .carat{border-top-color: #999;}
+/* OLD SELECT (HIDDEN) */
+.dropdown .old{position: absolute;left: 0;top: 0;height: 0;width: 0;overflow: hidden;}
+.dropdown select{position: absolute;left: 0px;top: 0px;}
+.dropdown.touch .old{width: 100%;height: 100%;}
+.dropdown.touch select{width: 100%;height: 100%;opacity: 0;}
+/* SELECTED FEEDBACK ITEM */
+.dropdown .selected,.dropdown li{display: block;font-size: 18px;line-height: 1;color: #000;padding: 9px 12px;overflow: hidden;white-space: nowrap;font-size: 14px;}
+.dropdown.disabled .selected{color: #999;}
+.dropdown .selected::after{content: '';position: absolute;right: 0;top: 0;bottom: 0;width: 60px;border-radius: 0 2px 2px 0;box-shadow: inset -55px 0 25px -20px #fff;}
+/* DROP DOWN WRAPPER */
+.dropdown div{position: absolute;height: 0;left: -1px;right: -1px;top: 100%;margin-top: -1px;background: #fff;border: 1px solid #ccc;border-top: 1px solid #eee;border-radius: 0 0 3px 3px;overflow: hidden;opacity: 0;}
+/* Height is adjusted by JS on open */
+.dropdown.open div{opacity: 1;z-index: 2;}
+/* FADE OVERLAY FOR SCROLLING LISTS */
+.dropdown.scrollable div::after{content: '';position: absolute;left: 0;right: 0;bottom: 0;height: 50px;box-shadow: inset 0 -50px 30px -35px #fff;}
+.dropdown.scrollable.bottom div::after{opacity: 0;}
+/* DROP DOWN LIST */
+.dropdown ul{position: absolute;left: 0;top: 0;height: 100%;width: 100%;list-style: none;overflow: hidden;padding:0;}
+.dropdown.scrollable.open ul{overflow-y: auto;}
+/* DROP DOWN LIST ITEMS */
+.dropdown li{list-style: none;padding: 8px 12px;}
+/* .focus class is also added on hover */
+.dropdown li.focus{background: #d24a67;position: relative;z-index: 3;color: #fff;}
+.dropdown li.active{font-weight: 700;}
+
+
+.xiaoli{width:100%;height:auto;float:left;}
+.setTerm{width:50%;float:left;margin-top:16px;font-size:14px;}
+a#save{display:inline-block;width:70px;height:32px;float:right;border-radius:4px; background-color:#40d0a7;color:#fff;text-align:center;line-height:32px;}
+.select-btn{width:140px!important;height:30px!important;}
+.select-btn span.caret{float:right;margin-top:7px;}
+.is-years{width:140px;}
+.setTerm .dropdown{float:left;}
+.set-term{width:95%;height:274px;float:left;background-color:#f6f6f6;margin-top:15px;padding-top:70px;padding-left:5%;}
+.set-term ul{margin:0 0 0 0;padding:0 0 0 0;float:left;list-style:none;}
+.set-term ul li{width:100%;height:40px;}
+.table-condensed{width:100%;background-color:#f4f4f4;}
+.table-condensed>tbody>tr>td{cursor: pointer;}
+.table-condensed>thead>tr>th.next{text-align:right;}
+.table-condensed>thead>tr>th.datepicker-switch{text-align:center;}
+.table-condensed>tbody>tr>td{font-size:12px;background-color:#fff;}
+.table-condensed tr td span.year,.table-condensed tr td span.month{padding:3px 5px;}
+.input-group .form-control{width:200px!important;float:none!important;}
+.input-group-addon{width:auto!important;border-left:none;border-right:none;}
+.dropdown-menu{width:200px;}
+
+.add-event{width:100%;height:100%;float:left;}
+.calendar-context-menu{width:200px;height:auto!important;}
+.calendar-context-menu .submenu{width:150px;}
+.modal{background-color:rgba(255,255,255,0.2)!important;}
+.modal-dialog{margin-top:21%;}
+
+
+

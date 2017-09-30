@@ -1,0 +1,113 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Access-Control-Allow-Origin" content="*">
+<meta name="keywords" content="微门户-登录" />
+<title>微门户-登录</title>
+<link rel="stylesheet"	href="<%=request.getContextPath()%>/resource/wmh/web/commons/css/css.css">
+<script src="http://cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var d,w,h,o;
+		d=document.documentElement;
+		w=d.clientWidth;
+		h=d.clientHeight;
+		o=$('.div');
+		o.css({left:(w-o.outerWidth())/2,top:(h-o.outerHeight())/2}).fadeIn("fast");
+	})
+</script>
+</head>
+<body>
+ 
+		 
+		<div class="div">
+			<div class="title">
+ 
+				<div class="h3"><img
+							src="<%=request.getContextPath()%>/resource/wmh/web/commons/img/logo1.png"
+							alt=""></div>
+			</div>
+			<div id="myForm" class="form">
+				<div class="main">
+					<div class="adminname">
+						<input class="password" type="text" value="原密码" name="account" id="oldPwd" style="ime-mode:disabled">
+					</div>
+					<div class="adminname">
+						<input class="password" type="text" value="请输入密码" name="pwd" id="newPwd" style="ime-mode:disabled">
+					</div>
+					<div class="adminpassword">
+						<input class="password" type="text" value="请输入密码" name="pwd" style="ime-mode:disabled">
+					</div>
+				</div>
+				<button class="login" id="resetPwd">修改密码</button>
+				<div class="find-pwd"><a href="<%=request.getContextPath()%>/find-pwd.jsp">返回登录</a></div>
+			</div>
+		</div>
+ 
+
+	<script type="text/javascript">
+	//重置input的值
+	$(".main input").each(function(){
+		var val=$(this).val();
+		$(this).focus(function(){
+			if($(this).val().indexOf("密码")!=-1){
+				$(this).val("");
+			}
+		}).blur(function(){
+			if($(this).val()==""){
+				$(this).val(val);
+			}
+		}).keyup(function(){
+			$(this).val($(this).val().replace(/[^\w\.\/]/ig,''));
+		})
+	})
+	$("#resetPwd").click(function(){
+		var oldPwd=$("#oldPwd").val();
+		var newPwd;
+		var isNull=true;
+		$(".main input").each(function(){
+			if($(this).val().indexOf("密码")!=-1){
+				isNull=false;
+				return false;
+			}
+		});
+		
+	 
+		if(isNull){
+			if($(".password").eq(1).val()==$(".password").eq(2).val()){
+				newPwd=$(".password").eq(1).val();
+				$.ajax({
+					type:"get",
+					dataType:"json",
+					cache:false,
+					url:"/wmh/userManage/web/updatePassword.htm",
+					async:false,
+					data:{
+						Param:oldPwd,
+						newPassword:newPwd
+					},
+				    success:function(data){
+				    	 if(!data.success){
+				    		  alert("原密码输入错误,请重新输入!");
+				    	 }else{
+				    		 
+				    	 }
+				    }
+				})
+			}
+			else{
+				alert("两次输入的密码不一样,请确认");
+			}
+		}else{
+			alert("请将上述信息填写完整!")
+		}
+	})
+	</script>
+</body>
+</html>

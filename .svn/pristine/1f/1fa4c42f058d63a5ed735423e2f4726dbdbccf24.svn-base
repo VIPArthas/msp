@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>好友主页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../../css/font/iconfont.css">
+    <script type="text/javascript" src="../../js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="../../js/rem.js"></script>
+	    <link rel="stylesheet" href="../../css/css.css">
+    <script type="text/javascript" src="../../js/path.js"></script>
+
+</head>
+<body style='padding-bottom:0.98rem;'>
+<section class="mycenter">
+    <div class="centerBJ"></div>
+    <div class="mymessage">
+        <div class="myphoto">
+            <img src="" alt="">
+        </div>
+        <p></p>
+        <div class="myxiangxi"><span class="mysexage girlsexage"><i class="icon iconfont icon-nan"></i><span>20</span></span><span class="mywhere"></span></div>
+    </div>
+    <div class="guan-fen">
+        <div class="myguan"><span id="woguanzhu"></span><span id="ta_hsGZ"></span></div>
+        <div class="myshuxian"></div>
+        <div class="myfen"><span id="guanzhuwo"></span><span id="GZ_tahs"></span></div>
+    </div>
+</section>
+<div class="margin"></div>
+<section class="tayuanfen">
+    <div>
+        <div class="musictitile"><i class="icon iconfont icon-taoxin"></i><span id="who_i"></span></div>
+        <div class="yuanfenzhi"><img id="myphoto" src="../../img/touxiang0.png" alt=""><img src="../../img/love.png" alt=""><img id="taphoto" src="../../img/touxiang00.png" alt=""><div><span class="yuanfenNum"></span><span>%</span></div></div>
+    </div>
+    <div class="alllike">
+        <div class="musictitile"><i class="icon iconfont icon-music"></i><span>共同喜欢的歌曲</span><span class="songNum"><span id="likenum"></span><span class="icon iconfont icon-xiangxia likeshow"></span></span></div>
+        <div class="alllikeSongs">
+        </div>
+    </div>
+    <div class="listensongs">
+        <div class="musictitile"><i class="icon iconfont icon-music"></i><span>最近听过相同的歌曲</span><span class="songNum"><span id="listennum"></span><span class="icon iconfont icon-xiangxia latelyshow"></span></span></div>
+        <div class="lately-songs">        
+        </div>
+    </div>
+</section>
+<div class="friendawhat">
+    <div class="friend-guanzhu" onclick="addattention($(this))"><span class="icon iconfont icon-jiahao"></span><span></span></div>
+    <div class="myshuxian"></div>
+    <div class="friend-liao" onclick='friend_liao()'><span class="icon iconfont icon-xiaoxi"></span><span id='talkwith'>聊一下</span></div>
+</div>
+</body>
+</html>
+
+<script>
+//    localStorage.setItem('someonezhuye',this.getAttribute('data-userid'));
+var someonezhuye = localStorage.getItem('someonezhuye');
+    $.ajax({
+        type: "GET",
+        url: SERVER_ROOT_PATH + "/xyf/xyfUser/wx/OtherHomePage.htm",
+        data:{toUserId:someonezhuye},
+        dataType: "json",
+        success: function (result) {
+        	console.log(result);
+            localStorage.setItem('someonemessage',JSON.stringify(result));
+            var headphoto = document.querySelector('.myphoto img');
+            headphoto.src = result.obj.headimage;
+            document.querySelector('#taphoto').src = result.obj.headimage;
+            document.querySelector('#myphoto').src = result.obj.myHeadImage;
+            var nickname = document.querySelector('p');
+            nickname.innerHTML = result.obj.nick_name;
+            var sexage = document.querySelector('.mysexage');
+            var sexagei = document.querySelector('.mysexage .iconfont');
+            if(result.obj.gender == 1){
+                sexage.className = 'mysexage boysexage';
+                sexagei.className = 'icon iconfont icon-nan';
+                document.querySelector('#ta_hsGZ').innerHTML = '他的关注';
+                document.querySelector('#GZ_tahs').innerHTML = '关注他的';
+                document.querySelector('#who_i').innerHTML = '我和他的缘分';
+            }else {
+                sexage.className = 'mysexage girlsexage';
+                sexagei.className = 'icon iconfont icon iconfont icon-iconfontshouyezhuyetubiao07';
+                document.querySelector('#ta_hsGZ').innerHTML = '她的关注';
+                document.querySelector('#GZ_tahs').innerHTML = '关注她的';
+                document.querySelector('#who_i').innerHTML = '我和她的缘分';
+
+            }
+            var age = document.querySelector('.mysexage span');
+            age.innerHTML = result.obj.age;
+            document.querySelector('.mywhere').innerHTML = result.obj.address;
+            document.querySelector('#woguanzhu').innerHTML = result.obj.gznum;
+            document.querySelector('#guanzhuwo').innerHTML = result.obj.ungznum;
+            document.querySelector('.yuanfenNum').innerHTML = Number(result.obj.yfPercent).toFixed(2);
+
+
+            if(result.obj.loveSongsCount){
+                document.querySelector('#likenum').innerHTML = result.obj.loveSongsCount + '首';
+            }else{
+                document.querySelector('#likenum').innerHTML = '0首';
+            }
+            if(result.obj.lateListenedSongsCount){
+                document.querySelector('#listennum').innerHTML = result.obj.lateListenedSongsCount + '首';
+            }else{
+                document.querySelector('#listennum').innerHTML = '0首';
+
+            }
+            if(result.obj. gzStatus == 1){
+            	$('.friend-guanzhu').attr('onclick','attentioned($(this))').html('<span class="icon iconfont icon-duihao" style="font-size: 0.2rem"></span><span>已关注</span>');
+            }else{
+            	$('.friend-guanzhu').attr('onclick','addattention($(this))').html('<span class="icon iconfont icon-jiahao"></span><span>加关注</span>')
+            }
+       
+            
+        }
+    });
+
+    function attentioned(th) {
+        th.attr('onclick','addattention($(this))').html('<span class="icon iconfont icon-jiahao"></span><span>加关注</span>')
+        $.ajax({
+            type: "GET",
+            url: SERVER_ROOT_PATH + "/xyf/xyfGz/wx/cancelGz.htm",
+            data: {gzUserId:someonezhuye},
+            dataType: "json",
+            success: function (result) {
+                console.log('66655')
+            }
+
+        });
+
+    }
+    function addattention(th) {
+        th.attr('onclick','attentioned($(this))').html('<span class="icon iconfont icon-duihao" style="font-size: 0.2rem"></span><span>已关注</span>')
+        $.ajax({
+            type: "GET",
+            url: SERVER_ROOT_PATH + "/xyf/xyfGz/wx/GzUser.htm",
+            data: {gzUserId:someonezhuye},
+            dataType: "json",
+            success: function (result) {
+                console.log('6668855')
+
+            }
+
+        });
+    }
+    function friend_liao(){
+    	localStorage.setItem('talksomeone',someonezhuye);
+        
+        window.location.href='../liaoyixai/talking.html'; 
+    }
+    
+   
+     $('.myguan').click(function () {
+    	window.location.href = 'taattention.html'
+    })
+     $('.myfen').click(function () {
+    	 window.location.href = 'attentionta.html'
+    })
+
+$(function () {
+    var jiantou = 1;
+    var jiantou1 = 1;
+    $('.likeshow').click(function () {
+        var musiclike =  JSON.parse(localStorage.getItem('someonemessage'));
+        var songs = document.querySelector('.alllikeSongs');
+        if(musiclike.attributes.xyfLovedSongList) {
+            for (var i = 0; i < musiclike.attributes.xyfLovedSongList.length; i++) {
+                var divsong = document.createElement('div');
+                divsong.className = 'likesong-li';
+                    divsong.innerHTML = '<img src=' + musiclike.attributes.xyfLovedSongList[i].picurl + ' alt=""><section class="like-music">'
+                            + '<div class="music-message"><div class="music-name">' + musiclike.attributes.xyfLovedSongList[i].songName + '</div><div class="music-singer">' + musiclike.attributes.xyfLovedSongList[i].singer + '</div></div></section>';
+                songs.appendChild(divsong);
+            }
+        }
+
+        if(jiantou == 1){
+            $(this).removeClass('icon-xiangxia').addClass('icon-xiangshang');
+            jiantou = 0
+        }else {
+            $(this).removeClass('icon-xiangshang').addClass('icon-xiangxia');
+            jiantou = 1
+        }
+        $('.alllikeSongs').toggleClass('alllikeSongsshow')
+
+    });
+    $('.latelyshow').click(function () {
+        var musiclisten =  JSON.parse(localStorage.getItem('someonemessage'));
+        var listensongs = document.querySelector('.lately-songs');
+        if(musiclisten.attributes.xyfListenedSongList) {
+            for (var i = 0; i < musiclisten.attributes.xyfListenedSongList.length; i++) {
+                var divsong = document.createElement('div');
+                divsong.className = 'likesong-li';
+                divsong.innerHTML = '<img src=' + musiclisten.attributes.xyfListenedSongList[i].picurl + ' alt=""><section class="like-music">'
+                        + '<div class="music-message"><div class="music-name">' + musiclisten.attributes.xyfListenedSongList[i].songName + '</div><div class="music-singer">' + musiclisten.attributes.xyfListenedSongList[i].singer + '</div></div></section>';
+                listensongs.appendChild(divsong);
+            }
+        }
+
+        if(jiantou1 == 1){
+            $(this).removeClass('icon-xiangxia').addClass('icon-xiangshang');
+            jiantou1 = 0
+        }else {
+            $(this).removeClass('icon-xiangshang').addClass('icon-xiangxia');
+            jiantou1 = 1
+        }
+        $('.lately-songs').toggleClass('alllikeSongsshow')
+    })
+   
+})
+
+</script>

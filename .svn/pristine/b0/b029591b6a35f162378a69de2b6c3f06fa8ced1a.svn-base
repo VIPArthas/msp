@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>缘分列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../../css/font/iconfont.css">
+    <script type="text/javascript" src="../../js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="../../js/rem.js"></script>
+    <link rel="stylesheet" href="../../css/ceshi.css">
+    <script type="text/javascript" src="../../js/path.js"></script>
+
+</head>
+<body>
+<p class="yuanfen-list">缘分值列表展示</p>
+<div class="valueshow">
+    
+</div>
+</body>
+</html>
+
+<script>
+ $.ajax({
+    type: "GET",
+    url: SERVER_ROOT_PATH + "/xyf/xyfUser/wx/getTopTenFateUser.htm",
+    dataType: "json",
+    success: function (result) {
+        if(result.success){
+            var bo = document.querySelector('.valueshow');
+            if(result.obj){
+            	console.log(result);
+                for (var i = 0; i < result.obj.length; i++) {
+                	console.log(Number(result.obj[i].fateRate));
+                    result.obj[i].fateRate = Number(result.obj[i].fateRate).toFixed(2);
+                    var list = document.createElement('div');
+                    list.className = 'valuecontent';
+                    list.innerHTML = '<div>' + result.obj[i].xyfUser + '</div><div>' + result.obj[i].otherUser + '</div><div>' + result.obj[i].fateRate + '%</div>'
+                    bo.appendChild(list);
+                }
+
+                
+
+            }
+        }
+
+    }
+
+}); 
+
+
+</script>

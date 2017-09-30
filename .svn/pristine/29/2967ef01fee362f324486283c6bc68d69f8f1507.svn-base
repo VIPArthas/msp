@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.wchat.TbWchatuserMapper" >
+	<resultMap type="java.util.Map" id="tbWchatuserMap">
+	</resultMap>
+  <resultMap id="BaseResultMap" type="com.wh.entity.TbWchatuser" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="openId" property="openid" jdbcType="VARCHAR" />
+    <result column="platform_id" property="platformId" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="headImg" property="headImg" jdbcType="VARCHAR"/>
+    <result column="nickName" property="nickName" jdbcType="VARCHAR"/>
+    <result column="address_province" property="addressProvince" jdbcType="VARCHAR"/>
+    <result column="address_city" property="addressCity" jdbcType="VARCHAR"/>
+    <result column="address_area" property="addressArea" jdbcType="VARCHAR"/>
+    <result column="address_detail" property="addressDetail" jdbcType="VARCHAR"/>
+    <result column="address_lng" property="addressLng" jdbcType="DOUBLE" />
+    <result column="address_lat" property="addressLat" jdbcType="DOUBLE" />
+    
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, createTime, openId, platform_id, source, status, user_id, nickName, headImg
+  </sql>
+  
+  <select id="queryUserIdList" resultType="java.lang.String" parameterType="com.wh.entity.TbUser">
+  	SELECT u.id FROM tb_user u WHERE 1=1 AND u.createTime 
+  	<if test="startDate !='' and startDate !=null and endDate !=null and  endDate !=''">
+		BETWEEN #{startDate} AND #{endDate}
+	</if>  	
+  </select>
+  
+  
+  
+  <select id="selectUserRouteListPage" resultType="java.util.Map" parameterType="com.wh.dto.UserRouteDto">
+  	SELECT * FROM user_route ur WHERE ur.status = 0
+  	<if test="userId !=null and userId.size()>0">
+  	and	ur.user_id in 
+	  	<foreach item="item" index="index" collection="userId"
+	               open="(" separator="," close=")">
+	        #{item}
+	     </foreach>
+     </if>
+  </select>
+  
+  <select id="selectRegistFromList" parameterType="com.wh.dto.SourceInfoDto" resultType="com.wh.dto.SourceInfoDto">
+  	select * from (
+  			SELECT 
+			CASE wu.source WHEN '0' THEN '关注来源未知'
+			WHEN '1' THEN '微信学生平台'
+			WHEN 'qrscene_yunying_1' THEN '企业平台-QQ群推广'
+			WHEN 'qrscene_yunying_4' THEN '企业平台-论坛推广'
+			WHEN 'qrscene_yunying_3' THEN '企业平台-朋友圈推广'
+			WHEN 'qrscene_yunying_5' THEN '企业平台-贴吧推广'
+			WHEN 'qrscene_yunying' THEN '企业平台-1500停车卡'
+			WHEN 'qrscene_stuyunying_1' THEN '学生服务号-猪八戒微信群'
+			WHEN 'qrscene_stuyunying_2' THEN '学生服务号-猪八戒QQ群'
+			WHEN 'qrscene_stuyunying_3' THEN '学生服务号-5000停车卡'
+			WHEN 'qrscene_stuyunying_123' THEN '学生服务号-倪总专用'
+			ELSE wu.source END 'qRcodeName',
+			CASE wu.`platform_id` 
+			WHEN '0' THEN '平台名称未知'
+			WHEN '1' THEN '校联网服务号'
+			WHEN '2' THEN '高校平台服务号'
+			WHEN '3' THEN '企业服务号'
+			ELSE wu.platform_id END 'sourceName',
+			CASE WHEN u.`id` IS NULL THEN '没有注册'
+			WHEN u.`source` = '29' THEN '私家车999'
+			WHEN u.`source` = '20' THEN '网页直接注册'
+			WHEN u.`source` = '21' THEN '安卓注册'
+			WHEN u.`source` = '22' THEN '服务号注册'
+			WHEN u.`source` = '23' THEN '企业号注册'
+			WHEN u.`source` = '23' THEN '订阅号注册'
+			WHEN u.`source` = '10' THEN '人岗匹配注册'
+			ELSE '注册来源未知' END 'registSource',u.source,u.mobile,wu.platform_id
+			FROM tb_wchatuser wu 
+			LEFT JOIN tb_user u ON wu.`user_id` = u.`id` 
+		 WHERE 1 = 1
+		<if test="startTime !='' and startTime !=null and endTime !=null and  endTime !=''">
+			AND u.createTime BETWEEN #{startTime} AND  #{endTime} 
+		</if>
+		<if test="mobile != '' and mobile != null">
+			AND u.mobile like concat('%',#{mobile}, '%')
+		</if>
+		<if test="sourceName != '' and sourceName != null">
+			AND wu.platform_id = #{sourceName}
+		</if>
+		
+  		)E where 1= 1
+		<if test="registSource != '' and registSource != null">
+			and E.source = #{registSource}
+		</if>
+		ORDER BY E.platform_id
+  </select>
+  
+  
+  <select id="selectRegistFromListPage" parameterType="com.wh.dto.SourceInfoDto" resultMap="tbWchatuserMap">
+  		select * from (
+  			SELECT 
+			CASE wu.source WHEN '0' THEN '关注来源未知'
+			WHEN '1' THEN '微信学生平台'
+			WHEN 'qrscene_yunying_1' THEN '企业平台-QQ群推广'
+			WHEN 'qrscene_yunying_4' THEN '企业平台-论坛推广'
+			WHEN 'qrscene_yunying_3' THEN '企业平台-朋友圈推广'
+			WHEN 'qrscene_yunying_5' THEN '企业平台-贴吧推广'
+			WHEN 'qrscene_yunying' THEN '企业平台-1500停车卡'
+			WHEN 'qrscene_stuyunying_1' THEN '学生服务号-猪八戒微信群'
+			WHEN 'qrscene_stuyunying_2' THEN '学生服务号-猪八戒QQ群'
+			WHEN 'qrscene_stuyunying_3' THEN '学生服务号-5000停车卡'
+			WHEN 'qrscene_stuyunying_123' THEN '学生服务号-倪总专用'
+			ELSE wu.source END 'qRcodeName',
+			CASE wu.`platform_id` 
+			WHEN '0' THEN '平台名称未知'
+			WHEN '1' THEN '校联网服务号'
+			WHEN '2' THEN '高校平台服务号'
+			WHEN '3' THEN '企业服务号'
+			ELSE wu.platform_id END 'sourceName',
+			CASE WHEN u.`id` IS NULL THEN '没有注册'
+			WHEN u.`source` = '29' THEN '私家车999'
+			WHEN u.`source` = '20' THEN '网页直接注册'
+			WHEN u.`source` = '21' THEN '安卓注册'
+			WHEN u.`source` = '22' THEN '服务号注册'
+			WHEN u.`source` = '23' THEN '企业号注册'
+			WHEN u.`source` = '23' THEN '订阅号注册'
+			WHEN u.`source` = '10' THEN '人岗匹配注册'
+			ELSE '注册来源未知' END 'registSource',u.source,u.mobile,wu.platform_id
+			FROM tb_wchatuser wu 
+			LEFT JOIN tb_user u ON wu.`user_id` = u.`id` 
+		 WHERE 1 = 1
+		<if test="startTime !='' and startTime !=null and endTime !=null and  endTime !=''">
+			AND u.createTime BETWEEN #{startTime} AND  #{endTime} 
+		</if>
+		<if test="mobile != '' and mobile != null">
+			AND u.mobile like concat('%',#{mobile}, '%')
+		</if>
+		<if test="sourceName != '' and sourceName != null">
+			AND wu.platform_id = #{sourceName}
+		</if>
+		
+  		)E where 1= 1
+		<if test="registSource != '' and registSource != null">
+			and E.source = #{registSource}
+		</if>
+		ORDER BY E.platform_id
+  </select>
+  
+  
+  <select id="selectSourceUserCountByCreateTimeListPage" parameterType="com.wh.dto.SourceDto" resultMap="tbWchatuserMap">
+  	SELECT * FROM (SELECT u.source,
+	CASE u.source WHEN '0' THEN '关注来源未知,私家车999或者网页直接注册'
+	WHEN '1' THEN '人岗匹配'
+	WHEN 'qrscene_yunying_1' THEN '企业平台-QQ群推广'
+	WHEN 'qrscene_yunying_4' THEN '企业平台-论坛推广'
+	WHEN 'qrscene_yunying_3' THEN '企业平台-朋友圈推广'
+	WHEN 'qrscene_yunying_5' THEN '企业平台-贴吧推广'
+	WHEN 'qrscene_yunying' THEN '企业平台-1500停车卡'
+	WHEN 'qrscene_stuyunying_1' THEN '学生服务号-猪八戒微信群'
+	WHEN 'qrscene_stuyunying_2' THEN '学生服务号-猪八戒QQ群'
+	WHEN 'qrscene_stuyunying_3' THEN '学生服务号-5000停车卡'
+	WHEN 'qrscene_stuyunying_123' THEN '学生服务号-倪总专用'
+	ELSE u.source END sourceName,
+	COUNT( u.id) userCount,COUNT(u.user_id) registerCount
+	FROM tb_wchatuser u 
+	WHERE 1=1 
+	<if test="startDate !='' and startDate!=null and endDate !=null and endDate!=''">
+		AND u.createTime BETWEEN #{startDate} AND  #{endDate} 
+	</if>
+	GROUP BY u.source) aa 
+  </select>
+
+	<!--全网兼职用户统计，关注数量和注册数量-->
+	<select id="selectOpenIdAndUserIdCount" parameterType="com.wh.dto.SourceDto" resultMap="tbWchatuserMap">
+
+
+		SELECT
+		count(DISTINCT tw.openId) open_id_count,
+		COUNT(DISTINCT tw.user_id) user_id_count,
+		(
+		SELECT
+			COUNT(DISTINCT ul.open_id)
+		FROM
+			tb_wchatuser t
+		LEFT JOIN user_logs ul ON ul.open_id = t.openId
+		WHERE
+			t.platform_id=1
+			AND t.`status`=1
+		<if test="startOperateTime != null and startOperateTime !='' and endOperateTime != null and endOperateTime!=''">
+			AND ul.operate_time BETWEEN #{startOperateTime} AND  #{endOperateTime}
+		</if>
+		) active_count
+		FROM
+			tb_wchatuser tw
+		WHERE
+			tw.platform_id = 1
+		<if test="startDate!=null and startDate !='' and endDate !=null and endDate!=''">
+			AND tw.createTime BETWEEN #{startDate} AND  #{endDate}
+		</if>
+	</select>
+
+	<!-- 运营推广列表数据查询,关注数量，注册数量，全网兼职（jzxx）的活跃数量， -->
+	<select id="selectYytgList" parameterType="com.wh.dto.SourceDto" resultMap="tbWchatuserMap">
+		SELECT * FROM (
+		SELECT
+		count(DISTINCT tw.openId) open_id_count,
+		COUNT(DISTINCT tw.user_id) user_id_count,
+		source,
+		(
+		SELECT
+		COUNT(DISTINCT twu.openId)
+		FROM
+		tb_wchatuser twu
+		WHERE
+		twu.source=tw.source AND
+		twu.openId in (
+		SELECT DISTINCT
+			ul.open_id
+		FROM
+			active_user_logs ul
+		WHERE
+			ul.open_id IS NOT NULL and ul.operate_model='jzxx'
+		<if test="startOperateTime!=null and startOperateTime !='' and endOperateTime !=null and endOperateTime!=''">
+			AND ul.create_time BETWEEN #{startOperateTime} AND  #{endOperateTime}
+		</if>
+		GROUP BY ul.open_id
+			)
+		) active_by_source
+		FROM
+			tb_wchatuser tw
+		WHERE
+		tw.platform_id = 1
+		<if test="startDate!=null and startDate !='' and endDate !=null and endDate!=''">
+			AND tw.createTime BETWEEN #{startDate} AND  #{endDate}
+		</if>
+		GROUP BY
+		tw.source
+		)a
+	</select>
+	
+  <!-- 运营推广列表数据查询 -->
+  <!--<select id="selectYytgListPage" parameterType="com.wh.dto.SourceDto" resultMap="tbWchatuserMap">
+  	SELECT
+	  *
+	FROM
+	  (SELECT
+	  	wu.source,
+	    CASE
+	      wu.source
+	      WHEN '0'
+	      THEN '关注来源未知'
+	      WHEN '1'
+	      THEN '微信学生平台'
+	      WHEN 'qrscene_yunying_1'
+	      THEN '企业平台-QQ群推广'
+	      WHEN 'qrscene_yunying_4'
+	      THEN '企业平台-论坛推广'
+	      WHEN 'qrscene_yunying_3'
+	      THEN '企业平台-朋友圈推广'
+	      WHEN 'qrscene_yunying_5'
+	      THEN '企业平台-贴吧推广'
+	      WHEN 'qrscene_yunying'
+	      THEN '企业平台-1500停车卡'
+	      WHEN 'qrscene_stuyunying_1'
+	      THEN '学生服务号-猪八戒微信群'
+	      WHEN 'qrscene_stuyunying_2'
+	      THEN '学生服务号-猪八戒QQ群'
+	      WHEN 'qrscene_stuyunying_3'
+	      THEN '学生服务号-5000停车卡'
+	      WHEN 'qrscene_stuyunying_123'
+	      THEN '学生服务号-倪总专用'
+	      ELSE wu.source
+	    END 'qRcodeName',
+	    CASE
+	      wu.`platform_id`
+	      WHEN '0'
+	      THEN '平台名称未知'
+	      WHEN '1'
+	      THEN '校联网服务号'
+	      WHEN '2'
+	      THEN '高校平台服务号'
+	      WHEN '3'
+	      THEN '企业服务号'
+	      ELSE wu.platform_id
+	    END 'sourceName',
+	    CASE
+	      WHEN u.`id` IS NULL
+	      THEN '没有注册'
+	      WHEN ur.`register_source` = '29'
+	      THEN '私家车999'
+	      WHEN ur.`register_source` = '20'
+	      THEN '网页直接注册'
+	      WHEN ur.`register_source` = '21'
+	      THEN '安卓注册'
+	      WHEN ur.`register_source` = '22'
+	      THEN '服务号注册'
+	      WHEN ur.`register_source` = '23'
+	      THEN '企业号注册'
+	      WHEN ur.`register_source` = '23'
+	      THEN '订阅号注册'
+	      WHEN ur.`register_source` = '10'
+	      THEN '人岗匹配注册'
+	      WHEN ur.`register_source` = 'jzxx'
+	      THEN '兼职信息'
+	      WHEN ur.`register_source` = 'xlcp'
+	      THEN '兼职信息'
+	      WHEN ur.`register_source` = 'common'
+	      THEN '直接注册'
+	      ELSE '注册来源未知'
+	    END 'registSource',
+	    ur.register_source,
+	    u.phone,
+	    wu.platform_id,
+	    wu.openId,
+	    u.id user_id,
+	    COUNT(wu.id) userCount,
+	    COUNT(wu.user_id) registerCount
+	  FROM
+	    tb_wchatuser wu
+	    LEFT JOIN user u
+	      ON wu.`user_id` = u.`id`
+	    LEFT JOIN `user_register` ur
+	      ON u.id = ur.user_id
+	  WHERE 1 = 1
+	<if test="startDate!=null and startDate !='' and endDate !=null and endDate!=''">
+		AND wu.createTime BETWEEN #{startDate} AND  #{endDate}
+	</if>
+	GROUP BY wu.source) aa
+  </select>-->
+  
+  <!--  活跃用户详情 -->
+  <!--<select id="selectActiveUserListPage" resultMap="tbWchatuserMap"  parameterType="com.wh.dto.SourceDto">
+  	SELECT 
+      * 
+    FROM
+      tb_wchatuser 
+    WHERE openId IN 
+      (SELECT DISTINCT 
+        open_id 
+      FROM
+        `user_logs` ul 
+      WHERE ul.open_id IN
+        (SELECT openId FROM
+          tb_wchatuser 
+        WHERE source = #{source}  
+        )
+        <if test="startOperateTime != null and startOperateTime !='' and endOperateTime != null and endOperateTime!=''">
+          AND ul.operate_time BETWEEN #{startOperateTime} AND #{endOperateTime}
+        </if> 
+        ) 
+        <if test="startDate!=null and startDate !='' and endDate !=null and endDate!=''">
+          and createTime BETWEEN #{startDate} AND #{endDate}
+        </if>
+         order by createTime desc
+  </select>-->
+
+
+	<select id="selectActiveUserListPage" resultMap="tbWchatuserMap"  parameterType="com.wh.dto.SourceDto">
+		select a.* from (
+			SELECT
+			tw.nickName nick_name,
+			tw.openId,
+			tw.address_detail w_address,
+			ju.address_detail b_address,
+			ju.ip_address i_address,
+			ju.operate_ip operate_ip,
+			tw.createTime,
+			MAX(ul.operate_time) max_operate_time,
+			min(ul.operate_time) min_operate_time
+			FROM
+			tb_wchatuser tw
+			LEFT JOIN jz_user ju ON ju.open_id = tw.openId
+			LEFT JOIN user_logs ul ON ul.open_id=ju.open_id and ul.log_model='jzxx'
+			WHERE 1=1
+			<if test='source != null and source != ""'>
+			and tw.source = #{source}
+			</if>
+
+			<if test="startDate!=null and startDate !='' and endDate !=null and endDate!=''">
+				and tw.createTime &gt;= #{startDate} AND tw.createTime &lt; #{endDate}
+			</if>
+			<if test="startOperateTime != null and startOperateTime !='' and endOperateTime != null and endOperateTime!=''">
+				AND ul.operate_time &gt;=#{startOperateTime} AND ul.operate_time &lt; #{endOperateTime}
+			</if>
+			GROUP BY tw.openId
+		) a
+	</select>
+  
+  <!-- 推广监控列表数据查询 -->
+  <select id="selectTgjkListPage" parameterType="com.wh.dto.SourceDto" resultMap="tbWchatuserMap">
+
+	  SELECT * FROM (
+	  	SELECT
+	  		COUNT(openId) focuseCount,
+		  (
+		  SELECT
+		  	COUNT(t1.openId)
+		  FROM
+		 	 tb_wchatuser t1
+		  WHERE
+		  	t1.source = tw.source
+			  AND t1.address_province = '河南省'
+			  AND t1.platform_id = 1
+			  AND t1.`status` = 1
+			  <if test="startDate!=null and startDate !='' and endDate !=null and endDate!=''">
+				  AND t1.createTime BETWEEN #{startDate} AND  #{endDate}
+			  </if>
+		  ) provinceCount,
+	  (
+	  SELECT
+	  	COUNT(t2.openId)
+	  FROM
+	 	 tb_wchatuser t2
+	  WHERE
+		  t2.source = tw.source
+		  AND t2.address_city = '郑州市'
+		  AND t2.platform_id = 1
+		  AND t2.`status` = 1
+		  <if test="startDate!=null and startDate !='' and endDate !=null and endDate!=''">
+			  AND t2.createTime BETWEEN #{startDate} AND  #{endDate}
+		  </if>
+	  ) cityCount,
+	  tw.source source
+	  FROM
+	  	tb_wchatuser tw
+	  WHERE
+	  	tw.platform_id = 1
+	  	AND tw.`status` = 1
+	  <if test="startDate!=null and startDate !='' and endDate !=null and endDate!=''">
+		  AND tw.createTime BETWEEN #{startDate} AND  #{endDate}
+	  </if>
+	  GROUP BY
+	 	 tw.source
+	  )a
+  </select>
+  
+  <select id="selectCount" parameterType="com.wh.dto.SourceDto" resultMap="tbWchatuserMap">
+	  	SELECT COUNT(1) FROM tb_wchatuser wu
+		WHERE 1 = 1 AND wu.status = 1
+	  <if test="source != null and source != ''">
+	  	AND wu.source = #{source}
+	  </if>
+	  <if test="addressProvince != null and addressProvince != ''">
+	  	AND wu.address_province = #{addressProvince}
+	  </if>
+	  <if test="addressCity != null and addressCity != ''">
+	  	AND wu.address_city = #{addressCity}
+	  </if>
+	  <if test="startDate!=null and startDate !='' and endDate !=null and endDate!=''">
+		AND wu.createTime BETWEEN #{startDate} AND  #{endDate}
+	  </if>
+
+
+	  <!-- GROUP BY wu.source -->
+  </select>
+  
+  	<!-- 运营推广详情页面数据查询 -->
+  <select id="selectDetailsListPage" parameterType="com.wh.dto.SourceDto" resultMap="tbWchatuserMap">
+  	SELECT 
+	  * 
+	FROM
+	  (SELECT 
+	    CASE
+	      wu.source 
+	      WHEN '0' 
+	      THEN '关注来源未知' 
+	      WHEN '1' 
+	      THEN '微信学生平台' 
+	      WHEN 'qrscene_yunying_1' 
+	      THEN '企业平台-QQ群推广' 
+	      WHEN 'qrscene_yunying_4' 
+	      THEN '企业平台-论坛推广' 
+	      WHEN 'qrscene_yunying_3' 
+	      THEN '企业平台-朋友圈推广' 
+	      WHEN 'qrscene_yunying_5' 
+	      THEN '企业平台-贴吧推广'
+	      WHEN 'qrscene_yunying' 
+	      THEN '企业平台-1500停车卡' 
+	      WHEN 'qrscene_stuyunying_1' 
+	      THEN '学生服务号-猪八戒微信群' 
+	      WHEN 'qrscene_stuyunying_2' 
+	      THEN '学生服务号-猪八戒QQ群' 
+	      WHEN 'qrscene_stuyunying_3' 
+	      THEN '学生服务号-5000停车卡' 
+	      WHEN 'qrscene_stuyunying_123' 
+	      THEN '学生服务号-倪总专用' 
+	      ELSE wu.source 
+	    END 'qRcodeName',wu.createTime,wu.address_province,
+	    wu.address_city,
+	    wu.address_detail,wu.nickName
+	  FROM
+	    tb_wchatuser wu WHERE 1 = 1 AND wu.status = 1
+	<if test="startDate!=null and startDate !='' and endDate !=null and endDate!=''">
+		AND wu.createTime BETWEEN #{startDate} AND  #{endDate} 
+	</if>
+	<if test="source != null and source != ''">
+	  	AND wu.source = #{source}
+	 </if>
+	  <if test="addressProvince != null and addressProvince != ''">
+	  	AND wu.address_province = #{addressProvince}
+	  </if>
+	  <if test="addressCity != null and addressCity != ''">
+	  	AND wu.address_city = #{addressCity}
+	  </if>
+	) aa
+  </select>
+
+
+<!--查询没有资料的用户-->
+	<select id="queryNoMemberInfo" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_wchatuser
+		where status=1 and (headImg is NULL or nickName is NULL) order by createTime DESC
+		limit 0,20;
+	</select>
+
+
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"  parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wchatuser
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <!--根据微信OpenId获得微信用户信息-->
+  <select id="findWchatuserByOpenId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    *
+    from tb_wchatuser
+    where openId = #{openId,jdbcType=VARCHAR}
+  </select>
+  <!--根据微信OpenId获得微信用户信息-->
+  <select id="queryByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_wchatuser
+    where user_id = #{user_id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tb_wchatuser
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.TbWchatuser" >
+    insert into tb_wchatuser (id, createTime, openId, 
+      platform_id, source, status, 
+      user_id)
+    values (#{id,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{openid,jdbcType=VARCHAR}, 
+      #{platformId,jdbcType=VARCHAR}, #{source,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{userId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="saveTbWchatuser" parameterType="com.wh.entity.TbWchatuser" >
+    insert into tb_wchatuser
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+        createTime,
+      <if test="openid != null" >
+        openId,
+      </if>
+      <if test="platformId != null" >
+        platform_id,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+		<if test="headImg != null" >
+			headImg,
+      </if>
+		<if test="nickName != null" >
+			nickName,
+      </if>
+
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+        #{createtime},
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="platformId != null" >
+        #{platformId,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+		 <if test="headImg != null" >
+        #{headImg,jdbcType=VARCHAR},
+      </if>
+		 <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+
+
+    </trim>
+  </insert>
+
+  <update id="updateTbWchatuser" parameterType="com.wh.entity.TbWchatuser" >
+    update tb_wchatuser
+    <set >
+      <if test="headImg != null" >
+		  headImg = #{headImg,jdbcType=VARCHAR},
+      </if>
+
+      <if test="nickName != null" >
+		  nickName = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="platformId != null" >
+        platform_id = #{platformId,jdbcType=VARCHAR},
+      </if>
+       <if test="openid != null" >
+		  openId = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="addressProvince != null" >
+        address_province = #{addressProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="addressCity != null" >
+        address_city = #{addressCity,jdbcType=VARCHAR},
+      </if>
+      <if test="addressArea != null" >
+        address_area = #{addressArea,jdbcType=VARCHAR},
+      </if>
+      <if test="addressDetail != null" >
+        address_detail = #{addressDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="addressLat != null" >
+        address_lat = #{addressLat,jdbcType=DOUBLE},
+      </if>
+      <if test="addressLng != null" >
+        address_lng = #{addressLng,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateTbWchatuserById" parameterType="com.wh.entity.TbWchatuser" >
+    update tb_wchatuser
+    <set >
+      <if test="headImg != null" >
+		  headImg = #{headImg,jdbcType=VARCHAR},
+      </if>
+
+      <if test="nickName != null" >
+		  nickName = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="platformId != null" >
+        platform_id = #{platformId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.TbWchatuser" >
+    update tb_wchatuser
+    set createTime = #{createtime,jdbcType=TIMESTAMP},
+      openId = #{openid,jdbcType=VARCHAR},
+      platform_id = #{platformId,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+	<update id="updateStatusByOpenId" parameterType="com.wh.entity.TbWchatuser" >
+    update tb_wchatuser
+    set status = #{status,jdbcType=INTEGER}
+    where platform_id = '1' and status = '1'
+	<if test="openIds !=null and openIds.size()>0">
+		and openId NOT in
+		<foreach item="item" index="index" collection="openIds "
+				 open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</if>
+  </update>
+
+
+
+
+  <select id="selectWchatUserAddress" resultMap="tbWchatuserMap">
+  	SELECT b.doContent,wu.*
+	FROM tb_wchatuser wu
+	LEFT JOIN (SELECT * FROM (
+	SELECT * FROM `tb_log` WHERE doType = 'location' ORDER BY doTime
+	) a
+	GROUP BY user_id) b ON wu.`openId` = b.user_id
+	WHERE wu.`status`=1 
+	AND b.doContent IS NOT NULL
+	AND wu.`address_detail` IS NULL
+  </select>
+
+
+	<!--根据微信OpenId获得微信用户信息-->
+	<select id="searchByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select  * from tb_wchatuser 		where user_id = #{userId,jdbcType=VARCHAR} and status = 1
+	</select>
+	
+	<!-- 根据userId查询微门户用户关注状态 -->
+	<select id="selectTbWchatsuerByUserId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select status from tb_wchatuser where user_id = #{userId,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<delete id="deleteUserByUserId" parameterType="java.lang.String" >
+    delete from tb_wchatuser
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  
+  
+  <!-- 根据openId删除用户 -->
+  <delete id="deleteUserByOpenId" parameterType="java.lang.String" >
+    delete from tb_wchatuser
+    where openId = #{openId,jdbcType=VARCHAR}
+  </delete>
+  
+  	<!-- 解绑手机号,openId设置为null -->
+  	<update id="updateOpenIdNull" parameterType="java.lang.String" >
+  UPDATE tb_wchatuser SET openId =NULL WHERE openId=#{openId,jdbcType=VARCHAR}
+
+  </update>
+  
+  
+</mapper>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>我的关注</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../../css/font/iconfont.css">
+    <script type="text/javascript" src="../../js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="../../js/rem.js"></script>
+	    <link rel="stylesheet" href="../../css/css.css">
+    <script type="text/javascript" src="../../js/path.js"></script>
+    
+</head>
+<body>
+<section class="list">
+    <ul class="list-ul">
+        
+    </ul>
+</section>
+</body>
+</html>
+
+<script>
+    $.ajax({
+        type: "GET",
+        url: SERVER_ROOT_PATH + "/xyf/xyfGz/wx/myGzList.htm",
+        dataType: "json",
+        success: function (result) {
+            var ul = document.querySelector('.list-ul');
+            if(result.obj){
+            for (var i = 0; i < result.obj.length; i++) {
+                var list = document.createElement('li');
+                list.className = 'list-li';
+                if(result.obj[i].gender == 1){
+                    list.innerHTML = '<div class="con"><img class="headphoto" src=' + result.obj[i].headimage + ' alt="" data-userid=' + result.obj[i].userId + '>'
+                            + '<section class="attention-people">'
+                            + '<div class="attention-person"><div class="liao-name">' + result.obj[i].nickName + '</div><div class="attention-message boy"><i class="icon iconfont icon-nan"></i><span>' + result.obj[i].age + '</span></div></div>'
+                            + '<div class="attentioned" onclick="attentioned($(this))" data-userid=' + result.obj[i].userId + '><i class="icon iconfont icon-duihao"></i><span>已关注</span></div>'
+                            + '</section></div>';
+                }else{
+                    list.innerHTML = '<div class="con"><img class="headphoto" src=' + result.obj[i].headimage + ' alt="" data-userid=' + result.obj[i].userId + '>'
+                            + '<section class="attention-people">'
+                            + '<div class="attention-person"><div class="liao-name">' + result.obj[i].nickName + '</div><div class="attention-message girl"><i class="icon iconfont icon-iconfontshouyezhuyetubiao07"></i><span>20</span></div></div>'
+                            + '<div class="attentioned" onclick="attentioned($(this))" data-userid=' + result.obj[i].userId + '><i class="icon iconfont icon-duihao"></i><span>已关注</span></div>'
+                            + '</section></div>';
+                }
+
+                ul.appendChild(list);
+            }
+            $(".headphoto").click(function () {
+                localStorage.setItem('someonezhuye',$(this).attr('data-userid'));
+                window.location.href='../friend/friendcenter.html';
+            })
+            }else{
+            	ul.innerHTML = '<img class="empty_img" src="../../img/empty_3.jpg" alt="">';
+
+            }
+        }
+
+    });
+
+    function attentioned(th) {
+        th.attr('onclick','addattention($(this))').attr('class','addattention').html('<i class="icon iconfont icon-jiahao"></i><span>加关注</span>')
+        $.ajax({
+            type: "GET",
+            url: SERVER_ROOT_PATH + "/xyf/xyfGz/wx/cancelGz.htm",
+            data: {gzUserId:th.data('userid')},
+            dataType: "json",
+            success: function (result) {
+            	console.log('66655')
+            	
+
+            }
+
+        });
+        
+    }
+    function addattention(th) {
+        th.attr('onclick','attentioned($(this))').attr('class','attentioned').html('<i class="icon iconfont icon-duihao"></i><span>已关注</span>')
+       
+        $.ajax({
+            type: "GET",
+            url: SERVER_ROOT_PATH + "/xyf/xyfGz/wx/GzUser.htm",
+            data: {gzUserId:th.data('userid')},
+            dataType: "json",
+            success: function (result) {
+            	console.log('66644455')
+
+            }
+
+        });
+    }
+    $(function () {
+        $("#headphoto").click(function () {
+            localStorage.setItem('someonezhuye',$(this).attr('data-userid'));
+            window.location.href='../friend/friendcenter.html';
+        })
+    })
+
+</script>

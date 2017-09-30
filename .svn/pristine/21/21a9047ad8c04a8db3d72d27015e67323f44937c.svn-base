@@ -1,0 +1,101 @@
+package com.wh.util.msp;
+
+
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import com.wh.service.msp.MspUserService;
+import com.wh.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
+import com.wh.mspentity.MspUser;
+
+
+/**
+ * 工具类
+ * @author Administrator	Leo
+ *
+ */
+public class MspUtil {
+	
+	private static Logger log = LoggerFactory.getLogger(MspUtil.class);
+
+
+	public static MspUserService mspUserService;
+	
+	
+	/**
+	 * 判断一个请求是否为AJAX请求
+	 * @param request
+	 * @return
+	 * 
+	 */
+	public static boolean isAjaxRequest(HttpServletRequest request){
+		String requestType = request.getHeader("X-Requested-With");
+		if (requestType!=null && requestType.equalsIgnoreCase("XMLHttpRequest")) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 获取id
+	 * @param request
+	 * @return
+	 */
+	public static String getMspId(HttpServletRequest request){
+		String id=request.getParameter("id");
+		if (StringUtil.isEmpty(id)) {
+			id=(String) request.getSession().getAttribute("id");
+		}
+		return id;
+		
+	}
+	
+	/**
+	 * 获取userId
+	 * @param request
+	 * @return
+	 */
+	public static String getMspUserId(HttpServletRequest request){
+		String userId=request.getParameter("userId");
+		if (StringUtil.isEmpty(userId)) {
+			userId=(String) request.getSession().getAttribute("userId");
+		}
+		return userId;
+		
+	}
+	
+
+	/**
+	 * 设置移动校园平台用户
+	 * @param request
+	 * @param mspUser
+	 */
+	public static void setMspUser(HttpServletRequest request,MspUser mspUser){
+		HttpSession session = request.getSession();
+		if(mspUser!=null){
+			if(!StringUtils.isEmpty(mspUser.getId())){
+				mspUser =mspUserService.load(mspUser.getId());
+			}
+		}
+		session.setAttribute("mspUser", mspUser);
+	}
+	
+	/**
+	 * 获取移动校园平台用户
+	 * @param request
+	 * @return
+	 */
+	public static MspUser getMspUser(HttpServletRequest request){
+		HttpSession session = request.getSession();
+		MspUser mspUser = (MspUser) session.getAttribute("mspUser");
+		if(mspUser!=null){
+			mspUser = mspUserService.load(mspUser.getId());
+		} 
+		return mspUser;
+	}
+
+
+}

@@ -1,0 +1,122 @@
+package com.wh.mspentity;
+
+import java.util.Date;
+
+import com.wh.util.BaseModel;
+
+public class MspMessage extends BaseModel{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Integer id;
+
+    private String toUser;
+
+    private String toParty;
+
+    private String toTag;
+
+    private String agentId;
+
+    private String content;
+
+    private Integer safe;
+
+    private Date createTime;
+
+    private Integer wxSend;
+
+    private Integer smsSend;
+
+    private Integer mailSend;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getToUser() {
+        return toUser;
+    }
+
+    public void setToUser(String toUser) {
+        this.toUser = toUser == null ? null : toUser.trim();
+    }
+
+    public String getToParty() {
+        return toParty;
+    }
+
+    public void setToParty(String toParty) {
+        this.toParty = toParty == null ? null : toParty.trim();
+    }
+
+    public String getToTag() {
+        return toTag;
+    }
+
+    public void setToTag(String toTag) {
+        this.toTag = toTag == null ? null : toTag.trim();
+    }
+
+    public String getAgentId() {
+        return agentId;
+    }
+
+    public void setAgentId(String agentId) {
+        this.agentId = agentId == null ? null : agentId.trim();
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
+    }
+
+    public Integer getSafe() {
+        return safe;
+    }
+
+    public void setSafe(Integer safe) {
+        this.safe = safe;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Integer getWxSend() {
+        return wxSend;
+    }
+
+    public void setWxSend(Integer wxSend) {
+        this.wxSend = wxSend;
+    }
+
+    public Integer getSmsSend() {
+        return smsSend;
+    }
+
+    public void setSmsSend(Integer smsSend) {
+        this.smsSend = smsSend;
+    }
+
+    public Integer getMailSend() {
+        return mailSend;
+    }
+
+    public void setMailSend(Integer mailSend) {
+        this.mailSend = mailSend;
+    }
+}

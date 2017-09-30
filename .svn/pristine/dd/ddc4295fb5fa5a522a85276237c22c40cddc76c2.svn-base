@@ -1,0 +1,1931 @@
+package com.wh.controller.xyf;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.wh.base.AjaxJson;
+import com.wh.constants.Constants;
+import com.wh.controller.common.BaseController;
+import com.wh.entity.SmsVerify;
+import com.wh.entity.UserLogin;
+import com.wh.framework.MethodLog;
+import com.wh.service.xlwapp.SmsService;
+import com.wh.service.xlwapp.UserLoginService;
+import com.wh.service.xyf.XyfGzService;
+import com.wh.service.xyf.XyfListenedSongService;
+import com.wh.service.xyf.XyfLovedSongService;
+import com.wh.service.xyf.XyfParamService;
+import com.wh.service.xyf.XyfUserService;
+import com.wh.util.AddressUtil;
+import com.wh.util.ControllerUtils;
+import com.wh.util.HttpClient;
+import com.wh.util.LocationUtils;
+import com.wh.util.MessageCode;
+import com.wh.util.StringUtil;
+import com.wh.util.UUIDUtil;
+import com.wh.util.WebUtil;
+import com.wh.util.base.SerializeUtil;
+import com.wh.xyfentity.XyfListenedSong;
+import com.wh.xyfentity.XyfLovedSong;
+import com.wh.xyfentity.XyfParam;
+import com.wh.xyfentity.XyfUser;
+
+import net.sf.json.JSONObject;
+
+@Controller
+@RequestMapping("/xyf/xyfUser")
+public class XyfUserController extends BaseController {
+	@Resource
+	private XyfUserService xyfUserService;
+	@Resource
+	private SmsService smsService;
+	@Resource
+	private XyfListenedSongService xyfListenedSongService;
+	@Resource
+	private XyfLovedSongService xyfLovedSongService;
+	@Resource
+	private XyfGzService xyfGzService;
+	@Resource
+	private UserLoginService userLoginService;
+
+	@Resource
+	private XyfParamService xyfParamService;
+
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private static String url = Constants.XIAOYUANLOGINURL;
+
+	/**
+	 * 设置个人基本信息 birthday 能直接使用
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/userInfo.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson userInfo(HttpServletRequest req, HttpServletResponse resp, XyfUser xyfUser) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		if (xyfUser != null) {
+			//String openId = (String) req.getSession().getAttribute("openId");
+			String userId = (String) req.getSession().getAttribute("userId");
+			// openId = "okLTXtzeE9Y9qBpf6BqhIRMkd_aI";
+			// userId = "9333083dd5e84ef89dfb2254a7a469fe";
+
+			if (StringUtil.isNotEmpty(userId)) {
+
+				xyfUser.setUserId(userId);
+				flag = xyfUserService.updateByUserId(xyfUser);
+			}
+		}
+		json.setSuccess(flag);
+		return json;
+	}
+
+	/**
+	 * 修改用户信息
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param xyfUser
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/updateUserInfo.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson updateUserInfo(HttpServletRequest req, HttpServletResponse resp, XyfUser xyfUser) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+
+		/*
+		 * xyfUser.setBirthday(new Date()); xyfUser.setNickName("李靖");
+		 * xyfUser.setAddress("东都洛阳");
+		 */
+		if (xyfUser != null) {
+
+			String userId = (String) req.getSession().getAttribute("userId");
+			// String userId = xyfUser.getUserId();
+
+			// userId = "9333083dd5e84ef89dfb2254a7a469fe";
+
+			if (StringUtil.isNotEmpty(userId)) {
+				xyfUser.setUserId(userId);
+				flag = xyfUserService.updateByUserId(xyfUser);
+			}
+			if (flag) {
+				req.getSession().setAttribute("userId", userId);
+				req.getSession().setAttribute("xyfUser", xyfUser);
+			}
+		}
+		json.setSuccess(flag);
+		return json;
+	}
+
+	/**
+	 * 我的主页
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param xyfUser
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/myHomePage.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson myHomePage(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		// String userId = req.getParameter("userId");
+		String userId = (String) req.getSession().getAttribute("userId");
+		log.info("我的主页userId:"+userId);
+		// userId = "9333083dd5e84ef89dfb2254a7a469fe";
+		Map<String, Object> userMap = xyfUserService.getUserByUserId(userId);
+		int age = getAgeByBirthday(userMap);
+		userMap.put("age", age);
+		json.setObj(userMap);
+
+		return json;
+	}
+
+	/**
+	 * 他人主页
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param xyfUser
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/OtherHomePage.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson OtherHomePage(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+
+		// 他人userId
+		String toUserId = req.getParameter("toUserId");
+		// String userId = (String) req.getSession().getAttribute("userId");
+		// toUserId = "71656d4b90634eadb6c5f948b787c9dc";
+		Map<String, Object> userMap = xyfUserService.getUserByUserId(toUserId);
+		int age = getAgeByBirthday(userMap);
+		userMap.put("age", age);
+
+		// 获取我的网易id或虾米id
+		//String openId = (String) req.getSession().getAttribute("openId");
+		// openId = "oUmK402xV4bjji5bap1Qt0KH3ifg";
+		
+		
+		
+		//XyfUser xyfUser = xyfUserService.getUserByOpenId(openId);
+		
+		
+		String userId = (String) req.getSession().getAttribute("userId");
+
+		XyfUser xyfUser = xyfUserService.findUserByUserId(userId);
+		
+
+		// 获取我的头像
+		String myHeadImage = xyfUser.getHeadimage();
+		if (StringUtil.isNotEmpty(myHeadImage)) {
+			userMap.put("myHeadImage", myHeadImage);
+		}
+		String myId = "";
+		String myWangyiId = xyfUser.getWangyiId();
+		if (StringUtil.isNotEmpty(myWangyiId)) {
+			myId = myWangyiId;
+		} else {
+			myId = xyfUser.getXiamiId();
+		}
+
+		// 他人网易id或虾米id
+		String otherId = "";
+		if (userMap.containsKey("wangyi_id") && userMap.get("wangyi_id") != null) {
+			String otherWangyiId = (String) userMap.get("wangyi_id");
+			if (StringUtil.isNotEmpty(otherWangyiId)) {
+				otherId = otherWangyiId;
+			}
+		} else {
+			otherId = (String) userMap.get("xiamiId");
+		}
+
+		// 我与她的缘分度
+		// 从数据库读取参数配置
+		XyfParam xyfParam = xyfParamService.load(1);
+		// 听歌
+		XyfUser otherUser = xyfUserService.getUserByMusicId(otherId);
+		if (otherUser != null) {
+			Map<String, Object> fateUser = xyfListenedSongService.getListenedFateUser(myId, otherId);
+			Double yfPercent = getTwoUserFate(otherUser, myId, otherId, xyfUser, xyfParam, fateUser);
+			userMap.put("yfPercent", yfPercent);
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 共同喜欢的歌曲
+		List<XyfLovedSong> xyfLovedSongList = xyfLovedSongService.getLoveSongs(myId, otherId);
+		if (xyfLovedSongList != null && xyfLovedSongList.size() > 0) {
+			userMap.put("loveSongsCount", xyfLovedSongList.size());
+			map.put("xyfLovedSongList", xyfLovedSongList);
+		}
+
+		// 最近听过相同的歌曲
+
+		List<XyfListenedSong> xyfListenedSongList = xyfListenedSongService.getListenedSongs(myId, otherId);
+		if (xyfListenedSongList != null && xyfListenedSongList.size() > 0) {
+			userMap.put("lateListenedSongsCount", xyfListenedSongList.size());
+			map.put("xyfListenedSongList", xyfListenedSongList);
+		}
+
+		Boolean flag = xyfGzService.getGzStatus(xyfUser.getUserId(), otherUser.getUserId());
+		if (flag) {
+			userMap.put("gzStatus", 1);
+		} else {
+			userMap.put("gzStatus", 0);
+		}
+		json.setObj(userMap);
+		json.setAttributes(map);
+		return json;
+	}
+
+	/**
+	 * 通过两人音乐id获取两人之间缘分值
+	 * 
+	 * @param myId
+	 * @param otherId
+	 * @param xyfUser
+	 * @param xyfParam
+	 * @return
+	 */
+	public Double getTwoUserFate(XyfUser otherUser, String myId, String otherId, XyfUser xyfUser, XyfParam xyfParam,
+			Map<String, Object> fateUser) {
+
+		Double yfPercent = 0.0;
+
+		// 获取歌曲fate
+		Double songFate = getSongFate(myId, fateUser, xyfParam);
+		// 获取距离fate
+		Double distanceFate = getDistanceFate(xyfUser, otherUser, fateUser);
+		//Double distanceFate = 1.0;
+		// 获取活跃度
+		Double hourFate = getHourRate(otherId, myId);
+		//Double hourFate = 1.0;
+		// 计算
+		// 计算总缘分值
+		Double param5 = Double.valueOf(xyfParam.getParam5()) * 0.01;
+		Double param4 = Double.valueOf(xyfParam.getParam4()) * 0.01;
+		Double fateRate = songFate * distanceFate * hourFate * param4;
+		
+		//Double fateRate = songFate * 1.0 * 1.0 * param4;
+		// 喜欢歌
+		Map<String, Object> fateUser1 = xyfLovedSongService.getLovedFateUser(myId, otherId);
+		
+		
+		Double songFate1 = getLoveSongFate(myId, fateUser1, xyfParam);
+		// 获取歌曲fate
+		if (fateUser1!=null &&fateUser1.containsKey("loveMsg")) {
+			fateUser.put("loveMsg", fateUser1.get("loveMsg"));
+		}
+		if (fateUser1!=null &&fateUser1.containsKey("loveNum")) {
+			fateUser.put("loveNum", fateUser1.get("loveNum"));
+		}
+		Double songFate2 = songFate + songFate1;
+		if (StringUtil.isNotEmpty(songFate2)) {
+			fateUser.put("songFate", songFate2);
+		} else {
+			fateUser.put("songFate", 0.0);
+		}
+
+		// 计算
+		// 计算总缘分值
+		// 从数据库读取参数配置
+		Double fateRate1 = songFate1 * distanceFate * hourFate * param5;
+		
+		
+		//Double fateRate1 = songFate1 * 1.0 * 1.0 * param5;
+		// 求和
+		Double fateRateTotal = fateRate + fateRate1;
+		
+		
+		if (fateRateTotal==0.0) {
+			yfPercent=0.0;
+		}else{
+			// 放大
+			yfPercent = 10 * Math.log(fateRateTotal*100  + 1) + 53.85;
+		}
+		return yfPercent;
+	}
+
+	/**
+	 * 后台杨娜测试专用 默认 不计算距离及登录因素
+	 * 
+	 * @param otherUser
+	 * @param myId
+	 * @param otherId
+	 * @param xyfUser
+	 * @param xyfParam
+	 * @param fateUser
+	 * @return
+	 */
+	public Double getTwoUserFate1(XyfUser otherUser, String myId, String otherId, XyfUser xyfUser, XyfParam xyfParam,
+			Map<String, Object> fateUser) {
+
+		Double yfPercent = 0.0;
+
+		// 获取歌曲fate
+		Double songFate = getSongFate(myId, fateUser, xyfParam);
+
+		// 计算
+		// 计算总缘分值
+		Double param5 = Double.valueOf(xyfParam.getParam5()) * 0.01;
+		// 计算
+		// 计算总缘分值
+		// 从数据库读取参数配置
+		Double param4 = Double.valueOf(xyfParam.getParam4()) * 0.01;
+		Double fateRate = songFate * 1.0 * 1.0 * param4;
+		// 喜欢歌
+		Map<String, Object> fateUser1 = xyfLovedSongService.getLovedFateUser(myId, otherId);
+		// 获取歌曲fate
+		Double songFate1 = getLoveSongFate(myId, fateUser1, xyfParam);
+		
+		Double fateRate1 = songFate1 * 1.0 * 1.0 * param5;
+		// 求和
+		Double fateRateTotal = fateRate  + fateRate1 ;
+
+		Double songFate2 = songFate + songFate1;
+		if (StringUtil.isNotEmpty(songFate2)) {
+			fateUser.put("songFate", songFate2);
+		} else {
+			fateUser.put("songFate", 0.0);
+		}
+		if (fateRateTotal==0.0) {
+			yfPercent=0.0;
+		}else{
+			// 放大
+			yfPercent = 10 * Math.log(fateRateTotal*100  + 1) + 53.85;
+		}
+		return yfPercent;
+	}
+
+	/**
+	 * 根据获取数据中的birthday来获取用户age
+	 * 
+	 * @param userMap
+	 * @return
+	 */
+	public static int getAgeByBirthday(Map<String, Object> userMap) {
+		int age = 0;
+		if (userMap != null && userMap.containsKey("birthday") && userMap.get("birthday") != null) {
+			// 将年龄添加其中 数据库date类型,后台接受直接用Date即可,用string 会转换错误
+			Date birthday = (Date) userMap.get("birthday");
+			XyfUser xyfUser = new XyfUser();
+			xyfUser.setBirthday(birthday);
+			age = xyfUser.getAge();
+		}
+		return age;
+	}
+
+	/**
+	 * 账号绑定(网易/虾米)
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param xyfUser
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/accountBind.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson accountBind(HttpServletRequest req, HttpServletResponse resp, XyfUser xyfUser) {
+		log.info("进入账号绑定----------------");
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+
+		if (xyfUser != null) {
+			String openId = (String) req.getSession().getAttribute("openId");
+			// openId = "okLTXtzeE9Y9qBpf6BqhIRMkd_aI";
+			if (StringUtil.isNotEmpty(openId)) {
+				xyfUser.setOpenId(openId);
+
+				// 判断userId是否存在,有可能是绑定了网易云账号后绑定虾米账号
+				String userId = xyfUserService.getUserIdByOpenId(openId);
+
+				if (StringUtil.isNotEmpty(userId)) {
+					xyfUser.setUserId(userId);
+					// 调去模拟登陆接口
+					flag = isBindAccountHaveUserId(xyfUser);
+					if (flag) {
+						// 用户登陆信息,有更新,没有就插入,log注解会再次执行一次
+						userLoginLog(req, xyfUser);
+						req.getSession().setAttribute("userId", userId);
+						
+					}else{
+						json.setMsg("更新用户绑定账号失败!");
+						return  json;
+					}
+					// flag = xyfUserService.updateByUserId(xyfUser);
+				} else {
+					userId = UUIDUtil.getUUID();
+					xyfUser.setUserId(userId);
+					// 调去模拟登陆接口
+					flag = isBindAccountNoUserId(xyfUser);
+					// flag = xyfUserService.save(xyfUser);
+
+					if (flag) {
+						// 用户登陆信息,有更新,没有就插入,log注解会再次执行一次
+						userLoginLog(req, xyfUser);
+						req.getSession().setAttribute("userId", userId);
+					}else{
+						json.setMsg("注册用户失败!");
+						return json;
+					}
+					
+				}
+			}
+		}
+		json.setSuccess(flag);
+		log.info("结束账号绑定----------------" + flag);
+		return json;
+	}
+
+	/**
+	 * 更新绑定的账号信息 如更换网易id
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param xyfUser
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/updateAccountBind.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson updateAccountBind(HttpServletRequest req, HttpServletResponse resp, XyfUser xyfUser) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		if (xyfUser != null) {
+			// String openId = (String) req.getSession().getAttribute("openId");
+			// openId = "okLTXtzeE9Y9qBpf6BqhIRMkd_aI";
+			// String userId = xyfUserService.getUserIdByOpenId(openId);
+			String userId = (String) req.getSession().getAttribute("userId");
+			if (StringUtil.isNotEmpty(userId)) {
+				xyfUser.setUserId(userId);
+				// 调去模拟登陆接口
+				// flag = isBindAccountHaveUserId(xyfUser);
+				flag = xyfUserService.updateByUserId(xyfUser);
+
+				/*
+				 * userLoginLog(req, xyfUser);
+				 * 
+				 * //清除账号抓取的歌曲,聊天等记录关联的是user_id ,不需要调整
+				 * xyfListenedSongService.deleteByMusicId(id);
+				 * xyfLovedSongService.deleteByMusicId(id); //
+				 * 根据此id,去python处模拟登陆并抓取数据 flag = getUserDataById(wangyiId,
+				 * "1");
+				 * 
+				 */
+
+			}
+
+			if (flag) {
+
+				req.getSession().setAttribute("userId", userId);
+
+			}
+		}
+		json.setSuccess(flag);
+		return json;
+	}
+
+	/**
+	 * 有userId下的账号绑定 更新xyfUser
+	 * 
+	 * @param xyfUser
+	 * @return
+	 */
+	public boolean isBindAccountHaveUserId(XyfUser xyfUser) {
+		boolean flag = false;
+
+		String wangyiAccount = xyfUser.getWangyiAccount();
+		String wangyiPassword = xyfUser.getWangyiPassword();
+
+		String xiamiAccount = xyfUser.getXiamiAccount();
+		String xiamiPassword = xyfUser.getXiamiPassword();
+		// 网易
+		if (StringUtil.isNotEmpty(wangyiAccount) && StringUtil.isNotEmpty(wangyiPassword)
+				&& StringUtil.isNotEmpty(url)) {
+
+			String wangyiId = getxiaoYuanId(wangyiAccount, wangyiPassword, "1");
+			log.info("------------------网易云id----------------" + wangyiId);
+			if (StringUtil.isNotEmpty(wangyiId)) {
+				xyfUser.setWangyiId(wangyiId);
+				xyfUser.setWangyiStatus(1);
+				flag = xyfUserService.updateByUserId(xyfUser);
+				return flag;
+			}
+			// 虾米
+		} else if (StringUtil.isNotEmpty(xiamiAccount) && StringUtil.isNotEmpty(xiamiPassword)
+				&& StringUtil.isNotEmpty(url)) {
+
+			String xiamiId = getxiaoYuanId(xiamiAccount, xiamiPassword, "2");
+			log.info("------------------虾米id----------------" + xiamiId);
+			if (StringUtil.isNotEmpty(xiamiId)) {
+				xyfUser.setXiamiId(xiamiId);
+				xyfUser.setXiamiStatus(1);
+				flag = xyfUserService.updateByUserId(xyfUser);
+				return flag;
+			}
+		}
+		return flag;
+	}
+
+	/**
+	 * 从python获取模拟登陆网易云音乐或虾米id信息
+	 * 
+	 * @param username
+	 * @param password
+	 * @param source
+	 * @return 正常返回网易云音乐或虾米id null表示登陆失败,账号密码不对
+	 */
+
+	/*
+	 * @RequestMapping(value = "/wx/getxiaoYuanId.htm", method = {
+	 * RequestMethod.POST, RequestMethod.GET })
+	 * 
+	 * @ResponseBody
+	 */
+	public String getxiaoYuanId(String username, String password, String source) {
+		Map<String, String> map = new HashMap<String, String>();
+
+		map.put("username", username);
+		map.put("password", password);
+		map.put("source", source);
+		map.put("uid", "");
+
+		/*
+		 * map.put("username", "135925755121"); map.put("password",
+		 * "63567609LI"); map.put("source", "1"); map.put("uid", "");
+		 */
+		String data = "";
+		if (map != null && map.size() > 0) {
+			for (String key : map.keySet()) {
+				data += key + "=" + map.get(key) + "&";
+			}
+			data = data.substring(0, data.length() - 1);
+		}
+
+		String result = HttpClient.sendPost(url, data);
+		// String result=HttpClientUtils.postJson(url, map, "json");
+
+		// String result=HttpClientUtils.post(url, data, "json");
+
+		// String result=HttpClientUtils.postMerge(url, map);
+		return result;
+	}
+
+	/**
+	 * 无userId 插入xyfUser
+	 * 
+	 * @param xyfUser
+	 * @return
+	 */
+	public boolean isBindAccountNoUserId(XyfUser xyfUser) {
+		boolean flag = false;
+		String wangyiAccount = xyfUser.getWangyiAccount();
+		String wangyiPassword = xyfUser.getWangyiPassword();
+
+		String xiamiAccount = xyfUser.getXiamiAccount();
+		String xiamiPassword = xyfUser.getXiamiPassword();
+		// 网易
+		if (StringUtil.isNotEmpty(wangyiAccount) && StringUtil.isNotEmpty(wangyiPassword)
+				&& StringUtil.isNotEmpty(url)) {
+			String wangyiId = getxiaoYuanId(wangyiAccount, wangyiPassword, "1");
+			log.info("------------------网易云id----------------" + wangyiId);
+			if (StringUtil.isNotEmpty(wangyiId)) {
+				xyfUser.setWangyiId(wangyiId);
+				xyfUser.setWangyiStatus(1);
+				flag = xyfUserService.save(xyfUser);
+				return flag;
+			}
+			// 虾米
+		} else if (StringUtil.isNotEmpty(xiamiAccount) && StringUtil.isNotEmpty(xiamiPassword)
+				&& StringUtil.isNotEmpty(url)) {
+
+			String xiamiId = getxiaoYuanId(xiamiAccount, xiamiPassword, "2");
+			log.info("------------------虾米id----------------" + xiamiId);
+			if (StringUtil.isNotEmpty(xiamiId)) {
+				xyfUser.setXiamiId(xiamiId);
+				xyfUser.setXiamiStatus(1);
+				flag = xyfUserService.save(xyfUser);
+				return flag;
+			}
+		}
+		return flag;
+	}
+	
+
+
+	/**
+	 * 登陆入口判断,在服务器端解决跨域问题
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/Login.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@MethodLog(logRemark = "登陆通知是否成功并返回原因", logTag = "登陆通知回调函数", logKey = "校缘项目微信端登陆入口", logType = 2)
+	@ResponseBody
+	public void Login(HttpServletRequest req, HttpServletResponse resp) {
+
+	/*	String code=req.getParameter("code");
+		log.info("-------code:--------"+code);*/
+
+		//2.处理请求授权服务，根据第三方服务提交的code向微信服务器获得openId，并返回给第三方服务
+
+        //调用的url:http://wmh.uni-uni.cn/Auth/auth/queryOpenIdByCode?code=
+		
+		//url = "http://www.uni-uni.cn/Auth/auth/gotoWxAuthPage?callback=" + "http://pdp.uni-uni.cn/wx/index"
+	
+		String openId = (String) req.getSession().getAttribute("openId");
+		// openId="oUmK409pK5CzVJrjDJhb1oqFUqic";
+		log.info("/wx/Login.htm------------进入校缘项目，用户openId:---------" + openId);
+		XyfUser xyfUser = xyfUserService.getUserByOpenId(openId);
+
+		if (xyfUser != null) {
+			String userId = xyfUser.getUserId();
+			if (StringUtil.isNotEmpty(userId) && StringUtil.isNotEmpty(xyfUser.getNickName())) {
+
+				userLoginLog(req, xyfUser);
+				req.getSession().setAttribute("userId", userId);
+				req.getSession().setAttribute("xyfUser", xyfUser);
+				try {
+					// 先删除基本信息为空的用户，否则会出现数据null的现象
+					// 有可能在多个用户注册的时候,删除了正在注册的用户
+					// xyfUserService.deleteNullUser();
+					// 已绑定过,进入有缘人界面
+					log.info("/wx/Login.htm------------5---------" + userId);
+					req.getRequestDispatcher("/resource/xyuan/html/index.html").forward(req, resp);
+				} catch (ServletException e) {
+
+					e.printStackTrace();
+				} catch (IOException e) {
+
+					e.printStackTrace();
+				}
+			} else {
+				log.info("/wx/Login.htm------------4---------" + openId);
+				// 删除原有openId信息,再次重新注册
+				xyfUserService.deleteByOpenId(openId);
+				// 删除其已抓取的歌曲数据
+
+				try {
+					req.getRequestDispatcher("/resource/xyuan/html/yindao.html").forward(req, resp);
+				} catch (ServletException | IOException e) {
+
+					e.printStackTrace();
+				}
+			}
+		} else {
+			try {
+				log.info("/wx/Login.htm------------3---------" + openId);
+				// 未绑定过,进入绑定页面
+				req.getRequestDispatcher("/resource/xyuan/html/yindao.html").forward(req, resp);
+			} catch (ServletException | IOException e) {
+
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	/**
+	 * 引导页 判断网易,虾米是否绑定
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/getUserInfo.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson getUserInfo(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		/*String openId = (String) req.getSession().getAttribute("openId");
+		// openId = "o2wGDwMpe6vySfShqeXdA7XKUiUk";
+		XyfUser xyfUser = xyfUserService.getUserByOpenId(openId);
+		*/
+		String userId = (String) req.getSession().getAttribute("userId");
+		XyfUser xyfUser=null;
+		if (StringUtil.isNotEmpty(userId)) {	
+			 xyfUser = xyfUserService.findUserByUserId(userId);
+		}
+		if (xyfUser != null) {
+			json.setObj(xyfUser);
+		}
+		return json;
+	}
+
+	/**
+	 * 通过wangyiId登陆
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param wangyiId
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/getUserByWangyiId.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson getUserByWangyiId(HttpServletRequest req, HttpServletResponse resp,
+			@RequestParam(required = true) String wangyiId) {
+		log.info("------------进入 ------   通过wangyiId登陆------------");
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		XyfUser xyfUser=null;
+		String openId = (String) req.getSession().getAttribute("openId");
+		
+		if (StringUtil.isNotEmpty(openId)) {
+			xyfUser= xyfUserService.getUserByOpenId(openId);
+		}else{
+			String userId = (String) req.getSession().getAttribute("userId");
+			xyfUser= xyfUserService.findUserByUserId(userId);
+		}
+		
+		/*
+		 * String userId = (String) req.getSession().getAttribute("userId");
+		 * xyfUserService.getUserByUserId(userId);
+		 */
+		if (xyfUser != null) {
+			String id = xyfUser.getWangyiId();
+			if (StringUtil.isNotEmpty(id) && wangyiId.equals(id)) {
+
+				flag = true;
+				userLoginLog(req, xyfUser);
+				req.getSession().setAttribute("userId", xyfUser.getUserId());
+				json.setSuccess(flag);
+				return json;
+			} else {
+				// wangyiId账号更换
+				// 先存用户,后做数据处理
+				XyfUser xyfUser1 = xyfUserService.getUserByMusicId(wangyiId);
+				if (xyfUser1 == null) {
+
+					xyfUser.setWangyiId(wangyiId);
+					xyfUser.setWangyiStatus(1);
+					xyfUserService.updateByUserId(xyfUser);
+					userLoginLog(req, xyfUser);
+
+					// 清除账号抓取的歌曲,聊天等记录关联的是user_id ,不需要调整
+					xyfListenedSongService.deleteByMusicId(id);
+					xyfLovedSongService.deleteByMusicId(id);
+					// 根据此id,去python处模拟登陆并抓取数据
+					flag = getUserDataById(wangyiId, "1");
+					if (flag) {
+						/*
+						 * xyfUser.setWangyiId(wangyiId);
+						 * xyfUser.setWangyiStatus(1); flag =
+						 * xyfUserService.updateByUserId(xyfUser);
+						 */
+						req.getSession().setAttribute("userId", xyfUser.getUserId());
+						// userLoginLog(req, xyfUser);
+						log.info("此网易Id已绑定,请更换其他网易Id");
+						json.setMsg("此网易Id已绑定,请更换其他网易Id");
+						json.setSuccess(flag);
+						return json;
+					} else {
+						xyfUserService.deleteByOpenId(openId);
+						json.setMsg("抓取数据失败或网易id错误!");
+						return json;
+					}
+				} else {
+					json.setMsg("此网易Id已绑定,请更换其他网易Id");
+					return json;
+				}
+
+				// flag = xyfUserService.updateByUserId(xyfUser);
+			}
+		} else {
+			xyfUser = new XyfUser();
+			xyfUser.setOpenId(openId);
+			String userId = UUIDUtil.getUUID();
+			xyfUser.setUserId(userId);
+			xyfUser.setWangyiId(wangyiId);
+			xyfUser.setWangyiStatus(1);
+			// 先存用户,如果用户id输入不正确,数据接口返回的为"",再删除此用户
+			xyfUserService.save(xyfUser);
+			userLoginLog(req, xyfUser);
+			// 调去模拟登陆接口
+			flag = getUserDataById(wangyiId, "1");
+			if (flag) {
+				// flag = xyfUserService.save(xyfUser);
+				req.getSession().setAttribute("wangyiId", wangyiId);
+				req.getSession().setAttribute("userId", userId);
+				req.getSession().setAttribute("xyfUser", xyfUser);
+				json.setSuccess(flag);
+				return json;
+			} else {
+				xyfUserService.deleteByOpenId(openId);
+				json.setMsg("抓取数据失败或网易id错误!");
+				return json;
+			}
+
+		}		
+	}
+
+	/**
+	 * 用户登陆日志
+	 * 
+	 * @param req
+	 * @param xyfUser
+	 *            用户对象
+	 */
+	public void userLoginLog(HttpServletRequest req, XyfUser xyfUser) {
+
+		// 用户登陆信息,有更新,没有就插入,log注解会再次执行一次
+		UserLogin userLogin = new UserLogin();
+		userLogin.setUserId(xyfUser.getUserId());
+		userLogin.setCreateTime(new Date());
+		userLogin.setLastloginTime(new Date());
+		String url = req.getRequestURI();
+		userLogin.setLastloginIp(WebUtil.getIp(req));
+		userLogin.setLastloginTerminal(WebUtil.getRequestTerminal(url));
+
+		String interceptorUrl = WebUtil.getRequestPath(req);
+		if (!StringUtils.isEmpty(interceptorUrl)) {
+			userLogin.setLastuseSource(WebUtil.getRequestModel(interceptorUrl));
+		}
+		try {
+			userLoginService.updateUseLoginByUserId(userLogin);
+		} catch (Exception e1) {
+			log.error("用户登陆日志插入或更新失败");
+			e1.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * 根据id判断是否能登陆,如果能登陆则抓取数据并返回true
+	 * 
+	 * @param id
+	 *            网易id或虾米id
+	 * @param source
+	 *            网易1 虾米2
+	 * @return
+	 */
+
+	/*
+	 * @RequestMapping(value = "/wx/getUserDataById.htm", method = {
+	 * RequestMethod.POST, RequestMethod.GET })
+	 * 
+	 * @ResponseBody
+	 */
+
+	public boolean getUserDataById(String id, String source) {
+		boolean flag = false;
+		// 有数据仍返回wangyiId,没有返回个""
+		// String data = "uid=" + id + "&" + "source=" + source;
+
+		log.info("/wx/getUserDataById.htm-------id" + id);
+		log.info("/wx/getUserDataById.htm-------source" + source);
+
+		Map<String, String> map = new HashMap<String, String>();
+
+		map.put("username", "");
+		map.put("password", "");
+		map.put("source", source);
+		map.put("uid", id);
+
+		/*
+		 * map.put("username", ""); map.put("password", ""); map.put("source",
+		 * "1"); map.put("uid", "456879452312356");
+		 */
+		String data = "";
+		if (map != null && map.size() > 0) {
+			for (String key : map.keySet()) {
+				data += key + "=" + map.get(key) + "&";
+			}
+			data = data.substring(0, data.length() - 1);
+		}
+
+		String result = HttpClient.sendPost(url, data);
+		System.out.println("result------------:" + result);
+		if (StringUtil.isNotEmpty(result)) {
+			flag = true;
+		}
+		log.info("/wx/getUserDataById.htm---------------result:" + result);
+		log.info("/wx/getUserDataById.htm---------------flag:" + flag);
+		return flag;
+	}
+
+	/**
+	 * 通过虾米id登陆
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param xiamiId
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/getUserByXiamiId.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson getUserByXiamiId(HttpServletRequest req, HttpServletResponse resp,
+			@RequestParam(required = true) String xiamiId) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		String openId = (String) req.getSession().getAttribute("openId");
+		XyfUser xyfUser = xyfUserService.getUserByOpenId(openId);
+		if (xyfUser != null) {
+			xyfUser.getUserId();
+			String id = xyfUser.getXiamiId();
+			if (StringUtil.isNotEmpty(id) && xiamiId.equals(id)) {
+				log.info("数据库存在此网易id,可直接登陆");
+				userLoginLog(req, xyfUser);
+				req.getSession().setAttribute("wangyiId", xiamiId);
+				flag = true;
+				json.setSuccess(flag);
+			} else {
+				// 根据此id,去python处模拟登陆并抓取数据
+
+				flag = getUserDataById(xiamiId, "2");
+				if (flag) {
+					xyfUser.setXiamiId(xiamiId);
+					flag = xyfUserService.updateByUserId(xyfUser);
+					userLoginLog(req, xyfUser);
+
+					req.getSession().setAttribute("userId", xyfUser.getUserId());
+
+				}
+				// flag = xyfUserService.updateByUserId(xyfUser);
+			}
+		} else {
+			xyfUser = new XyfUser();
+			xyfUser.setOpenId(openId);
+			String userId = UUIDUtil.getUUID();
+			xyfUser.setUserId(userId);
+			xyfUser.setXiamiId(xiamiId);
+			// 调去模拟登陆接口
+			flag = getUserDataById(xiamiId, "2");
+			if (flag) {
+				flag = xyfUserService.save(xyfUser);
+				userLoginLog(req, xyfUser);
+
+				req.getSession().setAttribute("userId", userId);
+
+			}
+
+			// flag = xyfUserService.save(xyfUser);
+		}
+		return json;
+	}
+
+	/**
+	 * 获取我的有缘人List 注意基本信息不能为null
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/getMyFateUsers.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson getMyFateUsers(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+/*		String openId = (String) req.getSession().getAttribute("openId");
+
+		
+		
+		 openId = "oUmK40xTlskW89Yra2m4QqR_cNdc";
+		log.info("/wx/getMyFateUsers.htm--------1--------" + openId);*/
+		//XyfUser xyfUser = xyfUserService.getUserByOpenId(openId);
+		String userId = (String) req.getSession().getAttribute("userId");
+		log.info("获取我的有缘人List--------------->userId:"+userId);
+		//userId="e1b9080fc04c4d839fa9aada34baf7ff";
+		
+		XyfUser xyfUser=null;
+		if (StringUtil.isNotEmpty(userId)) {	
+			 xyfUser = xyfUserService.findUserByUserId(userId);
+		}
+		// 如果有缘人界面传过来的参数有经纬度,更新之
+		String addrLng = req.getParameter("addrLng");
+		Double addrLng1 = null;
+		Double addrLat1 = null;
+
+		if (StringUtil.isNotEmpty(addrLng)) {
+			addrLng1 = Double.parseDouble(addrLng);
+		}
+		String addrLat = req.getParameter("addrLat");
+		if (StringUtil.isNotEmpty(addrLng)) {
+			addrLat1 = Double.parseDouble(addrLat);
+		}
+		if (StringUtil.isNotEmpty(addrLat1) && StringUtil.isNotEmpty(addrLng1)) {
+			xyfUser.setAddrLat(addrLat1);
+			xyfUser.setAddrLng(addrLng1);
+			xyfUserService.update(xyfUser);
+
+		} // 什么也没有的话,通过ip获取
+		else if (xyfUser.getAddrLat() == null) {
+			// 通过IP获取其经纬度
+			String userIp = WebUtil.getIp(req);
+			if (StringUtil.isNotEmpty(userIp)) {
+				Map<String, Double> map = AddressUtil.getLatAndLngByIp(userIp);
+				if (map != null && map.containsKey("lat")) {
+					xyfUser.setAddrLat(map.get("lat"));
+					xyfUser.setAddrLng(map.get("lng"));
+					xyfUserService.update(xyfUser);
+
+				}
+			}
+		}
+
+		if (xyfUser != null) {
+			String myId = xyfUser.getWangyiId();
+			if (StringUtil.isEmpty(myId)) {
+				myId = xyfUser.getXiamiId();
+			}
+			//默认匹配异性        交友目标0：同性，1：异性，2：都有		
+			Integer goals=1;		
+			
+			//根据交友目标获取有缘人的性别   性别 1:男性 0:女性
+			Integer  gender=xyfUser.getGender();
+			
+			//交友的性别  先默认为女
+			Integer sex=null;
+			switch (goals) {
+			case 0:
+				sex=gender;
+				break;
+			case 1:
+				if (gender==1) {
+					sex=0;
+				}else{
+					sex=1;
+				}
+				break;
+			case 2:
+				sex=null;
+				break;
+
+			default:
+				if (gender==1) {
+					sex=0;
+				}else{
+					sex=1;
+				}
+				break;
+			}
+			
+			//获取前端参数,判断真正的选取性别   
+			String goals1=req.getParameter("goals");
+			log.info("获取我的有缘人List--------------->goals:"+goals1);
+			if (StringUtil.isNotEmpty(goals1)) {
+				sex=Integer.valueOf(goals1);
+				if (goals1.equals("2")) {
+					sex=null;
+				}
+			}
+			
+			// 如果未获取到歌曲,直接返回数据 false
+			// 获取我喜欢的歌曲总数
+			int myLovedSongsCount = xyfLovedSongService.getMyLovedSongsCount(myId);
+			// 获取我听过的歌曲总数
+			int myListenedSongsCount = xyfListenedSongService.getMyListenedSongsCount(myId);
+			if (myLovedSongsCount <= 0 && myListenedSongsCount <= 0) {
+				json.setSuccess(false);
+				json.setMsg("喜欢或听歌的歌曲为0,不予匹配");
+				return json;
+			}
+
+			// 从数据库读取参数配置
+			XyfParam xyfParam = xyfParamService.load(1);
+
+			// 获取数据库中所有有音乐id且昵称不为null的用户
+			List<XyfUser> otherUserList = xyfUserService.getAllUser();
+
+			// 用于放置按缘分值排序后的缘分人集合
+			List<Map<String, Object>> fateList = new ArrayList<Map<String, Object>>();
+			int sAge=18;
+			String smallAge=req.getParameter("smallAge");
+			log.info("获取我的有缘人List--------------->smallAge:"+smallAge);
+			int bAge=35;
+			String bigAge=req.getParameter("bigAge");
+			log.info("获取我的有缘人List--------------->bigAge:"+bigAge);
+			for (XyfUser otherUser : otherUserList) {
+				if (otherUser != null && otherUser.getWangyiId() != null && !otherUser.getWangyiId().equals(myId)) {
+					Integer otherGender=otherUser.getGender();
+
+					if (StringUtil.isNotEmpty(smallAge)) {
+						sAge=Integer.valueOf(smallAge);
+					}					
+					
+					if (StringUtil.isNotEmpty(bigAge)) {
+						bAge=Integer.valueOf(bigAge);
+					}
+					int age=otherUser.getAge();
+					//只匹配与交友目标性别相同的人
+					if ((sex==null ||otherGender==sex)&&age>=sAge&&age<=bAge) {
+					String otherId = otherUser.getWangyiId();
+
+					Map<String, Object> fateUser = xyfListenedSongService.getListenedFateUser(myId, otherId);
+					fateUser.put("user_id", otherId);
+					fateUser.put("otherUser", otherUser);
+					Double fateRate = getTwoUserFate(otherUser, myId, otherId, xyfUser, xyfParam, fateUser);
+					if (StringUtil.isNotEmpty(fateRate)) {
+						fateUser.put("fateRate", fateRate);
+					} else {
+						fateUser.put("fateRate", 0.0);
+					}
+					Double fateRate2=   (Double) fateUser.get("fateRate");
+					if (fateRate2==0.0) {
+						//如果两人之间匹配值为0,不再显示
+						continue;
+					}
+					
+
+					// 共同喜欢的歌曲
+		/*			List<XyfLovedSong> xyfLovedSongList = xyfLovedSongService.getLoveSongs(myId, otherId);
+					if (xyfLovedSongList != null && xyfLovedSongList.size() > 0) {
+						fateUser.put("loveSongsCount", xyfLovedSongList.size());
+					}
+					// 最近听过相同的歌曲
+					List<XyfListenedSong> xyfListenedSongList = xyfListenedSongService.getListenedSongs(myId, otherId);
+					if (xyfListenedSongList != null && xyfListenedSongList.size() > 0) {
+						fateUser.put("lateListenedSongsCount", xyfListenedSongList.size());
+					}*/
+					Boolean flag = xyfGzService.getGzStatus(xyfUser.getUserId(), otherUser.getUserId());
+					if (flag) {
+						fateUser.put("gzStatus", 1);
+					} else {
+						fateUser.put("gzStatus", 0);
+					}
+
+					fateList.add(fateUser);
+
+				}
+			}
+			}
+			// 默认综合排序排序 按fateRate
+			try {
+				listSortByFateRate(fateList);
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
+
+			// 只返回前10条
+			List<Map<String, Object>> topTenfateList = new ArrayList<Map<String, Object>>();
+
+			if (fateList.size() > 10) {
+				for (int i = 0; i < 10; i++) {
+					topTenfateList.add(fateList.get(i));
+				}
+				json.setObj(topTenfateList);
+				req.getSession().setAttribute("fateList", topTenfateList);
+			} else {
+				req.getSession().setAttribute("fateList", fateList);
+				json.setObj(fateList);
+			}
+
+			log.info("/wx/getMyFateUsers.htm--------12--------" + json);
+			// fateUserSort(req, resp);
+			// }
+		}
+		return json;
+	}
+
+	/**
+	 * 匹配度及距离排序
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/fateUserSort.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson fateUserSort(HttpServletRequest req, HttpServletResponse resp) {
+		log.info("进行匹配度，距离等排序--------------");
+		AjaxJson json = new AjaxJson();
+		List<Map<String, Object>> fateList = (List<Map<String, Object>>) req.getSession().getAttribute("fateList");
+		log.info("进行匹配度，距离等排序--------------fateList:" + fateList);
+		String type = req.getParameter("type");
+		log.info("进行匹配度，距离等排序--------------type:" + type);
+		switch (type) {
+		// 按缘分值排序
+		case "fate":
+			try {
+				listSortBySongsRate(fateList);
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
+			break;
+		case "distance":
+			try {
+				listSortByDistance(fateList);
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
+			break;
+		default:
+			try {
+				listSortByFateRate(fateList);
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
+			break;
+		}
+
+		json.setObj(fateList);
+		log.info("结束匹配度，距离等排序--------------fateList:" + fateList);
+		return json;
+	}
+
+	/**
+	 * 排序 综合
+	 * 
+	 * @param resultList
+	 * @throws Exception
+	 */
+	public void listSortByFateRate(List<Map<String, Object>> resultList) throws Exception {
+		// resultList是需要排序的list，其内放的是Map
+		// 返回的结果集
+		Collections.sort(resultList, new Comparator<Map<String, Object>>() {
+
+			public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+
+				// o1，o2是list中的Map，可以在其内取得值，按其排序，此例为降序，s1和s2是排序字段值
+				if (o1.containsKey("fateRate") && o2.containsKey("fateRate")) {
+					Double s1 = Double.parseDouble(o1.get("fateRate").toString());
+					Double s2 = Double.parseDouble(o2.get("fateRate").toString());
+
+					if (s1 < s2) {
+						return 1;
+					} else {
+						return -1;
+					}
+				} else {
+					return 0;
+				}
+			}
+		});
+
+	}
+
+	/**
+	 * 排序 按距离
+	 * 
+	 * @param resultList
+	 * @throws Exception
+	 */
+	public void listSortByDistance(List<Map<String, Object>> resultList) throws Exception {
+		// resultList是需要排序的list，其内放的是Map
+		// 返回的结果集
+		Collections.sort(resultList, new Comparator<Map<String, Object>>() {
+			public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+				// o1，o2是list中的Map，可以在其内取得值，按其排序，此例为升序，s1和s2是排序字段值
+				if (o1.containsKey("distance") && o2.containsKey("distance")) {
+					Double s1 = Double.parseDouble(o1.get("distance").toString());
+					Double s2 = Double.parseDouble(o2.get("distance").toString());
+					if (s1 > s2) {
+						return 1;
+					} else {
+						return -1;
+					}
+				} else {
+					return 0;
+				}
+
+			}
+		});
+
+	}
+
+	/**
+	 * 排序按歌曲匹配度
+	 * 
+	 * @param resultList
+	 * @throws Exception
+	 */
+	public void listSortBySongsRate(List<Map<String, Object>> resultList) throws Exception {
+		// resultList是需要排序的list，其内放的是Map
+		// 返回的结果集
+		Collections.sort(resultList, new Comparator<Map<String, Object>>() {
+
+			public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+
+				// o1，o2是list中的Map，可以在其内取得值，按其排序，此例为降序，s1和s2是排序字段值
+				if (o1.containsKey("songsRate") && o2.containsKey("songsRate")) {
+
+					Double s1 = Double.parseDouble(o1.get("songsRate").toString());
+					Double s2 = Double.parseDouble(o2.get("songsRate").toString());
+
+					if (s1 < s2) {
+						return 1;
+					} else {
+						return -1;
+					}
+				} else {
+					return 0;
+				}
+			}
+		});
+
+	}
+
+	/**
+	 * 
+	 * @param myId
+	 *            我的音乐id
+	 * @param listenedFateUser
+	 *            我听过
+	 * @return
+	 */
+	public Double getSongFate(String myId, Map<String, Object> fateUser, XyfParam xyfParam) {
+
+		Double cnt1 = 0.0;// 歌曲同歌手同数
+		Double cnt2 = 0.0;// 歌曲同歌手不同数
+		Double cnt3 = 0.0;// 歌曲不同歌手同数
+
+		if (fateUser.containsKey("cnt1") && fateUser.get("cnt1") != null) {
+
+			cnt1 = Double.parseDouble(fateUser.get("cnt1").toString());
+
+		}
+		if (fateUser.containsKey("cnt2") && fateUser.get("cnt2") != null) {
+			cnt2 = Double.parseDouble(fateUser.get("cnt2").toString());
+		}
+		if (fateUser.containsKey("cnt3") && fateUser.get("cnt3") != null) {
+			cnt3 = Double.parseDouble(fateUser.get("cnt3").toString());
+		}
+		
+
+		// 有缘人音乐id
+		String musicId = (String) fateUser.get("user_id");
+
+		// 获取两人歌曲总数
+		int totalnum = xyfListenedSongService.getSongTotalNum(myId, musicId);
+
+		// 从数据库读取参数配置
+		// XyfParam xyfParam = xyfParamService.load(1);
+		Double param1 = Double.valueOf(xyfParam.getParam1()) * 0.01;
+		Double param2 = Double.valueOf(xyfParam.getParam2()) * 0.01;
+		Double param3 = Double.valueOf(xyfParam.getParam3()) * 0.01;
+
+		// 获取歌曲占比
+		// 歌曲总数为0,会获取NAN数据
+		Double songsRate = 0.0;
+		
+		
+		
+		
+		if (totalnum != 0) {
+			
+		double	a=cnt1 / (totalnum - cnt1) * param1;
+		double	b=cnt2 / (totalnum - cnt2) * param2;	
+		double	c=cnt3 / (totalnum - cnt3) * param3;			
+		if (a>=b&&a>=c) {
+			fateUser.put("listenNum", new Double(cnt1).intValue());
+			//最大影响因素
+			fateUser.put("listenMsg", "首共同听过的同样歌曲");
+		}else if(b>=c&&b>=a){
+			fateUser.put("listenNum", new Double(cnt2).intValue());
+			fateUser.put("listenMsg", "首共同听过的同歌名歌曲");
+		}else if(c>=b&&c>=a){
+			fateUser.put("listenNum", new Double(cnt3).intValue());
+			fateUser.put("listenMsg", "首共同听过的同歌手歌曲");
+		}
+			songsRate = a+b+c;
+		}
+
+
+		return songsRate;
+
+	}
+
+	/**
+	 * 获取两人喜欢的歌曲的songfate
+	 * 
+	 * @param myId
+	 * @param fateUser
+	 * @return
+	 */
+	public Double getLoveSongFate(String myId, Map<String, Object> fateUser, XyfParam xyfParam) {
+
+		Double cnt1 = 0.0;// 歌曲同歌手同数
+		Double cnt2 = 0.0;// 歌曲同歌手不同数
+		Double cnt3 = 0.0;// 歌曲不同歌手同数
+
+		if (fateUser.containsKey("cnt1") && fateUser.get("cnt1") != null) {
+
+			cnt1 = Double.parseDouble(fateUser.get("cnt1").toString());
+
+		}
+		if (fateUser.containsKey("cnt2") && fateUser.get("cnt2") != null) {
+			cnt2 = Double.parseDouble(fateUser.get("cnt2").toString());
+		}
+		if (fateUser.containsKey("cnt3") && fateUser.get("cnt3") != null) {
+			cnt3 = Double.parseDouble(fateUser.get("cnt3").toString());
+			
+		}
+		// 有缘人音乐id
+		String musicId = (String) fateUser.get("user_id");
+
+		// 获取两人歌曲总数
+		int totalnum = xyfLovedSongService.getSongTotalNum(myId, musicId);
+
+		// 从数据库读取参数配置
+		// XyfParam xyfParam = xyfParamService.load(1);
+		Double param1 = Double.valueOf(xyfParam.getParam1()) * 0.01;
+		Double param2 = Double.valueOf(xyfParam.getParam2()) * 0.01;
+		Double param3 = Double.valueOf(xyfParam.getParam3()) * 0.01;
+
+		// 获取歌曲占比
+		Double songsRate = 0.0;
+		if (totalnum != 0) {
+			
+			double	a=cnt1 / (totalnum - cnt1) * param1;
+			double	b=cnt2 / (totalnum - cnt2) * param2;	
+			double	c=cnt3 / (totalnum - cnt3) * param3;			
+			if (a>=b&&a>=c) {
+				//最大影响因素
+				fateUser.put("loveNum", new Double(cnt1).intValue());
+				fateUser.put("loveMsg", "首共同喜欢的同样歌曲");
+			}else if(b>=c&&b>=a){
+				fateUser.put("loveNum", new Double(cnt2).intValue());
+				fateUser.put("loveMsg", "首共同喜欢的同歌名歌曲");
+			}else if(c>=b&&c>=a){
+				fateUser.put("loveNum", new Double(cnt3).intValue());
+				fateUser.put("loveMsg", "首共同喜欢的同歌手歌曲");
+			}
+				songsRate = a+b+c;
+			}
+		return songsRate;
+
+	}
+
+	/**
+	 * 距离占比
+	 * 
+	 * @param xyfUser
+	 * @param otherUser
+	 * @param fateUser
+	 * @return
+	 */
+	public Double getDistanceFate(XyfUser xyfUser, XyfUser otherUser, Map<String, Object> fateUser) {
+
+		double distanceRate = 0.90;
+		Double otherLat = otherUser.getAddrLat();
+		Double otherLng = otherUser.getAddrLng();
+
+		// 我的经纬度
+		Double myLat = xyfUser.getAddrLat();
+		Double myLng = xyfUser.getAddrLng();
+
+		if (StringUtil.isNotEmpty(otherLat) && StringUtil.isNotEmpty(otherLng) && StringUtil.isNotEmpty(myLat)
+				&& StringUtil.isNotEmpty(myLng)) {
+
+			// 计算两者之间距离 y=-0.001x+1.001(衰减区间1-0.9)
+			Double distance = LocationUtils.getDistance(otherLat, otherLng, myLat, myLng);
+
+			// 单位千米
+			fateUser.put("distance", distance);
+			// 距离百分比
+
+			if (distance <= 1) {
+				distanceRate = 1.00;
+			} else if (distance >= 100) {
+				distanceRate = 0.90;
+			} else {
+				distanceRate = -0.001 * distance + 1.001;
+			}
+		}
+
+		return distanceRate;
+	}
+
+	/**
+	 * 获取活跃度占比
+	 * 
+	 * @param otherUserId
+	 * @param myUserId
+	 * @return
+	 */
+	public Double getHourRate(String otherUserId, String myUserId) {
+
+		int hourDiff = userLoginService.getHourDiff(otherUserId, myUserId);
+
+		// 1小时之内 hourDiff为0;
+		hourDiff += 1;
+		// Math.abs() 取其绝对值
+		hourDiff = Math.abs(hourDiff);
+
+		Double hourRate = 0.90;
+		if (hourDiff <= 1) {
+			hourRate = 1.00;
+		} else if (hourDiff > 72) {
+			hourRate = 0.90;
+		} else {
+			// y=1.022927*(0.977587^x)(衰减区间1-0.2)
+
+			hourRate = 1.022927 * (Math.pow(0.977587, hourDiff));
+		}
+		return hourRate;
+
+	}
+
+	/**
+	 * 获取数据库中缘分值最高的10个人
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/getTopTenFateUser.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson getTopTenFateUser(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		// 找出所有音乐id及对应的用户
+		List<XyfUser> fateuserList = xyfUserService.getAllUser();
+
+		XyfParam xyfParam = xyfParamService.load(1);
+		// 最终缘分人集合
+		List<Map<String, Object>> TotalfateList = new ArrayList<Map<String, Object>>();
+
+		for (int i = 0; i < fateuserList.size(); i++) {
+			XyfUser xyfUser = fateuserList.get(i);
+			if (xyfUser != null) {
+				String myId = xyfUser.getWangyiId();
+				if (StringUtil.isEmpty(myId)) {
+					myId = xyfUser.getXiamiId();
+				}
+				// 获取我喜欢的歌曲总数
+				int myLovedSongsCount = xyfLovedSongService.getMyLovedSongsCount(myId);
+				// 获取我听过的歌曲总数
+				int myListenedSongsCount = xyfListenedSongService.getMyListenedSongsCount(myId);
+				if (myLovedSongsCount <= 10 || myListenedSongsCount <= 10) {
+					fateuserList.remove(i);
+					continue;
+				}
+				// 获取数据库中所有有音乐id且昵称不为null的用户
+				// List<XyfUser> otherUserList = fateuserList;
+
+				// 用于放置按缘分值排序后的缘分人集合
+				List<Map<String, Object>> fateList = new ArrayList<Map<String, Object>>();
+
+				for (int j = i + 1; j < fateuserList.size(); j++) {
+					XyfUser otherUser = fateuserList.get(j);
+					if (otherUser != null && otherUser.getWangyiId() != null && !otherUser.getWangyiId().equals(myId)) {
+						String otherId = otherUser.getWangyiId();
+						Map<String, Object> fateUser = xyfListenedSongService.getListenedFateUser(myId, otherId);
+						fateUser.put("xyfUser", xyfUser.getNickName());
+						fateUser.put("otherUser", otherUser.getNickName());
+						Double fateRate = getTwoUserFate1(otherUser, myId, otherId, xyfUser, xyfParam, fateUser);
+						if (StringUtil.isNotEmpty(fateRate)) {
+							fateUser.put("fateRate", fateRate);
+						} else {
+							fateUser.put("fateRate", 0.0);
+						}
+						fateList.add(fateUser);
+					}
+
+				}
+
+				TotalfateList.addAll(fateList);
+			}
+		}
+
+		/*
+		 * // 根据用户音乐id获取其有缘人 按数量多少获取 听得音乐代表心情 喜欢的音乐代表性格 //
+		 * 包括歌曲同歌手同数,歌曲同歌手不同数,歌曲不同歌手同数及两人总歌曲数
+		 * 
+		 * List<Map<String, Object>> ListenedFateUserList =
+		 * xyfListenedSongService.getMyListenedFateUsers(myId);
+		 * 
+		 * List<Map<String, Object>> LovedFateUserList =
+		 * xyfLovedSongService.getMyLovedFateUsers(myId);
+		 * 
+		 * // 获取喜欢的缘分值 // 用于放置按缘分值排序后的缘分人集合 List<Map<String, Object>> fateList =
+		 * new ArrayList<Map<String, Object>>();
+		 * 
+		 * // 我喜欢的有缘人 if (LovedFateUserList != null && LovedFateUserList.size()
+		 * > 0) {
+		 * 
+		 * for (Map<String, Object> listenedFateUser : LovedFateUserList) {
+		 * 
+		 * // 获取定位信息 // 根据有缘人的音乐id获取其user,包括userId,经纬度等信息 if
+		 * (listenedFateUser.containsKey("user_id") &&
+		 * listenedFateUser.get("user_id") != null) {
+		 * 
+		 * // 有缘人音乐id String musicId = (String) listenedFateUser.get("user_id");
+		 * // 获取歌曲占比 Double songsRate = getLoveSongFate(myId,
+		 * listenedFateUser,xyfParam);
+		 * 
+		 * XyfUser otherUser = xyfUserService.getUserByMusicId(musicId); if
+		 * (otherUser != null) {
+		 * 
+		 * listenedFateUser.put("otherUser", otherUser);
+		 * listenedFateUser.put("myUser", xyfUser);
+		 * 
+		 * // 计算总缘分值 Double param5 = Double.valueOf(xyfParam.getParam5()) *
+		 * 0.01; Double fateRate = songsRate * 1.0 * 1.0 * param5;
+		 * 
+		 * listenedFateUser.put("fateRate", fateRate);
+		 * 
+		 * } } fateList.add(listenedFateUser); } }
+		 * 
+		 * // 我听过的有缘人 if (ListenedFateUserList != null &&
+		 * ListenedFateUserList.size() > 0) {
+		 * 
+		 * // 用于放置按缘分值排序后的缘分人集合 // List<Map<Double, Object>> fateList = new //
+		 * ArrayList<Map<Double, Object>>(); for (Map<String, Object>
+		 * listenedFateUser : ListenedFateUserList) {
+		 * 
+		 * // 获取定位信息 // 根据有缘人的音乐id获取其user,包括userId,经纬度等信息 if
+		 * (listenedFateUser.containsKey("user_id") &&
+		 * listenedFateUser.get("user_id") != null) {
+		 * 
+		 * // 有缘人音乐id String musicId = (String) listenedFateUser.get("user_id");
+		 * // 获取歌曲占比 Double songsRate = getSongFate(myId,
+		 * listenedFateUser,xyfParam); listenedFateUser.put("songsRate",
+		 * songsRate);
+		 * 
+		 * XyfUser otherUser = xyfUserService.getUserByMusicId(musicId); if
+		 * (otherUser != null) { listenedFateUser.put("otherUser", otherUser);
+		 * listenedFateUser.put("myUser", xyfUser); // 计算总缘分值 Double param4 =
+		 * Double.valueOf(xyfParam.getParam4()) * 0.01; Double fateRate =
+		 * songsRate * 1.0 * 1.0 * param4;
+		 * 
+		 * listenedFateUser.put("fateRate", fateRate);
+		 * 
+		 * } } fateList.add(listenedFateUser); }
+		 * 
+		 * }
+		 * 
+		 * // 听过的和喜欢的人极有可能不同,但又有相同的人,我们需要找出来 for (int i = 0; i <
+		 * fateList.size(); i++) { Map<String, Object> m1 = fateList.get(i); if
+		 * (m1.containsKey("fateRate") && m1.get("fateRate") != null) {
+		 * 
+		 * if (m1.containsKey("user_id") && m1.get("user_id") != null) { String
+		 * userId = (String) m1.get("user_id"); for (int j = i + 1; j <
+		 * fateList.size(); j++) { Map<String, Object> m2 = fateList.get(j);
+		 * String userId2 = (String) m2.get("user_id"); if
+		 * (userId.equals(userId2)) {
+		 * 
+		 * Double m1fateRate =
+		 * Double.parseDouble(m1.get("fateRate").toString()); Double m2fateRate
+		 * = Double.parseDouble(m2.get("fateRate").toString()); Double fateRate
+		 * = m1fateRate + m2fateRate; m1.put("fateRate", fateRate);
+		 * fateList.remove(j); break; } } }
+		 * 
+		 * } else {
+		 * 
+		 * fateList.remove(i); } } // 对最终结果的缘分值进行放大处理 y =10*LN(x+1)+53.85 for
+		 * (Map<String, Object> fateUser : fateList) { Double fateRate = 0.0001;
+		 * if (fateUser.containsKey("fateRate") && fateUser.get("fateRate") !=
+		 * null) { fateRate =
+		 * Double.parseDouble(fateUser.get("fateRate").toString()); } Double
+		 * BigFateRate = 10 * Math.log(fateRate * 100 + 1) + 53.85;
+		 * fateUser.put("fateRate", BigFateRate); }
+		 * 
+		 * TotalfateList.addAll(fateList); } } // 默认综合排序排序 按fateRate try {
+		 * listSortByFateRate(TotalfateList); } catch (Exception e) {
+		 * 
+		 * e.printStackTrace(); }
+		 * 
+		 * 
+		 */
+
+		// 听过的和喜欢的人极有可能不同,但又有相同的人,我们需要找出来
+		for (int i = 0; i < TotalfateList.size(); i++) {
+			Map<String, Object> m1 = TotalfateList.get(i);
+			if (m1.containsKey("fateRate") && m1.get("fateRate") != null) {
+				if (m1.containsKey("user_id") && m1.get("user_id") != null) {
+					for (int j = i + 1; j < TotalfateList.size(); j++) {
+						Map<String, Object> m2 = TotalfateList.get(j);
+						// 去除重复数据
+						if (m1.get("fateRate").toString().equals(m2.get("fateRate").toString())) {
+							TotalfateList.remove(j);
+
+						}
+					}
+				}
+
+			} else {
+				TotalfateList.remove(i);
+			}
+		}
+
+		// 默认综合排序排序 按fateRate
+		try {
+			listSortByFateRate(TotalfateList);
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		// 只返回前10条
+		List<Map<String, Object>> topTenfateList = new ArrayList<Map<String, Object>>();
+
+		if (TotalfateList.size() > 10) {
+			for (int i = 0; i < 10; i++) {
+				topTenfateList.add(TotalfateList.get(i));
+			}
+			json.setObj(topTenfateList);
+			log.info("缘分值页面结果" + topTenfateList);
+		} else {
+			json.setObj(TotalfateList);
+		}
+		return json;
+
+	}
+
+	/**
+	 * 安卓版手机号注册
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param xyfUser
+	 * @return
+	 */
+	@RequestMapping(value = "/android/register.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson register(HttpServletRequest req, HttpServletResponse resp, XyfUser xyfUser) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		// 验证码
+		String code = (String) req.getSession().getAttribute("codeMsg");
+		String phone = (String) req.getSession().getAttribute("phone");
+
+		/*code = "1234";
+		phone = "13592575512";
+		xyfUser.setCode("1234");
+		xyfUser.setPassword("4321");
+		xyfUser.setPhone("13592575512");*/
+		log.info("安卓版手机号注册code:"+code);
+		log.info("安卓版手机号注册phone:"+phone);
+		if (xyfUser!=null) {
+			if (StringUtil.isNotEmpty(phone)&&StringUtil.isNotEmpty(code)) {
+				
+				if (code.equals(xyfUser.getCode()) && phone.equals(xyfUser.getPhone())) {
+					
+					XyfUser xyfUser1=xyfUserService.getUserByPhone(phone);
+					if (xyfUser1!=null) {
+						json.setMsg("手机号已存在!");
+						return json;
+					}else{
+						String userId = UUIDUtil.getUUID();
+						xyfUser.setUserId(userId);
+						xyfUser.setCreateTime(new Date());
+						flag = xyfUserService.save(xyfUser);
+						if (flag) {
+							req.getSession().setAttribute("userId", userId);
+							req.getSession().setAttribute("xyfUser", xyfUser);
+							json.setSuccess(flag);
+							return json;
+						}else{
+							json.setMsg("注册用户失败,保存信息出错!");
+							return json;
+							
+						}
+					}
+
+				} else {
+					json.setMsg("验证码或手机号错误");
+					json.setSuccess(flag);
+					return json;
+				}
+			}else{
+				json.setMsg("验证码或手机号不存在");
+			}
+		}else{
+			json.setMsg("xyfUser未传递参数");
+		}
+		json.setSuccess(flag);
+		return json;
+	}
+
+	/**
+	 * 发送手机验证码
+	 *
+	 * @param session
+	 * @param response
+	 * @param request
+	 */
+	@RequestMapping(value = "/android/sendMsgCode.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson sendMsgCode(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		String phone = req.getParameter("phone");
+		// phone = "13592575512";
+
+		if (StringUtil.isNotEmpty(phone)) {
+			String code = MessageCode.genVerifyCode();
+			String ip = WebUtil.getIp(req);
+			Integer operateTerminal = WebUtil.getRequestTerminal(req.getRequestURI());
+			SmsVerify smsVerify = new SmsVerify(null, phone, code, null, null, ip, operateTerminal);
+			smsVerify = MessageCode.sendCode(smsVerify);
+			if (smsVerify != null) {// 发送成功
+				try {
+					smsService.saveSms(smsVerify);
+				} catch (Exception e) {
+
+					e.printStackTrace();
+				}
+				req.getSession().setAttribute("codeMsg", code);
+				req.getSession().setAttribute("phone", phone);
+				json.setSuccess(true);
+				return json;
+			} else {
+				json.setMsg("发送失败");
+				return json;
+			}
+		}
+
+		return json;
+
+	}
+	
+	/**
+	 * 用户登陆
+	 * @param req
+	 * @param resp
+	 * @param xyfUser
+	 * @return
+	 */
+	@RequestMapping(value = "/android/Login.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson Login(HttpServletRequest req, HttpServletResponse resp, XyfUser xyfUser) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+
+		/*xyfUser.setPhone("13592575512");
+		xyfUser.setPassword("4321111");
+*/
+		if (xyfUser != null) {
+			String phone = xyfUser.getPhone();
+			String password = xyfUser.getPassword();
+			if (StringUtil.isNotEmpty(phone) && StringUtil.isNotEmpty(password)) {
+				xyfUser=xyfUserService.getByPhoneAndPassword(phone, password);
+				if (xyfUser!=null) {
+					flag=true;
+					req.getSession().setAttribute("userId", xyfUser.getUserId());
+				}else{
+					json.setMsg("手机号或密码错误");
+				}
+			}
+		}
+		json.setSuccess(flag);
+		return json;
+	}
+	
+	
+	
+	
+	/**
+	 * 忘记密码
+	 * @param req
+	 * @param resp
+	 * @param xyfUser
+	 * @return
+	 */
+	@RequestMapping(value = "/android/forgetPassword.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson forgetPassword(HttpServletRequest req, HttpServletResponse resp, XyfUser xyfUser) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		// 验证码
+		String code = (String) req.getSession().getAttribute("codeMsg");
+		String phone = (String) req.getSession().getAttribute("phone");
+
+		/*code = "1234";
+		phone = "13592575512";
+		xyfUser.setCode("1234");
+		xyfUser.setPassword("432111");
+		xyfUser.setPhone("13592575512");
+*/
+		if (code.equals(xyfUser.getCode()) && phone.equals(xyfUser.getPhone())) {
+			XyfUser oldUser=xyfUserService.getUserByPhone(phone);
+			if (oldUser!=null) {
+				oldUser.setPassword(xyfUser.getPassword());
+				flag=xyfUserService.update(oldUser);
+				if (flag) {
+					req.getSession().setAttribute("userId", oldUser.getUserId());
+					req.getSession().setAttribute("xyfUser", oldUser);
+				}
+			}
+		
+	}
+		json.setSuccess(flag);
+		return json;
+	}
+
+}

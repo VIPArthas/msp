@@ -1,0 +1,178 @@
+package com.wh.controller.xyf;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.wh.base.AjaxJson;
+import com.wh.controller.common.BaseController;
+import com.wh.service.xyf.XyfGzService;
+import com.wh.service.xyf.XyfUserService;
+import com.wh.util.StringUtil;
+import com.wh.xyfentity.XyfUser;
+
+@Controller
+@RequestMapping("/xyf/xyfGz")
+public class XyfGzController extends BaseController {
+	@Resource
+	private XyfUserService xyfUserService;
+	@Resource
+	private XyfGzService xyfGzService;
+
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+
+	/**
+	 * 我的关注列表
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/myGzList.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson myGzList(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		// String userId = req.getParameter("userId");
+		String userId = (String) req.getSession().getAttribute("userId");
+		// userId = "9333083dd5e84ef89dfb2254a7a469fe";
+		if (StringUtil.isNotEmpty(userId)) {
+			List<XyfUser> XyfUserList = xyfUserService.getMyGzList(userId);
+			if (XyfUserList != null && XyfUserList.size() > 0) {
+				json.setObj(XyfUserList);
+			}
+		}
+		return json;
+	}
+
+	/**
+	 * 关注我的list
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/gzMeList.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson gzMeList(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+
+		String userId = (String) req.getSession().getAttribute("userId");
+		//userId = "9333083dd5e84ef89dfb2254a7a469fe";
+		if (StringUtil.isNotEmpty(userId)) {
+			List<XyfUser> XyfUserList = xyfUserService.getGzMeList(userId);
+			if (XyfUserList != null && XyfUserList.size() > 0) {
+				json.setObj(XyfUserList);
+			}
+		}
+		return json;
+	}
+
+	/**
+	 * 取消关注
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/cancelGz.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson cancelGz(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		String gzUserId = req.getParameter("gzUserId");
+		// gzUserId = "9333083dd5e84ef89dfb2254a7a41234";
+		String userId = (String) req.getSession().getAttribute("userId");
+		// userId = "9333083dd5e84ef89dfb2254a7a469fe";
+		if (StringUtil.isNotEmpty(userId) && StringUtil.isNotEmpty(gzUserId)) {
+			int count = xyfGzService.deleteByUserIdAndGzUserId(userId, gzUserId);
+			if (count > 0) {
+				flag = true;
+			}
+		}
+		json.setSuccess(flag);
+		return json;
+	}
+
+	/**
+	 * 关注用户,插入关注数据
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/GzUser.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson GzUser(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		String gzUserId = req.getParameter("gzUserId");
+		// gzUserId = "11111";
+		String userId = (String) req.getSession().getAttribute("userId");
+		// userId = "22222";
+		if (StringUtil.isNotEmpty(userId) && StringUtil.isNotEmpty(gzUserId)) {
+			int count = xyfGzService.GzUser(userId, gzUserId);
+			if (count > 0) {
+				flag = true;
+			}
+		}
+		json.setSuccess(flag);
+		return json;
+	}
+	
+	/**
+	 * 他关注的list
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/otherGzList.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson otherGzList(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		String userId = req.getParameter("otherUserId");
+		//String userId = (String) req.getSession().getAttribute("userId");
+
+		 //userId = "9333083dd5e84ef89dfb2254a7a469fe";
+		if (StringUtil.isNotEmpty(userId)) {
+			List<XyfUser> XyfUserList = xyfUserService.getMyGzList(userId);
+			if (XyfUserList != null && XyfUserList.size() > 0) {
+				json.setObj(XyfUserList);
+			}
+		}
+		return json;
+	}
+	
+	
+	/**
+	 * 关注他的list
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/gzOtherList.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson gzOtherList(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		String userId = req.getParameter("otherUserId");
+		//String userId = (String) req.getSession().getAttribute("userId");
+		//userId = "9333083dd5e84ef89dfb2254a7a469fe";
+		if (StringUtil.isNotEmpty(userId)) {
+			List<XyfUser> XyfUserList = xyfUserService.getGzMeList(userId);
+			if (XyfUserList != null && XyfUserList.size() > 0) {
+				json.setObj(XyfUserList);
+			}
+		}
+		return json;
+	}
+	
+
+}

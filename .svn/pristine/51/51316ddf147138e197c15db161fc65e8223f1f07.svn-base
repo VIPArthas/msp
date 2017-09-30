@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.msp.MspMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.mspentity.MspMessage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="to_user" property="toUser" jdbcType="VARCHAR" />
+    <result column="to_party" property="toParty" jdbcType="VARCHAR" />
+    <result column="to_tag" property="toTag" jdbcType="VARCHAR" />
+    <result column="agent_id" property="agentId" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="safe" property="safe" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, to_user, to_party, to_tag, agent_id, content, safe, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from msp_message
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from msp_message
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wh.mspentity.MspMessage" >
+    insert into msp_message (id, to_user, to_party, 
+      to_tag, agent_id, content, 
+      safe, create_time)
+    values (#{id,jdbcType=INTEGER}, #{toUser,jdbcType=VARCHAR}, #{toParty,jdbcType=VARCHAR}, 
+      #{toTag,jdbcType=VARCHAR}, #{agentId,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{safe,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.mspentity.MspMessage" >
+    insert into msp_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="toUser != null" >
+        to_user,
+      </if>
+      <if test="toParty != null" >
+        to_party,
+      </if>
+      <if test="toTag != null" >
+        to_tag,
+      </if>
+      <if test="agentId != null" >
+        agent_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="safe != null" >
+        safe,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="toUser != null" >
+        #{toUser,jdbcType=VARCHAR},
+      </if>
+      <if test="toParty != null" >
+        #{toParty,jdbcType=VARCHAR},
+      </if>
+      <if test="toTag != null" >
+        #{toTag,jdbcType=VARCHAR},
+      </if>
+      <if test="agentId != null" >
+        #{agentId,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="safe != null" >
+        #{safe,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.mspentity.MspMessage" >
+    update msp_message
+    <set >
+      <if test="toUser != null" >
+        to_user = #{toUser,jdbcType=VARCHAR},
+      </if>
+      <if test="toParty != null" >
+        to_party = #{toParty,jdbcType=VARCHAR},
+      </if>
+      <if test="toTag != null" >
+        to_tag = #{toTag,jdbcType=VARCHAR},
+      </if>
+      <if test="agentId != null" >
+        agent_id = #{agentId,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="safe != null" >
+        safe = #{safe,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.mspentity.MspMessage" >
+    update msp_message
+    set to_user = #{toUser,jdbcType=VARCHAR},
+      to_party = #{toParty,jdbcType=VARCHAR},
+      to_tag = #{toTag,jdbcType=VARCHAR},
+      agent_id = #{agentId,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      safe = #{safe,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  	<!-- 根据条件获取企业号消息List -->
+	<select id="findList" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from msp_message
+		<include refid="sql_where" />
+	</select>
+
+
+	<select id="countList" resultType="int">
+		SELECT count(1) FROM msp_message
+		<include refid="sql_where" />
+	</select>
+	
+	
+	<sql id="sql_where">
+	<where>
+	  <if test="id != null">
+		 and id = #{id,jdbcType=INTEGER} 
+	  </if>	
+	  <if test="toUser != null" >
+        and to_user = #{toUser,jdbcType=VARCHAR}
+      </if>
+      <if test="toParty != null" >
+        and to_party = #{toParty,jdbcType=VARCHAR}
+      </if>
+      <if test="toTag != null" >
+        and to_tag = #{toTag,jdbcType=VARCHAR}
+      </if>
+      <if test="agentId != null" >
+        and agent_id = #{agentId,jdbcType=VARCHAR}
+      </if>
+      <if test="content != null" >
+        and content = #{content,jdbcType=VARCHAR}
+      </if>
+      <if test="safe != null" >
+        and safe = #{safe,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+   
+	</where>
+</sql>
+  
+</mapper>

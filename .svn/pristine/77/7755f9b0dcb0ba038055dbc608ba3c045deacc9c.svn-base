@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.msp.MspPhotoMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.mspentity.MspPhoto" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="msg" property="msg" jdbcType="VARCHAR" />
+    <result column="comment_num" property="commentNum" jdbcType="INTEGER" />
+    <result column="pageview_num" property="pageviewNum" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, msg, comment_num, pageview_num, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from msp_photo
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from msp_photo
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.mspentity.MspPhoto" >
+    insert into msp_photo (id, user_id, msg, 
+      comment_num, pageview_num, create_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR}, 
+      #{commentNum,jdbcType=INTEGER}, #{pageviewNum,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.mspentity.MspPhoto" >
+    insert into msp_photo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="msg != null" >
+        msg,
+      </if>
+      <if test="commentNum != null" >
+        comment_num,
+      </if>
+      <if test="pageviewNum != null" >
+        pageview_num,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null" >
+        #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="commentNum != null" >
+        #{commentNum,jdbcType=INTEGER},
+      </if>
+      <if test="pageviewNum != null" >
+        #{pageviewNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.mspentity.MspPhoto" >
+    update msp_photo
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null" >
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="commentNum != null" >
+        comment_num = #{commentNum,jdbcType=INTEGER},
+      </if>
+      <if test="pageviewNum != null" >
+        pageview_num = #{pageviewNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.mspentity.MspPhoto" >
+    update msp_photo
+    set user_id = #{userId,jdbcType=VARCHAR},
+      msg = #{msg,jdbcType=VARCHAR},
+      comment_num = #{commentNum,jdbcType=INTEGER},
+      pageview_num = #{pageviewNum,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  
+	<!-- 随手拍首页展示 -->  
+    <select id="showList" resultType="java.util.Map" parameterType="java.lang.String" >
+    	SELECT 
+  t.*,
+  ma.file_path 
+FROM
+  (SELECT 
+    mu.`name`,
+    mp.* 
+  FROM
+    `msp_photo` mp 
+    LEFT JOIN msp_user mu 
+      ON mp.`user_id` = mu.`id` 
+      <if test="type==1">
+      ORDER BY pageview_num DESC
+      </if>
+      <if test="type==2">
+      ORDER BY create_time DESC
+      </if>
+   ) t 
+  LEFT JOIN msp_attachements ma 
+    ON t.id = ma.link_id 
+GROUP BY t.id 
+  
+  	</select>
+  
+  
+  
+</mapper>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>聊一下</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <script type="text/javascript" src="../../js/rem.js"></script>
+    <script type="text/javascript" src="../../js/path.js"></script>
+    <link rel="stylesheet" href="../../css/css.css">
+</head>
+<body>
+<section class="list">
+    <ul class="list-ul">
+      
+    </ul>
+</section>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/zepto/1.1.4/zepto.min.js"></script>
+<script type="text/javascript" src="../../js/zuohua.js"></script>
+<script type="text/javascript" src="../../js/index.js"></script> 
+<script type="text/javascript">
+$('.liaoyixai', parent.document).addClass('select-actived').siblings('a').removeClass('select-actived');
+$(function(){
+liaoyixia();
+})
+</script>
+</body>
+</html>

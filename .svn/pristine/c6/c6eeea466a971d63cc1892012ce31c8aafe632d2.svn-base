@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.msp.MspTeacherClassMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.mspentity.MspTeacherClass" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="VARCHAR" />
+    <result column="class_id" property="classId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_id, class_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from msp_teacher_class
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from msp_teacher_class
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wh.mspentity.MspTeacherClass" >
+    insert into msp_teacher_class (id, member_id, class_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=VARCHAR}, #{classId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.mspentity.MspTeacherClass" >
+    insert into msp_teacher_class
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="classId != null" >
+        class_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="classId != null" >
+        #{classId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.mspentity.MspTeacherClass" >
+    update msp_teacher_class
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="classId != null" >
+        class_id = #{classId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.mspentity.MspTeacherClass" >
+    update msp_teacher_class
+    set member_id = #{memberId,jdbcType=VARCHAR},
+      class_id = #{classId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  	<!-- 根据教师工号获取代班信息 -->
+    <select id="tecClassListByMembId" resultType="java.util.Map" parameterType="java.lang.String" >
+   SELECT 
+  mc.`id` mcid,
+  mc.`name` mcname,
+  mu.`memeber_id` mumemberid,
+  mu.`name` muname 
+FROM
+  `msp_teacher_class` mtc 
+  LEFT JOIN `msp_user` mu 
+    ON mtc.`member_id` = mu.`memeber_id` 
+  LEFT JOIN `msp_class` mc 
+    ON mtc.`class_id` = mc.`id` 
+WHERE mu.`memeber_id` = #{memberId,jdbcType=VARCHAR}
+  AND TYPE = 1 
+  </select>
+</mapper>

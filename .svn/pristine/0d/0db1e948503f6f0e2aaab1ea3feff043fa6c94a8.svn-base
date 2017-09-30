@@ -1,0 +1,28 @@
+package com.wh.service.msp.impl;
+
+import javax.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import com.wh.dao.msp.MspClassMapper;
+import com.wh.mspentity.MspClass;
+import com.wh.service.base.impl.BaseServiceImpl;
+import com.wh.service.msp.MspClassService;
+
+/**
+ * 班级表
+ * @author Administrator
+ *
+ */
+@Service
+public class MspClassServiceImpl extends BaseServiceImpl<MspClass, String> implements MspClassService {
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+	@Resource
+	MspClassMapper dao;
+
+	@Resource
+	public void setBaseDAO(MspClassMapper mspClassMapper) {
+		this.dao = mspClassMapper;
+		this.baseDAO = mspClassMapper;
+	}
+}

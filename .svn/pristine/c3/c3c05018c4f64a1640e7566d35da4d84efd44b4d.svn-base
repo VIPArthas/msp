@@ -1,0 +1,78 @@
+package com.wh.controller.msp;
+
+import java.util.Set;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.wh.base.AjaxJson;
+import com.wh.controller.common.BaseController;
+import com.wh.service.msp.MspUserService;
+import com.wiscom.ldapvalidate.ldapCheck;
+
+/**
+ * 仅内网可用
+ * @author Administrator
+ *
+ */
+@Controller
+@RequestMapping("/msp/mspLogin")
+public class MspLoginController extends BaseController {
+
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+
+	@Resource
+	private MspUserService mspUserService;
+	
+	
+	@RequestMapping(value = "/wx/login.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson login(HttpServletRequest req, HttpServletResponse resp,String username,String password) {
+		
+		
+		
+		AjaxJson json = new AjaxJson();
+		ldapCheck test = ldapCheck.getInstance("D:\\tomcat8\\webapps\\ROOT\\WEB-INF\\classes\\config.properties");
+		//成功,username 即工号       若   
+		if (test.checkPassword(username, password)) {
+			
+			
+			
+			System.out.println("password is ok");
+		} else {
+			System.out.println("password is error or other system reasons");
+		}
+		String dn = test.getUserDN(username);
+		Set hs = test.getUserAttribute(username, "cn");
+		System.out.println(dn);
+		System.out.println("set:" + hs);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		return json;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/wx/loginOut.htm")
+	public String loginOut() {
+		
+		return "/wmh/wx/wxlogin";
+	}
+
+}

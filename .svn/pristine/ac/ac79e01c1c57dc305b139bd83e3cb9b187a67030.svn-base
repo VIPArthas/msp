@@ -1,0 +1,63 @@
+$(document).ready(function(){
+	var DepId=1;
+	var innerUserData=function(models){
+		$(".thistable tbody").html("");
+		for(var i=0;i<models.length;i++){
+			   $("<tr><td>"+models[i].name+"</td><td>"+models[i].mobile+"</td><td>"+models[i].email+"</td><td>"+models[i].fatherName+":"+models[i].fatherPhone+"</td><td>"+models[i].wxNum+"</td></tr>").appendTo($(".thistable tbody"));
+		    }
+	}
+	//页面装载初始数据
+	$.ajax({
+		type:"get",
+		dataType:"json",
+		cache:false,
+		url:urlPix+"/msp/mspUser/web/showAddressBook.htm",
+		async:false,
+		data:{
+		start:1,
+		length:10
+		},
+	    success:function(data){
+	    $("<li data-id="+data.obj.id+"><span data-switch='on' name='child'><i class='fa'>&#xe63b;</i>"+data.obj.name+"</span></li>").appendTo($(".result-list").eq(0));
+	    innerUserData(data.attributes.muList)
+	    }
+	});
+	//请求子频道
+	$(".result-list li").on("click","span[data-switch='on']",function(){
+		var parentLi=$(this).parent();
+		var childId=parentLi.data("id");
+		DepId=childId;
+		var dataModel={};
+		$.ajax({
+			 type:"get",
+			 dataType:"json",
+			 cache:false,
+			 url:urlPix+"/msp/mspUser/web/showAddressBook.htm",
+			 async:false,
+			 data:{
+			 depID:childId,
+			 start:1,
+			 length:10
+			 },
+			 success:function(data){
+				 dataModel=data;
+			 }
+		 })
+		if($(this).data("switch")=="on"){
+			alert(dataModel.obj.childDepList.length)
+			 if(dataModel.obj.childDepList!=null){
+				 var ChildList="<ul>"
+				 for(var i=0;i<dataModel.obj.childDepList.length;i++){
+					 ChildList+="<li data-id='"+dataModel.obj.childDepList[i].id+"'><span data-switch='on' name='child'><i class='fa'>&#xe63b;</i>"+dataModel.obj.childDepList[i].name+"</span></li>"
+					 innerUserData(dataModel.attributes.muList);
+				 }
+				 ChildList+="</ul>";
+				 $(ChildList).appendTo(parentLi);
+				 }
+		 $(this).data("switch","off");
+		}else{
+			innerUserData(dataModel.attributes.muList);
+		}
+	})
+ 
+})

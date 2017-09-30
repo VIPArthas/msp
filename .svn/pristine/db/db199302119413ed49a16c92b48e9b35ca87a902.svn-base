@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.rgpp.TbUserMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.entity.TbUser" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="headImg" property="headimg" jdbcType="VARCHAR" />
+    <result column="lastLoginTime" property="lastlogintime" jdbcType="TIMESTAMP" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+    <result column="openId" property="openid" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="subName" property="subname" jdbcType="VARCHAR" />
+    <result column="selfImg" property="selfimg" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="INTEGER" />
+    <result column="subName1" property="subname1" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, createTime, description, headImg, lastLoginTime, latitude, longitude, openId, 
+    sex, type, username, subName, selfImg, source, subName1
+  </sql>
+  <select id="findUserById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_user
+    where 1=1 
+   	<if test="id !=null and id !=''">
+		and id = #{id,jdbcType=VARCHAR}
+	</if>
+  </select>
+  
+  <!--根据openId查询 -->
+  <select id="findUserByOpenId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_user as u where u.id
+    in ( select w.user_id from tb_wchatuser as w where 1= 1 
+    	<if test="id !=null and id !=''">
+			and w.openId = #{openId,jdbcType=VARCHAR}
+	</if>
+	)
+    
+  </select>
+  <!--根据mobile查询 -->
+  <select id="findUserByMobile" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_user as u where 1 = 1 
+   	<if test="mobile!=null and mobile !=''">
+		and u.mobile = #{mobile,jdbcType=VARCHAR}
+	</if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tb_user
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.TbUser" >
+    insert into tb_user (id, createTime, description, 
+      headImg, lastLoginTime, latitude, 
+      longitude, openId, sex, 
+      type, username, subName, 
+      selfImg, source, subName1
+      )
+    values (#{id,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{description,jdbcType=VARCHAR}, 
+      #{headimg,jdbcType=VARCHAR}, #{lastlogintime,jdbcType=TIMESTAMP}, #{latitude,jdbcType=DOUBLE}, 
+      #{longitude,jdbcType=DOUBLE}, #{openid,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, 
+      #{type,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{subname,jdbcType=VARCHAR}, 
+      #{selfimg,jdbcType=VARCHAR}, #{source,jdbcType=INTEGER}, #{subname1,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="saveUser" parameterType="com.wh.entity.TbUser" >
+    insert into tb_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="headimg != null" >
+        headImg,
+      </if>
+      <if test="lastlogintime != null" >
+        lastLoginTime,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="openid != null" >
+        openId,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="subname != null" >
+        subName,
+      </if>
+      <if test="selfimg != null" >
+        selfImg,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="subname1 != null" >
+        subName1,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="headimg != null" >
+        #{headimg,jdbcType=VARCHAR},
+      </if>
+      <if test="lastlogintime != null" >
+        #{lastlogintime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="subname != null" >
+        #{subname,jdbcType=VARCHAR},
+      </if>
+      <if test="selfimg != null" >
+        #{selfimg,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=INTEGER},
+      </if>
+      <if test="subname1 != null" >
+        #{subname1,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.TbUser" >
+    update tb_user
+    <set >
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="headimg != null" >
+        headImg = #{headimg,jdbcType=VARCHAR},
+      </if>
+      <if test="lastlogintime != null" >
+        lastLoginTime = #{lastlogintime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="openid != null" >
+        openId = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="subname != null" >
+        subName = #{subname,jdbcType=VARCHAR},
+      </if>
+      <if test="selfimg != null" >
+        selfImg = #{selfimg,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=INTEGER},
+      </if>
+      <if test="subname1 != null" >
+        subName1 = #{subname1,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.TbUser" >
+    update tb_user
+    set createTime = #{createtime,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=VARCHAR},
+      headImg = #{headimg,jdbcType=VARCHAR},
+      lastLoginTime = #{lastlogintime,jdbcType=TIMESTAMP},
+      latitude = #{latitude,jdbcType=DOUBLE},
+      longitude = #{longitude,jdbcType=DOUBLE},
+      openId = #{openid,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      username = #{username,jdbcType=VARCHAR},
+      subName = #{subname,jdbcType=VARCHAR},
+      selfImg = #{selfimg,jdbcType=VARCHAR},
+      source = #{source,jdbcType=INTEGER},
+      subName1 = #{subname1,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

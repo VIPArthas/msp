@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>校缘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<script src="/resource/xyuan/js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="/resource/xyuan/js/rem.js?v=1"></script>
+	<link rel="stylesheet" href="/resource/xyuan/css/index.css">
+    <link rel="stylesheet" href="/resource/xyuan/css/swiper.min.css">
+   <script type="text/javascript" src="/resource/xyuan/js/path.js"></script>
+</head>
+<body>
+<div class="swiper-container" style="height: 100%;">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide swiper-join">
+            <section class="yindaoone"></section>
+        </div>
+        <div class="swiper-slide swiper-recharge">
+            <section class="yindaotwo">
+                <a href="/resource/xyuan/html/music/bangding.html">开启缘分之旅</a>
+            </section>
+        </div>
+    </div>
+    <div class="swiper-pagination"></div>
+</div>
+</body>
+
+<script type="text/javascript" src="/resource/xyuan/js/zepto.min.js"></script>
+<script type="text/javascript" src="/resource/xyuan/js/swiper.min.js"></script>
+
+</html>
+<script language="javascript">
+    var mySwiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        paginationClickable: true,
+    })
+    
+   
+
+</script>

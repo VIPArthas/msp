@@ -1,0 +1,21 @@
+package com.wh.controller.xyf;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.wh.controller.common.BaseController;
+import com.wh.service.xyf.XyfListenedSongService;
+
+@Controller
+@RequestMapping("/xyf/xyfListenedSong")
+public class XyfListenedSongController extends BaseController {
+	@Resource
+	private XyfListenedSongService xyfListenedSongService;
+
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+
+}

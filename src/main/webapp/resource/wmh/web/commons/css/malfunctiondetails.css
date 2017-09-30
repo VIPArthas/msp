@@ -1,0 +1,59 @@
+*{
+	padding: 0;
+	margin: 0;
+	font-family: "微软雅黑";
+}
+.row{
+	width: 100%;
+}
+
+.h_xiangqing{
+	width:100%;
+	border-bottom: 2px solid #1C7ED7;
+	margin-top: 30px;
+}
+.h_xiangqing>div{
+	width: 135px;
+	height: 35px;
+	background: #1C7ED7;
+	text-align: center;
+	line-height: 35px;
+	color: white;
+}
+.h_difang{
+	margin-top: 40px;
+	width: 100%;
+	-height: 50px;
+	position: relative;
+}
+.h_difang>span:nth-child(1){
+	display: inline-block;
+	width: 6px;
+	height: 16px;
+	background: #1C7ED7;
+	border-radius:2px 2px 2px 2px ;
+	position: absolute;
+	top: 2px;
+}
+.h_difang>span:nth-child(2){
+	display: inline-block;
+	font-size: 16px;
+    color: #1C7ED7;
+    margin-left: 16px;
+    /*border: 1px solid gainsboro;*/
+}
+.h_difang>span:nth-child(3){
+	display: block;
+	width: 90%;
+	font-size: 16px;
+    color: #858585;
+    margin-left: 16px;
+    margin-top: 10px;
+}
+.imgs{
+	width: 177px;
+	height: 132px;
+	margin-left: 16px;
+	margin-top: 20px;
+	border: 0;
+}

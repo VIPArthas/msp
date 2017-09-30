@@ -1,0 +1,41 @@
+
+@font-face {font-family: "fa";
+  src: url('iconfont.eot?t=1489046077301'); /* IE9*/
+  src: url('iconfont.eot?t=1489046077301#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1489046077301') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1489046077301') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1489046077301#fa') format('svg'); /* iOS 4.1- */
+}
+
+.fa {
+  font-family:"fa" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-bianji:before { content: "\e62f"; }
+
+.fa-tianjia:before { content: "\e627"; }
+
+.fa-bianji1:before { content: "\e611"; }
+
+.fa-zhuxiao:before { content: "\e95c"; }
+
+.fa-shanchu:before { content: "\e8c5"; }
+
+.fa-xiaoxituisong:before { content: "\e6ad"; }
+
+.fa-yonghuguanli:before { content: "\e6c8"; }
+
+.fa-duihao:before { content: "\e60d"; }
+
+.fa-fasongxiaoxi:before { content: "\e72a"; }
+
+.fa-money:before { content: "\e6ff"; }
+
+.fa-xinwen:before { content: "\e612"; }
+
+.fa-chakanxiaoxi:before { content: "\e673"; }
+

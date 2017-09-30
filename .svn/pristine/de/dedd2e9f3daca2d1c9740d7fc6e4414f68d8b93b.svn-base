@@ -1,0 +1,113 @@
+package com.wh.service.xyf.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import com.wh.dao.xyf.XyfUserMapper;
+import com.wh.service.base.impl.BaseServiceImpl;
+import com.wh.service.xyf.XyfUserService;
+import com.wh.xyfentity.XyfUser;
+
+@Service
+public class XyfUserServiceImpl extends BaseServiceImpl<XyfUser, Integer> implements XyfUserService {
+	@Resource
+	XyfUserMapper dao;
+
+	@Resource
+	public void setBaseDAO(XyfUserMapper xyfUserMapper) {
+		this.dao = xyfUserMapper;
+		this.baseDAO = xyfUserMapper;
+	}
+
+	@Override
+	public Map<String, Object> getUserByUserId(String userId) {
+
+		return dao.getUserByUserId(userId);
+	}
+
+	@Override
+	public boolean updateByUserId(XyfUser xyfUser) {
+
+		return dao.updateByUserId(xyfUser) > 0 ? true : false;
+	}
+
+	@Override
+	public List<XyfUser> getMyGzList(String userId) {
+
+		return dao.getMyGzList(userId);
+	}
+
+	@Override
+	public String getUserIdByOpenId(String openId) {
+
+		return dao.getUserIdByOpenId(openId);
+	}
+
+	/**
+	 * 根据openId获取用户信息
+	 * 
+	 * @param openId
+	 * @return
+	 */
+	@Override
+	public XyfUser getUserByOpenId(String openId) {
+
+		return dao.getUserByOpenId(openId);
+	}
+
+	@Override
+	public List<XyfUser> getGzMeList(String userId) {
+
+		return dao.getGzMeList(userId);
+	}
+
+	@Override
+	public XyfUser getUserByMusicId(String musicId) {
+
+		return dao.getUserByMusicId(musicId);
+	}
+
+	@Override
+	public void deleteByOpenId(String openId) {
+		dao.deleteByOpenId(openId);
+
+	}
+
+	@Override
+	public List<XyfUser> getAllUser() {
+
+		return dao.getAllUser();
+	}
+
+	@Override
+	public void deleteNullUser() {
+		dao.deleteNullUser();
+
+	}
+
+	@Override
+	public XyfUser getByPhoneAndPassword(String phone, String password) {
+		
+		return dao.getByPhoneAndPassword(phone,password);
+	}
+
+	@Override
+	public XyfUser getUserByPhone(String phone) {
+		
+		return dao.getUserByPhone(phone);
+	}
+
+	@Override
+	public XyfUser findUserByUserId(String userId) {
+		// TODO Auto-generated method stub
+		return dao.findUserByUserId(userId);
+	}
+
+	
+
+
+
+}

@@ -1,0 +1,116 @@
+package com.wh.util.msp;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.wh.base.AjaxJson;
+import com.wh.mspentity.MspDepartment;
+import com.wh.mspentity.MspPlatform;
+import com.wh.service.msp.MspPlatformService;
+import com.wh.service.rgpp.PlatformService;
+import com.wh.util.StringUtil;
+
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
+
+/**
+ * 微信企业号调用类 {"errcode":0,"errmsg":"ok"} 此结果表示调用方法成功返回
+ * 
+ * @author Sunlight
+ * 
+ */
+
+
+public class QiYeUtil {
+
+	private static Logger log = LoggerFactory.getLogger(QiYeUtil.class);
+
+
+	/**
+	 * 获取企业号AccessToken
+	 * 
+	 * @param CorpID
+	 * @param CorpSecret
+	 * @return
+	 */
+	public static AccessToken getAccessToken(String CorpID, String CorpSecret) {
+		AccessToken accessToken = WechatAccessToken.getAccessToken(CorpID, CorpSecret, 1);
+		return accessToken;
+	}
+
+	/**
+	 * OAuth2验证接口根据code获取成员信息
+	 * 
+	 * @param token
+	 * @param code
+	 * @param AgentID
+	 * @return
+	 */
+	public static Result<String> oAuth2GetUserByCode(String token, String code, int AgentID) {
+		Result<String> result = new Result<String>();
+		JSONObject jo = WechatOAuth2.getUserByCode(token, code, AgentID);
+		if (jo != null) {
+			try {
+				String userId = jo.getString("UserId");
+				if (userId != null && userId.length() > 0) {
+					log.info("OAuth2验证接口根据code获取成员信息----> UserId" + userId);
+					result.setErrmsg("");
+					result.setErrcode("0");
+					result.setObj(userId);
+				} else {
+					result.setErrmsg(jo.getString("errmsg"));
+					result.setErrcode(jo.getString("errcode"));
+				}
+
+			} catch (Exception e) {
+				result.setErrmsg("accessToken 超时......");
+				result.setErrcode("42001");
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 获取code
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	public static void getCode(HttpServletRequest request, HttpServletResponse response) {
+		// 此处可以添加获取持久化的数据，如企业号id等相关信息
+		String corpid = Constants.CORPID;
+		String redirect_uri = Constants.REDIRECT_URL;
+		try {
+			redirect_uri = java.net.URLEncoder.encode(redirect_uri, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			log.error("企业号获取code,重定向地址编码错误:" + e.toString());
+
+		}
+		String oauth2Url = Constants.OAUTH2_URL;
+		oauth2Url = oauth2Url.replace("CORPID", corpid).replace("REDIRECT_URL", redirect_uri);
+		try {
+			response.sendRedirect(oauth2Url);
+		} catch (IOException e) {
+			log.error("企业号获取code,重定向失败:" + e.toString());
+		}
+
+	}
+
+	/**
+	 * 根据accesstoken获取部门list
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+
+}

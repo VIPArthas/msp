@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.wmh.WmhTagUseMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.entity.WmhTagUse" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="tag_name" property="tagName" jdbcType="VARCHAR" />
+    <result column="tag_number" property="tagNumber" jdbcType="INTEGER" />
+    <result column="last_use_time" property="lastUseTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, tag_name, tag_number, last_use_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from wmh_tag_use
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from wmh_tag_use
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.WmhTagUse" >
+    insert into wmh_tag_use (id, tag_name, tag_number, 
+      last_use_time)
+    values (#{id,jdbcType=VARCHAR}, #{tagName,jdbcType=VARCHAR}, #{tagNumber,jdbcType=INTEGER}, 
+      #{lastUseTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.WmhTagUse" >
+    insert into wmh_tag_use
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="tagName != null" >
+        tag_name,
+      </if>
+      <if test="tagNumber != null" >
+        tag_number,
+      </if>
+      <if test="lastUseTime != null" >
+        last_use_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="tagName != null" >
+        #{tagName,jdbcType=VARCHAR},
+      </if>
+      <if test="tagNumber != null" >
+        #{tagNumber,jdbcType=INTEGER},
+      </if>
+      <if test="lastUseTime != null" >
+        #{lastUseTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.WmhTagUse" >
+    update wmh_tag_use
+    <set >
+      <if test="tagName != null" >
+        tag_name = #{tagName,jdbcType=VARCHAR},
+      </if>
+      <if test="tagNumber != null" >
+        tag_number = #{tagNumber,jdbcType=INTEGER},
+      </if>
+      <if test="lastUseTime != null" >
+        last_use_time = #{lastUseTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.WmhTagUse" >
+    update wmh_tag_use
+    set tag_name = #{tagName,jdbcType=VARCHAR},
+      tag_number = #{tagNumber,jdbcType=INTEGER},
+      last_use_time = #{lastUseTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据标签查询标签使用情况 -->
+  <select id="selectTagByTagName" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select * from wmh_tag_use where tag_name = #{tagName,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 获取常用的前4个标签 -->
+  <select id="getOftenUseTags" resultType="java.util.Map">
+  	SELECT t.`tag_name` FROM wmh_tag_use t ORDER BY t.`tag_number` DESC LIMIT 4
+  </select>  
+  
+  <!-- 获取最近使用的前10个标签 -->
+  <select id="getLastUseTags" resultType="java.util.Map">
+  	SELECT t.`tag_name` FROM wmh_tag_use t ORDER BY t.`last_use_time` DESC LIMIT 10
+  </select>
+  
+  <!-- 根据标签Id修改标签使用次数+1 -->
+  <update id="updateTagNumberById" parameterType="java.lang.String" >
+    update wmh_tag_use
+    <set >
+        tag_number = tag_number + 1, last_use_time = #{lastUseTime,jdbcType=VARCHAR}
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询常用的10条标签 -->
+  <select id="selectCommonUseTagList" resultMap="BaseResultMap">
+  	SELECT * FROM `wmh_tag_use` ORDER BY tag_number DESC LIMIT 10
+  </select>
+</mapper>

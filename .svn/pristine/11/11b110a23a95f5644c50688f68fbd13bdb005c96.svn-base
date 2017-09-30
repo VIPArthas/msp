@@ -1,0 +1,21 @@
+package com.wh.dao.xyf;
+
+import org.springframework.stereotype.Repository;
+
+import com.wh.base.BaseMapper;
+import com.wh.xyfentity.XyfParam;
+
+@Repository
+public interface XyfParamMapper extends BaseMapper<XyfParam, Integer>{
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(XyfParam record);
+
+    int insertSelective(XyfParam record);
+
+    XyfParam selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(XyfParam record);
+
+    int updateByPrimaryKey(XyfParam record);
+}

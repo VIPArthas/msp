@@ -1,0 +1,79 @@
+package com.wh.service.xyf;
+
+import java.util.List;
+import java.util.Map;
+
+import com.wh.exception.ServiceException;
+import com.wh.service.base.BaseService;
+import com.wh.xyfentity.XyfUser;
+
+public interface XyfUserService extends BaseService<XyfUser, Integer> {
+
+	/**
+	 * 根据用户id获取用户主页信息
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	Map<String, Object> getUserByUserId(String userId);
+
+	/**
+	 * 根据userId更新用户信息
+	 * 
+	 * @param xyfUser
+	 * @return
+	 */
+
+	boolean updateByUserId(XyfUser xyfUser);
+
+	/**
+	 * 获取用户关注列表
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	List<XyfUser> getMyGzList(String userId);
+
+	String getUserIdByOpenId(String openId);
+	/**
+	 * 根据openId获取用户信息
+	 * @param openId
+	 * @return
+	 */
+	XyfUser getUserByOpenId(String openId);
+	
+	/**
+	 * 关注我的用户list
+	 * @param userId
+	 * @return
+	 */
+	List<XyfUser> getGzMeList(String userId);
+	/**
+	 * 根据有缘人的音乐id获取其user,包括userId,经纬度等信息
+	 * @param musicId
+	 * @return
+	 */
+	XyfUser getUserByMusicId(String musicId)throws ServiceException;
+
+	void deleteByOpenId(String openId)throws ServiceException;
+
+	List<XyfUser> getAllUser()throws ServiceException;
+
+	void deleteNullUser()throws ServiceException;
+	
+	/**
+	 * 根据手机号，密码查询用户
+	 * @param phone
+	 * @param password
+	 * @return
+	 */
+	XyfUser getByPhoneAndPassword(String phone, String password)throws ServiceException;
+
+	XyfUser getUserByPhone(String phone)throws ServiceException;
+
+	XyfUser findUserByUserId(String userId)throws ServiceException;
+
+
+	
+
+}

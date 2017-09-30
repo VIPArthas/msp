@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.wmh.WmhNewsMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.entity.WmhNews" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="news_title" property="newsTitle" jdbcType="VARCHAR" />
+    <result column="source_div" property="sourceDiv" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="click_num" property="clickNum" jdbcType="INTEGER" />
+    <result column="bottom_text" property="bottomText" jdbcType="VARCHAR" />
+    <result column="sync_time" property="syncTime" jdbcType="VARCHAR" />
+    <result column="sign" property="sign" jdbcType="INTEGER" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.wh.entity.WmhNews" extends="BaseResultMap" >
+    <result column="news_content" property="newsContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, url, news_title, source_div, create_time, click_num, bottom_text, sync_time,sign,author
+  </sql>
+  <sql id="Blob_Column_List" >
+    news_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wmh_news
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from wmh_news
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.WmhNews" >
+    insert into wmh_news (id, url, news_title, 
+      source_div, create_time, click_num, 
+      bottom_text, sync_time, news_content,sign,author
+      )
+    values (#{id,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{newsTitle,jdbcType=VARCHAR}, 
+      #{sourceDiv,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{clickNum,jdbcType=INTEGER}, 
+      #{bottomText,jdbcType=VARCHAR}, #{syncTime,jdbcType=VARCHAR}, #{newsContent,jdbcType=LONGVARCHAR},
+      #{sign,jdbcType=INTEGER},
+      #{author,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.WmhNews" >
+    insert into wmh_news
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="newsTitle != null" >
+        news_title,
+      </if>
+      <if test="sourceDiv != null" >
+        source_div,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="clickNum != null" >
+        click_num,
+      </if>
+      <if test="bottomText != null" >
+        bottom_text,
+      </if>
+      <if test="syncTime != null" >
+        sync_time,
+      </if>
+      <if test="newsContent != null" >
+        news_content,
+      </if>
+      <if test="sign != null" >
+        sign,
+      </if>
+       <if test="author != null" >
+        author,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="newsTitle != null" >
+        #{newsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceDiv != null" >
+        #{sourceDiv,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="clickNum != null" >
+        #{clickNum,jdbcType=INTEGER},
+      </if>
+      <if test="bottomText != null" >
+        #{bottomText,jdbcType=VARCHAR},
+      </if>
+      <if test="syncTime != null" >
+        #{syncTime,jdbcType=VARCHAR},
+      </if>
+      <if test="newsContent != null" >
+        #{newsContent,jdbcType=LONGVARCHAR},
+      </if>
+       <if test="sign != null" >
+        #{sign,jdbcType=INTEGER},
+      </if>
+      <if test="author != null" >
+        #{author,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.WmhNews" >
+    update wmh_news
+    <set >
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="newsTitle != null" >
+        news_title = #{newsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceDiv != null" >
+        source_div = #{sourceDiv,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="clickNum != null" >
+        click_num = #{clickNum,jdbcType=INTEGER},
+      </if>
+      <if test="bottomText != null" >
+        bottom_text = #{bottomText,jdbcType=VARCHAR},
+      </if>
+      <if test="syncTime != null" >
+        sync_time = #{syncTime,jdbcType=VARCHAR},
+      </if>
+      <if test="newsContent != null" >
+        news_content = #{newsContent,jdbcType=LONGVARCHAR},
+      </if>
+       <if test="sign != null" >
+        sign = #{sign,jdbcType=INTEGER},
+      </if>
+      <if test="author != null" >
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wh.entity.WmhNews" >
+    update wmh_news
+    set url = #{url,jdbcType=VARCHAR},
+      news_title = #{newsTitle,jdbcType=VARCHAR},
+      source_div = #{sourceDiv,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      click_num = #{clickNum,jdbcType=INTEGER},
+      bottom_text = #{bottomText,jdbcType=VARCHAR},
+      sync_time = #{syncTime,jdbcType=VARCHAR},
+      news_content = #{newsContent,jdbcType=LONGVARCHAR},
+      sign = #{sign,jdbcType=INTEGER},
+      author = #{author,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.WmhNews" >
+    update wmh_news
+    set url = #{url,jdbcType=VARCHAR},
+      news_title = #{newsTitle,jdbcType=VARCHAR},
+      source_div = #{sourceDiv,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      click_num = #{clickNum,jdbcType=INTEGER},
+      bottom_text = #{bottomText,jdbcType=VARCHAR},
+      sync_time = #{syncTime,jdbcType=VARCHAR},
+      sign = #{sign,jdbcType=INTEGER},
+      author = #{author,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectAllNews" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wmh_news order by create_time desc
+  </select>
+  
+  
+  
+  <select id="selectWmhNewsListPage" parameterType="com.wh.entity.WmhNews" resultMap="BaseResultMap">
+		SELECT 
+		  <include refid="Base_Column_List" />
+		FROM
+		  wmh_news 
+		  	<where>
+			<if test="searchContent != null and searchContent != ''">
+				and (news_title like CONCAT ('%',#{searchContent},'%'))
+			</if>
+			<if test="sign != null">
+				 and sign = #{sign}
+			</if>  
+		</where>
+		  
+		  order by create_time desc
+  </select>
+  
+  <!-- 首页新闻列表展示，根据时间倒序查询新闻 -->
+  <select id="selectNewsByCrateTimeMobileListPage" resultType="java.util.Map" parameterType="com.wh.entity.WmhNews">
+  	SELECT 
+	  id,
+	  news_title,
+	  source_div,
+	  create_time,
+	  sync_time
+	FROM
+	  wmh_news 
+		<where>
+			<if test="searchContent != null and searchContent != ''">
+				and (news_title like CONCAT ('%',#{searchContent},'%'))
+			</if>
+			<if test="sign != null">
+				 and sign = #{sign}
+			</if>  
+		</where>
+	ORDER BY create_time DESC
+  </select>
+  <!-- 根据条件查询新闻条数 -->
+  <select id="selectNewsCount" resultType="java.lang.Long" parameterType="com.wh.entity.WmhNews">
+  	SELECT 
+	  count(1) 
+	FROM
+	  wmh_news
+	<where>
+			<if test="searchContent != null and searchContent != ''">
+				and (news_title like CONCAT ('%',#{searchContent},'%'))
+			</if>
+			<if test="sign != null">
+				 and sign = #{sign}
+			</if>  
+		</where>
+  </select>
+  <select id="selectSyncTimeAndNewsCount" resultType="java.util.Map" parameterType="com.wh.entity.WmhNews">
+  	SELECT MAX(n.`sync_time`) sync_time,COUNT(1) news_count  FROM wmh_news n WHERE n.`sign` = #{sign}
+  </select>
+  
+</mapper>

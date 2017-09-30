@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color: #f3f3f3">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <title>随手拍详情</title>
+    <script type="text/javascript" src="../../js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="../../js/path.js"></script> 
+    <script type="text/javascript" src="../../js/style.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../css/font/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/swiper.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/index.css"/>
+
+</head>
+<body style="padding-bottom:55px;">
+<header class="details_header"><div><img id="sender-photo" src="" alt=""><span id='sender-name'></span></div><span id='sender-time'></span></header>
+<div class="swiper-container details_img">
+    <div class="swiper-wrapper">
+<!--         <div class="swiper-slide">
+            <section class="yindaoone">
+                <img src="../../img/2.jpg" alt="">
+            </section>
+        </div>
+        <div class="swiper-slide">
+            <section class="yindaotwo">
+                <img src="../../img/1.jpg" alt="">
+            </section>
+        </div>
+        <div class="swiper-slide">
+            <section class="yindaoone">
+                <img src="../../img/2.jpg" alt="">
+            </section>
+        </div>
+        <div class="swiper-slide">
+            <section class="yindaotwo">
+                <img src="../../img/1.jpg" alt="">
+            </section>
+        </div>
+        <div class="swiper-slide">
+            <section class="yindaoone">
+                <img src="../../img/2.jpg" alt="">
+            </section>
+        </div>
+        <div class="swiper-slide">
+            <section class="yindaotwo">
+                <img src="../../img/1.jpg" alt="">
+            </section>
+        </div> -->
+    </div>
+    <div class="swiper-pagination"></div>
+</div>
+<div style="background-color: white">
+    <p id='detail-msg' class="details_title wrap"></p>
+</div>
+<div class="details_message">
+    <span class="icon iconfont icon-chakan"><span id='detail-num'></span></span>
+    <span id='detail-replyNum'><span id="reply_Num"></span>条评论</span>
+</div>
+<section class="details_comment">
+<!--     <div><span class="name">沫沫</span>&nbsp;回复了&nbsp;<span class="name">夏目</span>：<span>me too!</span></div>
+    <div><span class="name">夏目</span>：<span>怀念每天打英雄联盟的日子</span></div> -->
+</section>
+<div class="send_comment">
+    <div><input id="replymsg" type="text" placeholder="评论"><span onclick="sendreply()">发表</span></div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../../js/zepto.min.js"></script>
+<script type="text/javascript" src="../../js/swiper.min.js"></script>
+<script type="text/javascript" src="../../js/ajax.js"></script>
+<script language="javascript">
+  $(document).ready(function(){
+	  detail();
+	});
+    
+    
+</script>

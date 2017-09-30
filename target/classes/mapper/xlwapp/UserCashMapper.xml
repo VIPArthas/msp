@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wh.dao.xlwapp.UserCashMapper">
+  <resultMap id="BaseResultMap" type="com.wh.entity.UserCash">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="cash_num" jdbcType="INTEGER" property="cashNum" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="cash_money" jdbcType="DOUBLE" property="cashMoney" />
+    <result column="cash_real_money" jdbcType="DOUBLE" property="cashRealMoney" />
+    <result column="cash_status" jdbcType="INTEGER" property="cashStatus" />
+    <result column="cash_time" jdbcType="TIMESTAMP" property="cashTime" />
+    <result column="cash_bank" jdbcType="VARCHAR" property="cashBank" />
+    <result column="cash_fees" jdbcType="DOUBLE" property="cashFees" />
+    <result column="cash_card" jdbcType="VARCHAR" property="cashCard" />
+    <result column="cash_remark" jdbcType="VARCHAR" property="cashRemark" />
+    <result column="operate_user" jdbcType="VARCHAR" property="operateUser" />
+    <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime" />
+    <result column="operate_ip" jdbcType="VARCHAR" property="operateIp" />
+    <result column="balance" jdbcType="DOUBLE" property="balance"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, cash_num, user_id, cash_money, cash_real_money, cash_status, cash_time, cash_bank, 
+    cash_fees, cash_card, cash_remark, operate_user, operate_time, operate_ip,balance
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_cash
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from user_cash where  user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user_cash
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.UserCash">
+    insert into user_cash (id, cash_num, user_id, 
+      cash_money, cash_real_money, cash_status, 
+      cash_time, cash_bank, cash_fees, 
+      cash_card, cash_remark, operate_user, 
+      operate_time, operate_ip)
+    values (#{id,jdbcType=VARCHAR}, #{cashNum,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, 
+      #{cashMoney,jdbcType=DOUBLE}, #{cashRealMoney,jdbcType=DOUBLE}, #{cashStatus,jdbcType=INTEGER}, 
+      #{cashTime,jdbcType=TIMESTAMP}, #{cashBank,jdbcType=VARCHAR}, #{cashFees,jdbcType=DOUBLE}, 
+      #{cashCard,jdbcType=VARCHAR}, #{cashRemark,jdbcType=VARCHAR}, #{operateUser,jdbcType=VARCHAR}, 
+      #{operateTime,jdbcType=TIMESTAMP}, #{operateIp,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.UserCash">
+    insert into user_cash
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="cashNum != null">
+        cash_num,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="cashMoney != null">
+        cash_money,
+      </if>
+      <if test="cashRealMoney != null">
+        cash_real_money,
+      </if>
+      <if test="cashStatus != null">
+        cash_status,
+      </if>
+      <if test="cashTime != null">
+        cash_time,
+      </if>
+      <if test="cashBank != null">
+        cash_bank,
+      </if>
+      <if test="cashFees != null">
+        cash_fees,
+      </if>
+      <if test="cashCard != null">
+        cash_card,
+      </if>
+      <if test="cashRemark != null">
+        cash_remark,
+      </if>
+      <if test="operateUser != null">
+        operate_user,
+      </if>
+      <if test="operateTime != null">
+        operate_time,
+      </if>
+      <if test="operateIp != null">
+        operate_ip,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="cashNum != null">
+        #{cashNum,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="cashMoney != null">
+        #{cashMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="cashRealMoney != null">
+        #{cashRealMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="cashStatus != null">
+        #{cashStatus,jdbcType=INTEGER},
+      </if>
+      <if test="cashTime != null">
+        #{cashTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cashBank != null">
+        #{cashBank,jdbcType=VARCHAR},
+      </if>
+      <if test="cashFees != null">
+        #{cashFees,jdbcType=DOUBLE},
+      </if>
+      <if test="cashCard != null">
+        #{cashCard,jdbcType=VARCHAR},
+      </if>
+      <if test="cashRemark != null">
+        #{cashRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="operateUser != null">
+        #{operateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="operateTime != null">
+        #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateIp != null">
+        #{operateIp,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.UserCash">
+    update user_cash
+    <set>
+      <if test="cashNum != null">
+        cash_num = #{cashNum,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="cashMoney != null">
+        cash_money = #{cashMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="cashRealMoney != null">
+        cash_real_money = #{cashRealMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="cashStatus != null">
+        cash_status = #{cashStatus,jdbcType=INTEGER},
+      </if>
+      <if test="cashTime != null">
+        cash_time = #{cashTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cashBank != null">
+        cash_bank = #{cashBank,jdbcType=VARCHAR},
+      </if>
+      <if test="cashFees != null">
+        cash_fees = #{cashFees,jdbcType=DOUBLE},
+      </if>
+      <if test="cashCard != null">
+        cash_card = #{cashCard,jdbcType=VARCHAR},
+      </if>
+      <if test="cashRemark != null">
+        cash_remark = #{cashRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="operateUser != null">
+        operate_user = #{operateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="operateTime != null">
+        operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateIp != null">
+        operate_ip = #{operateIp,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.UserCash">
+    update user_cash
+    set cash_num = #{cashNum,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=VARCHAR},
+      cash_money = #{cashMoney,jdbcType=DOUBLE},
+      cash_real_money = #{cashRealMoney,jdbcType=DOUBLE},
+      cash_status = #{cashStatus,jdbcType=INTEGER},
+      cash_time = #{cashTime,jdbcType=TIMESTAMP},
+      cash_bank = #{cashBank,jdbcType=VARCHAR},
+      cash_fees = #{cashFees,jdbcType=DOUBLE},
+      cash_card = #{cashCard,jdbcType=VARCHAR},
+      cash_remark = #{cashRemark,jdbcType=VARCHAR},
+      operate_user = #{operateUser,jdbcType=VARCHAR},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      operate_ip = #{operateIp,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="selectByActiveListPage" parameterType="com.wh.dto.system.UserSearchDto" resultType="java.util.Map">
+    SELECT
+    uc.*, u.real_name, u.phone
+    FROM
+    user_cash uc
+    LEFT JOIN user u ON uc.user_id = u.id
+    WHERE
+    1 = 1
+    <if test="realName != null and realName != ''">
+      and u.real_name LIKE CONCAT('%',#{realName},'%')
+    </if>
+    <if test="phone != null and phone != ''">
+      and u.phone LIKE CONCAT('%',#{phone},'%')
+    </if>
+    <if test="registerTimeStart !=null and registerTimeStart !=''">
+      AND uc.cash_time &gt;= #{registerTimeStart,jdbcType=TIMESTAMP}
+    </if>
+    <if test="registerTimeEnd !=null and registerTimeEnd !=''">
+      AND uc.cash_time &lt;= #{registerTimeEnd,jdbcType=TIMESTAMP}
+    </if>
+    <if test="sortName !=null and sortName !=''">
+      order by ${sortName}
+    </if>
+    <if test="sortName ==null or sortName ==''">
+      order by uc.cash_time desc
+    </if>
+  </select>
+
+
+
+
+</mapper>

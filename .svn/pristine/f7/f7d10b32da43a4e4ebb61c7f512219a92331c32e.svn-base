@@ -1,0 +1,173 @@
+package com.wh.controller.msp;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.wh.base.AjaxJson;
+import com.wh.controller.common.BaseController;
+import com.wh.util.StringUtil;
+import com.wh.util.msp.Constants;
+import com.wh.util.msp.JdbcTest;
+
+@Controller
+@RequestMapping("/msp/mspOracle")
+public class MspOraclController extends BaseController {
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+
+	/**
+	 * 
+	 * 学生缴费信息
+	 * 
+	 * @param req
+	 * @param resp
+	 */
+	@RequestMapping(value = "/wx/xsjf.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson xsjf(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		JdbcTest jt = new JdbcTest();
+		String xh = (String) req.getSession().getAttribute("wxid");
+		 xh = "1020161525";
+		if (StringUtil.isNotEmpty(xh)) {
+			List<Map<String, Object>> userList = jt.xsjf(xh);
+			if (userList != null && userList.size() > 0) {
+				json.setObj(userList);
+			}
+			Map<String, Object> map = jt.xsjfTotal(xh);
+			if (map != null && map.size() > 0) {
+				json.setAttributes(map);
+			}
+		}
+
+		return json;
+	}
+
+	/**
+	 * 图书借阅
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param bookName
+	 *            图书名称
+	 * @param bookStatus
+	 *            图书状态
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/tsjy.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson tsjy(HttpServletRequest req, HttpServletResponse resp, String bookName, String bookStatus) {
+		AjaxJson json = new AjaxJson();
+		JdbcTest jt = new JdbcTest();
+		String xh = (String) req.getSession().getAttribute("wxid");
+		 xh = "2003060631";
+		if (StringUtil.isNotEmpty(xh)) {
+			List<Map<String, Object>> userList = jt.tsjy(xh, bookName, bookStatus);
+			if (userList != null && userList.size() > 0) {
+				json.setObj(userList);
+			}
+		}
+
+		return json;
+	}
+
+	/**
+	 * 课程安排
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/kcap.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson kcap(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		JdbcTest jt = new JdbcTest();
+		Integer type = (Integer) req.getSession().getAttribute("type");
+		 type = 2;
+
+		// 根据当前时间处理开学学年及开课学期
+		Date date = new Date();
+		String kkxn = new SimpleDateFormat("yyyy").format(date);
+		// 开课学期 0:秋 1:春 例:2017-02-10 之前为 2016 1 2017-02-10至2017-08-15为 2016 1
+		// 2017-08-15之后为 2017 0
+		String kkxq = "";
+		try {
+			Date autumnDate = new SimpleDateFormat("yyyy-MM-dd").parse(kkxn + Constants.AUTUMN_DAY_TIME);
+			Date springDate = new SimpleDateFormat("yyyy-MM-dd").parse(kkxn + Constants.SPRING_DAY_TIME);
+			if (date.before(springDate)) {
+				kkxn = String.valueOf(Integer.valueOf(kkxn) - 1);
+				kkxq = "0";
+			} else if (date.after(springDate) && date.before(autumnDate)) {
+				kkxn = String.valueOf(Integer.valueOf(kkxn) - 1);
+				kkxq = "1";
+			} else {
+				kkxq = "0";
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		 kkxn = "2016";
+		// 老师
+		if (StringUtil.isNotEmpty(type) && type.equals(1)) {
+			String zgh = (String) req.getSession().getAttribute("wxid");
+
+			// zgh="2003030032";
+			if (StringUtil.isNotEmpty(zgh)) {
+				List<Map<String, Object>> userList = jt.kcapT(zgh, kkxn, kkxq);
+				if (userList != null && userList.size() > 0) {
+					json.setObj(userList);
+				}
+			}
+
+		}
+		// 学生
+		if (StringUtil.isNotEmpty(type) && type.equals(2)) {
+			String classId = (String) req.getSession().getAttribute("classId");
+			// classId = "2013120801";
+			if (StringUtil.isNotEmpty(classId)) {
+				List<Map<String, Object>> userList = jt.kcapS(classId, kkxn, kkxq);
+				if (userList != null && userList.size() > 0) {
+					json.setObj(userList);
+				}
+			}
+		}
+		return json;
+	}
+
+	/**
+	 * 成绩查询
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param xn
+	 *            学年
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/cjcx.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson cjcx(HttpServletRequest req, HttpServletResponse resp, String xn) {
+		AjaxJson json = new AjaxJson();
+		JdbcTest jt = new JdbcTest();
+		String xh = (String) req.getSession().getAttribute("wxid");
+		xh = "20135224";
+		if (StringUtil.isNotEmpty(xh)) {
+			List<Map<String, Object>> userList = jt.cjcx(xh, xn);
+			if (userList != null && userList.size() > 0) {
+				json.setObj(userList);
+			}
+		}
+
+		return json;
+	}
+
+}

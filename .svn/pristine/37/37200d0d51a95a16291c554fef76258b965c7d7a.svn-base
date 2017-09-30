@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.xlwapp.SmsVerifyMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.entity.SmsVerify" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="verify_code" property="verifyCode" jdbcType="VARCHAR" />
+    <result column="send_content" property="sendContent" jdbcType="VARCHAR" />
+    <result column="send_interface" property="sendInterface" jdbcType="VARCHAR" />
+    <result column="overdue_time" property="overdueTime" jdbcType="TIMESTAMP" />
+    <result column="operate_ip" property="operateIp" jdbcType="VARCHAR" />
+    <result column="operate_terminal" property="operateTerminal" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, phone, status, verify_code, send_content, send_interface, overdue_time, operate_ip, 
+    operate_terminal, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sms_verify
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sms_verify
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.SmsVerify" >
+    insert into sms_verify (id, user_id, phone, status, 
+      verify_code, send_content, send_interface, 
+      overdue_time, operate_ip, operate_terminal, 
+      create_time)
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{verifyCode,jdbcType=VARCHAR}, #{sendContent,jdbcType=VARCHAR}, #{sendInterface,jdbcType=VARCHAR}, 
+      #{overdueTime,jdbcType=TIMESTAMP}, #{operateIp,jdbcType=VARCHAR}, #{operateTerminal,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.SmsVerify" >
+    insert into sms_verify
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="verifyCode != null" >
+        verify_code,
+      </if>
+      <if test="sendContent != null" >
+        send_content,
+      </if>
+      <if test="sendInterface != null" >
+        send_interface,
+      </if>
+      <if test="overdueTime != null" >
+        overdue_time,
+      </if>
+      <if test="operateIp != null" >
+        operate_ip,
+      </if>
+      <if test="operateTerminal != null" >
+        operate_terminal,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="verifyCode != null" >
+        #{verifyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sendContent != null" >
+        #{sendContent,jdbcType=VARCHAR},
+      </if>
+      <if test="sendInterface != null" >
+        #{sendInterface,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueTime != null" >
+        #{overdueTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateIp != null" >
+        #{operateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="operateTerminal != null" >
+        #{operateTerminal,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.SmsVerify" >
+    update sms_verify
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="verifyCode != null" >
+        verify_code = #{verifyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sendContent != null" >
+        send_content = #{sendContent,jdbcType=VARCHAR},
+      </if>
+      <if test="sendInterface != null" >
+        send_interface = #{sendInterface,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueTime != null" >
+        overdue_time = #{overdueTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateIp != null" >
+        operate_ip = #{operateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="operateTerminal != null" >
+        operate_terminal = #{operateTerminal,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.SmsVerify" >
+    update sms_verify
+    set user_id = #{userId,jdbcType=VARCHAR},
+    	phone = #{phone,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      verify_code = #{verifyCode,jdbcType=VARCHAR},
+      send_content = #{sendContent,jdbcType=VARCHAR},
+      send_interface = #{sendInterface,jdbcType=VARCHAR},
+      overdue_time = #{overdueTime,jdbcType=TIMESTAMP},
+      operate_ip = #{operateIp,jdbcType=VARCHAR},
+      operate_terminal = #{operateTerminal,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <link rel="stylesheet" type="text/css" href="../other/commons/css/iconfont.css"  />
+    <title>推广查询</title>
+    <style>
+        html {  -ms-text-size-adjust: 100%;  -webkit-text-size-adjust: 100%;  font-size: 62.5%;font-family: 微软雅黑;width:100%; height: 100%;background: url(../other/commons/img/bg1.jpg) ;background-size: 51px 100%;background-repeat: repeat-x;margin: 0;padding: 0}
+        body{height: 100%;margin: 0;padding:0}
+        .con{display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;flex-flow: column;height: 100%;}
+        .con a{flex: 1;color: #fff;position: relative }
+        .con a span{position: absolute;top:50%;margin-top: -2rem;font-size: 2.8rem;text-shadow: 1px 2px 3px rgba(0,0,0,0.4);left:100%;display: none;width: 12rem;}
+        .con a .btn{width:7rem;height: 7rem;border-radius: 50%;text-align: center;box-shadow: 2px 2px 3px rgba(0,0,0,0.4),-2px -2px 3px rgba(255,255,255,.5);position: absolute;top:50%;margin-top: -3.5rem;left:-7rem;display: none}
+        .con a:nth-of-type(1) .btn{background-color:#37BD9B }
+        .con a:nth-of-type(2) .btn{background-color:#F5BD42 }
+        .con a:nth-of-type(3) .btn{background-color:#4A8BDC }
+        .con a .btn i{font-size: 3.6rem;line-height: 7rem;}
+    </style>
+    <script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+</head>
+<body>
+    <div class="con">
+        <a href="http://www.uni-uni.cn/temp/wx/viewJzUserDetail.htm"><div class="btn"><i class="iconfont icon-chaxun"></i></div><span>活动查询</span></a>
+        <a href="http://www.uni-uni.cn/temp/wx/toLogin.htm"><div class="btn"><i class="iconfont icon-hezuo"></i></div><span>合作平台</span></a>
+    </div>
+<script type="text/javascript">
+    $(function(){
+        var ww=$(window).width();
+        $(".con .btn").show().animate({"left":"10%"},500);
+        setTimeout(function(){
+            $(".con a:eq(0) span").show().animate({"left":ww/10+100+"px"},400);
+            $(".con a:eq(1) span").show().animate({"left":ww/10+100+"px"},600);
+        },500);
+
+    });
+</script>
+</body>
+
+</html>

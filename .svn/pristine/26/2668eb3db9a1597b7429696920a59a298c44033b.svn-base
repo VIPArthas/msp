@@ -1,0 +1,55 @@
+package com.wh.service.xyf;
+
+
+import java.util.List;
+import java.util.Map;
+
+import com.wh.service.base.BaseService;
+import com.wh.xyfentity.XyfListenedSong;
+
+
+public interface XyfListenedSongService extends BaseService<XyfListenedSong, Integer>{
+	
+	/**
+	 * 获取我和她都听过的歌曲详情
+	 * @param myId
+	 * @param otherId
+	 * @return
+	 */
+	List<XyfListenedSong> getListenedSongs(String myId, String otherId);
+	
+	/**
+	 * 根据用户音乐id获取其有缘人 按数量多少获取最多的10个用户 听得音乐代表心情 喜欢的音乐代表性格
+	 * @param myId
+	 * @return
+	 */
+	List<Map<String, Object>> getMyListenedFateUsers(String myId);
+	
+	/**
+	 * 有缘人与我听歌的歌曲总数
+	 * @param myId
+	 * @param otherId
+	 * @return
+	 */
+	int getSongTotalNum(String myId, String otherId);
+	
+	/**
+	 * 获取我听过的歌曲总数
+	 * @param myId
+	 * @return
+	 */
+	int getMyListenedSongsCount(String myId);
+	
+	/**
+	 * 获取两人之间听歌的缘分
+	 * @param myId
+	 * @param otherId
+	 * @return
+	 */
+	Map<String, Object> getListenedFateUser(String myId, String otherId);
+
+	void deleteByMusicId(String id);
+
+	
+
+}

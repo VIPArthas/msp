@@ -1,0 +1,12 @@
+package com.wh.service.msp;
+
+
+import com.wh.mspentity.MspReply;
+import com.wh.service.base.BaseService;
+
+
+public interface MspReplyService extends BaseService<MspReply, Integer> {
+
+
+
+}

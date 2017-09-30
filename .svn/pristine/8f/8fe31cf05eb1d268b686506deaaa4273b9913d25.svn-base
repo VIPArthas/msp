@@ -1,0 +1,30 @@
+package com.wh.dao.xyf;
+
+import org.springframework.stereotype.Repository;
+
+import com.wh.base.BaseMapper;
+import com.wh.xyfentity.XyfRelate;
+@Repository
+public interface XyfRelateMapper extends BaseMapper<XyfRelate, Integer> {
+	int deleteByPrimaryKey(Integer id);
+
+	int insert(XyfRelate record);
+
+	int insertSelective(XyfRelate record);
+
+	XyfRelate selectByPrimaryKey(Integer id);
+
+	int updateByPrimaryKeySelective(XyfRelate record);
+
+	int updateByPrimaryKey(XyfRelate record);
+
+	/**
+	 * 拉黑他人
+	 * 
+	 * @param userId
+	 * @param toUserId
+	 * @return
+	 */
+	int blackOtherPerson(String userId, String toUserId);
+
+}

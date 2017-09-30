@@ -1,0 +1,34 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="校联网,微门户" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <title>校联网微门户-新闻管理</title>
+    <link href="<%=request.getContextPath() %>/resource/wmh/web/commons/css/font/iconfont.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/resource/wmh/web/commons/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="<%=request.getContextPath() %>/resource/wmh/web/commons/js/public.js" ></script>
+</head>
+<body>
+<!--标签页开始-->
+<div class="tabs">
+    <div class="row">
+        <div class="col-md-2 col-sm-3 co-xs-6">新闻详情</div>
+        <div class="col-md-10 col-sm-9 co-xs-6"></div>
+    </div>
+</div>
+<!--标签页结束-->
+
+<article>
+    <h3>${news.newsTitle }<sub>${news.sourceDiv } 来稿     ${news.createTime }  责任编辑: ${news.author }  点击: ${news.clickNum }次</sub></h3>
+         <c:out value="${news.newsContent}"  escapeXml="false" /> 
+	<div class=" footer" > ${news.bottomText } </div>
+</article>
+</body>
+</html>

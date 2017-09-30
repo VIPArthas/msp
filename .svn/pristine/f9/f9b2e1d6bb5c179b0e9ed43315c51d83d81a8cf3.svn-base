@@ -1,0 +1,16 @@
+package com.wh.service.xyf;
+
+import com.wh.service.base.BaseService;
+import com.wh.xyfentity.XyfParam;
+
+
+
+public interface XyfParamService extends BaseService<XyfParam, Integer>{
+	
+
+	
+	
+	
+	
+
+}

@@ -1,0 +1,1092 @@
+package com.wh.controller.wmh;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.wh.entity.WmhUser;
+import com.wh.service.wmh.WmhUserService;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.wh.base.AjaxJson;
+import com.wh.constants.Constants;
+import com.wh.controller.common.BaseController;
+import com.wh.entity.User;
+import com.wh.entity.UserPay;
+import com.wh.entity.WmhTagUse;
+import com.wh.entity.WmhUserTag;
+import com.wh.framework.MethodLog;
+import com.wh.mspentity.MspAdmin;
+import com.wh.service.msp.MspAdminService;
+import com.wh.service.wmh.WmhTagUseService;
+import com.wh.service.wmh.WmhUserManageService;
+import com.wh.service.wmh.WmhUserTagService;
+import com.wh.service.xlwapp.UserService;
+import com.wh.util.DateUtil;
+import com.wh.util.ExportExcelUtil;
+import com.wh.util.StringUtil;
+import com.wh.util.UUIDUtil;
+import com.wh.util.WebUtil;
+
+import net.sf.json.JSONObject;
+
+/** 
+ * 1代表新联学院   2代表河南职业技术学院
+ * @param 
+ * @author 王鹏翔 
+ * @date 2017年3月7日 下午1:12:35 
+ * @return 
+ */
+@Controller
+@RequestMapping("/wmh/userManage")
+public class WmhUserManageController extends BaseController {
+
+	
+	@Autowired
+	private WmhUserManageService wmhUserManageService;
+	@Autowired
+	private WmhUserService wmhUserService;
+	@Autowired
+	private WmhUserTagService wmhUserTagService;
+	@Autowired
+	private WmhTagUseService wmhTagUseService;
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private MspAdminService mspAdminService;
+
+	
+	
+	/**
+	 * 
+	 * 新联学院后台登陆
+	 * @author 王鹏翔
+	 * @Date 2017年3月7日  下午3:03:08
+	 * @param response
+	 * @param user
+	 */
+	@RequestMapping(value="/web/adminLogin.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson adminLogin(HttpServletRequest request,HttpServletResponse response,WmhUser user){
+		AjaxJson json =new AjaxJson();
+		String account=request.getParameter("account");		
+		String password=request.getParameter("password");
+		
+		MspAdmin admin=mspAdminService.load(1);
+		
+		boolean flag=admin.getAdminName().equals(account) &&admin.getAdminPassword().equals(password);
+		if (flag) {
+			request.getSession().setAttribute("admin", user);// 当前用户信息
+			request.getSession().setAttribute("sign", 3);// 当前用户信息
+		}
+		json.setSuccess(flag);
+		return json;
+	}
+	
+	@RequestMapping("/web/findPassword.htm")
+	public String updatePassword(){
+		
+		return "/wmh/web/updatePassword";
+	}
+	
+	
+	/**
+	 * 修改密码
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/web/updatePassword.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson updatePassword(HttpServletRequest request,HttpServletResponse response){
+		AjaxJson json =new AjaxJson();
+		
+		MspAdmin admin=mspAdminService.load(1);
+		String oldPassword=request.getParameter("oldPassword");	
+		String newPassword=request.getParameter("newPassword");
+		boolean flag=admin.getAdminPassword().equals(oldPassword);
+		if (flag) {
+			admin.setAdminPassword(newPassword);
+			flag=mspAdminService.update(admin);		
+		}else{
+			json.setMsg("原密码输入不正确!");
+		}
+
+		json.setSuccess(flag);
+		return json;
+	}
+
+	
+	
+	/**
+	 * 河南职业技术学院
+	 * @param request
+	 * @param response
+	 * @param user
+	 * @return
+	 */
+	@RequestMapping(value="/web/adminLogin2.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@MethodLog(logKey="后台管理员登录",logTag="登录",logRemark="登录成功跳转到用户列表页面")
+	@ResponseBody
+	public AjaxJson adminLogin2(HttpServletRequest request,HttpServletResponse response,WmhUser user){
+		AjaxJson json =new AjaxJson();
+		boolean flag="admin".equals(user.getAccount()) && "hzjx666".equals(user.getPassword());
+		if (flag) {
+			request.getSession().setAttribute("admin", user);// 当前用户信息
+			request.getSession().setAttribute("sign", 2);// 当前用户信息
+		}
+		json.setSuccess(flag);
+		return json;
+	}
+	
+	@RequestMapping("/web/goLogin.htm")
+	public String goLogin(){
+		
+		return "/wmh/web/login";
+	}
+	
+	@RequestMapping("/web/goLogin2.htm")
+	public String goLogin2(){
+		
+		return "/wmh/web/login2";
+	}
+	
+	@RequestMapping("/web/goIndex.htm")
+	public String goIndex(){
+		
+		return "/wmh/web/index";
+	}
+	
+	@RequestMapping("/web/goIndex1.htm")
+	public String goIndex1(HttpServletRequest request,ModelMap map){
+		HttpSession httpSession=request.getSession(false);
+		
+		if(httpSession == null){
+			map.put("title", "新联学院微门户后台管理");
+		}else{
+			Object osign=httpSession.getAttribute("sign");
+			if (osign==null) {
+				map.put("title", "新联学院微门户后台管理");
+			}else{
+				Integer sign=Integer.valueOf(osign.toString());
+						
+				if(sign == WmhUserService.SIGN_TYPE_XINLIAN){
+					map.put("title", "新联学院微门户后台管理");
+				}else{
+					map.put("title", "河南职业技术学院微门户后台管理");
+				}
+			} 
+		}
+		return "/wmh/wx/manage/index";
+	}
+	
+	@RequestMapping("/web/goIndex2.htm")
+	public String goIndex2(){
+		
+		return "/wmh/web/index2";
+	}
+	
+	/**
+	 * 后台用户管理列表数据
+	 * @author 王鹏翔
+	 * @Date 2017年3月7日  下午4:05:22
+	 * @param request
+	 * @param map
+	 * @param user
+	 * @return
+	 */
+	@RequestMapping("/web/goUserManageList.htm")
+	public String goUserManageList(HttpServletRequest request,ModelMap map,WmhUser user){
+		//request.getSession().getAttribute("sign");
+		String num = request.getParameter("num");
+		if(null != num){
+			if("1".equals(num)){//模糊查询
+				user.setVagueSearch(user.getSearchContent());
+			}else{
+				user.setTagSearch(user.getSearchContent());
+				user.setTagNameList(user.getSearchContent().split(" "));
+			}
+		}
+		try {
+			List<Object> wmhUserList = this.wmhUserManageService.selectWmhUserListPage(user);
+			map.put("userList", wmhUserList);
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		map.put("user", user);
+		return "/wmh/web/user/userList";
+	}
+	
+	
+	
+	/**
+	 * 微门户微信端后台用户管理list
+	 * @param request
+	 * @param map
+	 * @param user
+	 * @return
+	 */
+	@RequestMapping("/web/goUserManageListWx.htm")
+	public void goUserManageListWx(HttpServletRequest request,HttpServletResponse response,ModelMap map,WmhUser user){
+		JSONObject json = new  JSONObject();
+		String searchContent=user.getSearchContent();
+		if (StringUtil.isNotEmpty(searchContent)) {
+			user.setVagueSearch(searchContent);
+			map.put("vagueSearch",searchContent);
+		}
+		try {
+			List<Object> wmhUserList = this.wmhUserManageService.selectWmhUserListPage(user);
+			map.put("userList", wmhUserList);
+			json.put("userList", wmhUserList);
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		map.put("user", user);
+		json.put("user", user);
+		WebUtil.write(response, json.toString());
+	}
+	
+	
+	/**
+	 * 微门户微信端后台用户管理list
+	 * @param request
+	 * @param map
+	 * @param user
+	 * @return
+	 */
+	@RequestMapping("/web/goUserManageListWx1.htm")
+	public String goUserManageListWx1(HttpServletRequest request,HttpServletResponse response,ModelMap map,WmhUser user){
+		JSONObject json = new  JSONObject();
+		String searchContent=user.getSearchContent();
+		if (StringUtil.isNotEmpty(searchContent)) {
+			user.setVagueSearch(searchContent);
+			map.put("vagueSearch",searchContent);
+		}
+		try {
+			List<Object> wmhUserList = this.wmhUserManageService.selectWmhUserListPage(user);
+			map.put("userList", wmhUserList);
+			
+			if (wmhUserList!=null && wmhUserList.size()>0) {
+				Integer totalPage = 0;
+				
+				List list=	(List) wmhUserList.get(0);
+				if (list!=null && list.size()>0) {
+					
+					Integer userCount=wmhUserList.size();
+					if (userCount % Constants.wmhPageSize == 0) {
+						totalPage = userCount /Constants.wmhPageSize;
+					} else {
+						totalPage = userCount / Constants.wmhPageSize + 1;
+					}
+					map.put("totalPage", totalPage);
+				}else{
+					map.put("totalPage", 1);
+				}
+				}
+
+			json.put("userList", wmhUserList);
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		map.put("user", user);
+		json.put("user", user);
+		return "/wmh/wx/manage/user/user";
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 微门户微信端后台
+	 * 获取用户数量
+	 * @param request
+	 * @param modelMap
+	 * @param user  有筛选条件
+	 * @return
+	 */
+	@RequestMapping("/web/getUserCountPageWx.htm")
+	public String getUserCountPageWx(HttpServletRequest request, ModelMap modelMap, WmhUser user) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		String searchContent=user.getSearchContent();
+		if (StringUtil.isNotEmpty(searchContent)) {
+			map.put("vagueSearch", searchContent);
+			modelMap.put("vagueSearch", searchContent);
+		}
+		Integer userCount = wmhUserManageService.getUserCountPageWx(map);
+		Integer totalPage = 0;
+		if (userCount % Constants.wmhPageSize == 0) {
+			totalPage = userCount /Constants.wmhPageSize;
+		} else {
+			totalPage = userCount / Constants.wmhPageSize + 1;
+		}
+		modelMap.put("totalPage", totalPage);
+		
+		
+		return "/wmh/wx/manage/user/user";
+	}
+	
+	
+	/**
+	 * 根据userId查询用户详情
+	 * @author 王鹏翔
+	 * @Date 2017年3月8日  上午9:30:28
+	 * @param request
+	 * @param map
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/web/userDetailPage.htm")
+	public String userDetailPage(HttpServletRequest request,ModelMap map,String userId){
+		try {
+			Map<String, Object> user = this.wmhUserManageService.selectUserDetailByUserId(userId);
+			map.put("user", user);
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		return "";
+	}
+	
+	/**
+	 * 删除用户
+	 * @author 王鹏翔
+	 * @Date 2017年3月8日  上午9:47:31
+	 * @param response
+	 * @param user
+	 */
+	@RequestMapping("/web/deleteUserByUserId.htm")
+	public void deleteUserByUserId(HttpServletResponse response,WmhUser user){
+		JSONObject jso = new JSONObject();
+		//user.setUserStatus(1);//删除时修改用户状态为1，0是正常，1是禁用
+		try {
+			wmhUserService.deleteByPrimaryKey(user.getId());
+			
+			//根据userId删除该用户的所有标签
+			wmhUserTagService.deleteUserTagByUserId(user.getId());
+			jso.put("code", 0);
+			jso.put("msg", "删除成功！");
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		WebUtil.write(response, jso.toString());
+		
+	}
+	
+	/***
+	 * 到添加用户页面
+	 * @author 王鹏翔
+	 * @Date 2017年3月13日  下午1:50:27
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/web/goAddUserPage.htm")
+	public String goAddUserPage(HttpServletRequest request,ModelMap map){
+		//查询常用标签
+		try {
+			List<WmhTagUse> list = this.wmhTagUseService.selectCommonUseTagList();
+			map.put("list", list);
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		return "/wmh/web/user/addUser";
+	}
+	
+	/**
+	 * 微信端  到添加用户页面
+	 * @param request
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/web/goAddUserPageWx.htm")
+	public String goAddUserPageWx(HttpServletRequest request,ModelMap map){
+		//查询常用标签
+		try {
+			List<WmhTagUse> list = this.wmhTagUseService.selectCommonUseTagList();
+			map.put("list", list);
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		return "/wmh/wx/manage/user/adduser";
+	}
+	
+	
+	
+	/**
+	 * 添加用户
+	 * @author 王鹏翔
+	 * @Date 2017年3月8日  上午10:51:02
+	 * @param response
+	 * @param user
+	 * @param tagStr
+	 */
+	@RequestMapping("/web/addUser.htm")
+	public void addUser(HttpServletResponse response,WmhUser user,String tagStr){
+		JSONObject jso = new JSONObject();
+		try{
+			if(user == null){
+				jso.put("code", 1);
+				jso.put("msg", "请填写用户信息！");
+			}else{
+				/*user.setId(UUIDUtil.getUUID());*/
+				JSONObject js =this.wmhUserManageService.checkUserInfo(response,user);
+				if((int)(js.get("code")) == 1){
+					WebUtil.write(response, js.toString());
+					return;
+				}
+				//根据手机号查询user、tb_wchatuser表数据，把wmh_user、user、tb_wchatuser表的userid关联起来
+				/*List<WmhUser> userList = this.wmhUserService.selectUserByPhone(user);*/
+				User user2 = new User();
+				user2.setPhone(user.getPhone());
+				List<User> list= this.userService.selectUserByPhone(user2);
+				if(/*(null == userList || (null != userList && userList.size() ==0)) && */list.size() ==0){
+					user.setId(UUIDUtil.getUUID());
+				}else{
+					//获取user表用户id
+					user.setId(list.get(0).getId());
+				}
+				this.wmhUserService.insertSelective(user);//添加用户
+				
+				if(!StringUtils.isEmpty(tagStr)){
+					String[] tags = tagStr.split(" ");
+					for (String tagName : tags) {
+						//查询该标签是否存在，不存在则新增标签，存在则使用现有标签信息
+						WmhTagUse tag1 = this.wmhTagUseService.selectTagByTagName(tagName);
+						if(null == tag1){//标签不存在,创建标签
+							WmhTagUse tag = new WmhTagUse();
+							tag.setId(UUIDUtil.getUUID());
+							tag.setTagName(tagName);
+							tag.setLastUseTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+							this.wmhTagUseService.insertSelective(tag);//创建标签
+							//为当前添加用户添加标签
+							WmhUserTag userTag = new WmhUserTag();
+							userTag.setId(UUIDUtil.getUUID());
+							userTag.setUserId(user.getId());
+							userTag.setTagId(tag.getId());
+							userTag.setTagName(tag.getTagName());
+							this.wmhUserTagService.insertSelective(userTag);
+						}else{//标签存在，修改标签使用次数
+							//修改标签使用次数
+							tag1.setTagNumber(tag1.getTagNumber()+1);
+							tag1.setLastUseTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+							this.wmhTagUseService.updateByPrimaryKeySelective(tag1);
+							//为当前添加用户添加标签
+							WmhUserTag userTag = new WmhUserTag();
+							userTag.setId(UUIDUtil.getUUID());
+							userTag.setUserId(user.getId());
+							userTag.setTagId(tag1.getId());
+							userTag.setTagName(tag1.getTagName());
+							this.wmhUserTagService.insertSelective(userTag);
+						}
+						
+					}
+				}
+				jso.put("code", 0);
+				jso.put("msg", "添加成功！");
+				
+			}
+		}catch (Exception e){
+			log.error("异常日志：", e);
+		}
+		WebUtil.write(response, jso.toString());
+	}
+	
+	/**
+	 * 微信端新增用户保存
+	 * @param response
+	 * @param user
+	 * @param tagStr
+	 */
+	@RequestMapping("/web/addUserWx.htm")
+	public void addUserWx(HttpServletResponse response,WmhUser user,String tagStr){
+		JSONObject jso = new JSONObject();
+		try{
+			if(user == null){
+				jso.put("code", 1);
+				jso.put("msg", "请填写用户信息！");
+			}else{
+				/*user.setId(UUIDUtil.getUUID());*/
+				JSONObject js =this.wmhUserManageService.checkUserInfo(response,user);
+				if((int)(js.get("code")) == 1){
+					WebUtil.write(response, js.toString());
+					return;
+				}
+				//根据手机号查询user、tb_wchatuser表数据，把wmh_user、user、tb_wchatuser表的userid关联起来
+				/*List<WmhUser> userList = this.wmhUserService.selectUserByPhone(user);*/
+				User user2 = new User();
+				user2.setPhone(user.getPhone());
+				List<User> list= this.userService.selectUserByPhone(user2);
+				if(/*(null == userList || (null != userList && userList.size() ==0)) && */list.size() ==0){
+					user.setId(UUIDUtil.getUUID());
+				}else{
+					//获取user表用户id
+					user.setId(list.get(0).getId());
+				}
+
+				user.setCreateTime(new Date());
+				this.wmhUserService.insertSelective(user);//添加用户
+				
+				if(!StringUtils.isEmpty(tagStr)){
+					String[] tags = tagStr.split(",");
+					for (String tagName : tags) {
+						//查询该标签是否存在，不存在则新增标签，存在则使用现有标签信息
+						WmhTagUse tag1 = this.wmhTagUseService.selectTagByTagName(tagName);
+						if(null == tag1){//标签不存在,创建标签
+							WmhTagUse tag = new WmhTagUse();
+							tag.setId(UUIDUtil.getUUID());
+							tag.setTagName(tagName);
+							tag.setLastUseTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+							this.wmhTagUseService.insertSelective(tag);//创建标签
+							//为当前添加用户添加标签
+							WmhUserTag userTag = new WmhUserTag();
+							userTag.setId(UUIDUtil.getUUID());
+							userTag.setUserId(user.getId());
+							userTag.setTagId(tag.getId());
+							userTag.setTagName(tag.getTagName());
+							this.wmhUserTagService.insertSelective(userTag);
+						}else{//标签存在，修改标签使用次数
+							//修改标签使用次数
+							tag1.setTagNumber(tag1.getTagNumber()+1);
+							tag1.setLastUseTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+							this.wmhTagUseService.updateByPrimaryKeySelective(tag1);
+							//为当前添加用户添加标签
+							WmhUserTag userTag = new WmhUserTag();
+							userTag.setId(UUIDUtil.getUUID());
+							userTag.setUserId(user.getId());
+							userTag.setTagId(tag1.getId());
+							userTag.setTagName(tag1.getTagName());
+							this.wmhUserTagService.insertSelective(userTag);
+						}
+						
+					}
+				}
+				jso.put("code", 0);
+				jso.put("msg", "添加成功！");
+				
+			}
+		}catch (Exception e){
+			log.error("异常日志：", e);
+		}
+		WebUtil.write(response, jso.toString());
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 去编辑页面
+	 * @author 王鹏翔
+	 * @Date 2017年3月13日  下午4:24:45
+	 * @param request
+	 * @param map
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/web/goEditUserPage.htm")
+	public String goEditUserPage(HttpServletRequest request,ModelMap map,String userId){
+		try {
+			Map<String, Object> user = this.wmhUserManageService.selectWmhUserByUserId(userId);
+			List<WmhTagUse> list = this.wmhTagUseService.selectCommonUseTagList();
+			map.put("user", user);
+			map.put("list", list);
+			
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		return "/wmh/web/user/userEdit";
+	}
+	
+	
+	@RequestMapping("/web/goEditUserPageWx.htm")
+	public String goEditUserPageWx(HttpServletRequest request,ModelMap map,String userId){
+		try {
+			Map<String, Object> user = this.wmhUserManageService.selectWmhUserByUserId(userId);
+			List<WmhTagUse> list = this.wmhTagUseService.selectCommonUseTagList();
+			map.put("user", user);
+			map.put("list", list);
+			
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		return "/wmh/wx/manage/user/editoruser";
+	}
+	
+	
+	/**
+	 * 编辑用户
+	 * @author 王鹏翔
+	 * @Date 2017年3月8日  上午10:21:21
+	 * @param request
+	 * @param map
+	 * @param user
+	 * @param tagStr
+	 */
+	@RequestMapping("/we/editUserInfo.htm")
+	public void editUserInfo(HttpServletResponse response,WmhUser user,String tagStr){
+		JSONObject jso = new JSONObject();
+		try{
+			JSONObject js = this.wmhUserManageService.editCheckUserInfo(response,user);
+			if((int)(js.get("code"))==1){
+				WebUtil.write(response, js.toString());
+				return ;
+			}
+			this.wmhUserService.updateUser(user);//编辑用户信息
+			if(!StringUtils.isEmpty(tagStr)){
+				List<Map<String, Object>> tagList = this.wmhUserTagService.selectUserTagList(user.getId());//查询用户编辑之前所拥有的标签
+				String[] tags = tagStr.split(" ");
+				for (String tagName : tags) {
+					//查询该标签是否存在，不存在则新增标签，存在则使用现有标签信息
+					WmhTagUse tag1 = this.wmhTagUseService.selectTagByTagName(tagName);
+					if(null == tag1){//标签不存在,创建标签
+						WmhTagUse tag = new WmhTagUse();
+						tag.setId(UUIDUtil.getUUID());
+						tag.setTagName(tagName);
+						tag.setLastUseTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+						this.wmhTagUseService.insertSelective(tag);//创建标签
+					}else{//标签存在，修改标签使用次数
+						//修改标签使用次数
+						tag1.setTagNumber(tag1.getTagNumber()+1);
+						tag1.setLastUseTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+						this.wmhTagUseService.updateByPrimaryKeySelective(tag1);
+					}
+				}
+				if(tagList.size() ==0){//之前该用户没有标签，添加标签
+					for (String tagName : tags) {
+						WmhTagUse tag = this.wmhTagUseService.selectTagByTagName(tagName);
+						WmhUserTag userTag = new WmhUserTag();
+						userTag.setId(UUIDUtil.getUUID());
+						userTag.setUserId(user.getId());
+						userTag.setTagId(tag.getId());
+						userTag.setTagName(tag.getTagName());
+						this.wmhUserTagService.insertSelective(userTag);
+					}
+				}else{//编辑之前有标签
+					for(int i = 0; i<tagList.size();i++){
+						boolean whetherDelete = true;
+						for (int j = 0;j<tags.length;j++) {
+							// 编辑之后的标签和现有标签处理
+							if(tagList.get(i).get("tag_name").equals(tags[j])){
+								whetherDelete = false;
+								break;
+							}
+						}
+						if(whetherDelete){//如果现有标签不存在于编辑之后的标签之中，进行删除
+							this.wmhUserTagService.deleteByPrimaryKey((String)tagList.get(i).get("id"));
+						}
+					}
+					for (String tagName : tags) {//添加编辑之后用户标签中没有的标签
+						WmhTagUse tag = this.wmhTagUseService.selectTagByTagName(tagName);
+						//根据标签id和用户id查询该用户下有没有此标签，如果不存在则进行添加
+						WmhUserTag usertag = new WmhUserTag();
+						usertag.setUserId(user.getId());
+						usertag.setTagId(tag.getId());
+						WmhUserTag userTag = this.wmhUserTagService.selectUserTagByCondition(usertag);
+						if(userTag == null){
+							WmhUserTag uTag = new WmhUserTag();
+							uTag.setId(UUIDUtil.getUUID());
+							uTag.setUserId(user.getId());
+							uTag.setTagId(tag.getId());
+							uTag.setTagName(tag.getTagName());
+							this.wmhUserTagService.insertSelective(uTag);
+						}
+					}
+				}
+			}else{
+				//根据userId删除该用户下所有标签
+				this.wmhUserTagService.deleteUserTagByUserId(user.getId());
+			}
+			jso.put("code", 0);
+			jso.put("msg", "编辑成功！");
+		}catch (Exception e){
+			log.error("异常日志：", e);
+		}
+		WebUtil.write(response, jso.toString());
+	}
+	/**
+	 * 后台微信端编辑
+	 * @param response
+	 * @param user
+	 * @param tagStr
+	 */
+	@RequestMapping("/we/editUserInfoWx.htm")
+	public void editUserInfoWx(HttpServletRequest request, HttpServletResponse response,WmhUser user,String tagStr){
+		JSONObject jso = new JSONObject(); 
+	
+		try{
+			JSONObject js = this.wmhUserManageService.editCheckUserInfo(response,user);
+			if((int)(js.get("code"))==1){
+				WebUtil.write(response, js.toString());
+				return ;
+			}
+			this.wmhUserService.updateUser(user);//编辑用户信息
+			if(!StringUtils.isEmpty(tagStr)){
+				List<Map<String, Object>> tagList = this.wmhUserTagService.selectUserTagList(user.getId());//查询用户编辑之前所拥有的标签
+				String[] tags = tagStr.split(",");
+				for (String tagName : tags) {
+					if (StringUtil.isNotEmpty(tagName)) {
+					//查询该标签是否存在，不存在则新增标签，存在则使用现有标签信息
+					WmhTagUse tag1 = this.wmhTagUseService.selectTagByTagName(tagName);
+					if(null == tag1){//标签不存在,创建标签
+						WmhTagUse tag = new WmhTagUse();
+						tag.setId(UUIDUtil.getUUID());
+						tag.setTagName(tagName);
+						tag.setLastUseTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+						this.wmhTagUseService.insertSelective(tag);//创建标签
+					}else{//标签存在，修改标签使用次数
+						//修改标签使用次数
+						tag1.setTagNumber(tag1.getTagNumber()+1);
+						tag1.setLastUseTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+						this.wmhTagUseService.updateByPrimaryKeySelective(tag1);
+					}
+					}
+				}
+				if(tagList.size() ==0){//之前该用户没有标签，添加标签
+					for (String tagName : tags) {
+						if (StringUtil.isNotEmpty(tagName)) {
+						WmhTagUse tag = this.wmhTagUseService.selectTagByTagName(tagName);
+						WmhUserTag userTag = new WmhUserTag();
+						userTag.setId(UUIDUtil.getUUID());
+						userTag.setUserId(user.getId());
+						userTag.setTagId(tag.getId());
+						userTag.setTagName(tag.getTagName());
+						this.wmhUserTagService.insertSelective(userTag);
+						}
+					}
+				}else{//编辑之前有标签
+					for(int i = 0; i<tagList.size();i++){
+						boolean whetherDelete = true;
+						for (int j = 0;j<tags.length;j++) {
+							// 编辑之后的标签和现有标签处理
+							if(tagList.get(i).get("tag_name").equals(tags[j])){
+								whetherDelete = false;
+								break;
+							}
+						}
+						if(whetherDelete){//如果现有标签不存在于编辑之后的标签之中，进行删除
+							this.wmhUserTagService.deleteByPrimaryKey((String)tagList.get(i).get("id"));
+						}
+					}
+					for (String tagName : tags) {//添加编辑之后用户标签中没有的标签
+						if (StringUtil.isNotEmpty(tagName)) {
+						WmhTagUse tag = this.wmhTagUseService.selectTagByTagName(tagName);
+						//根据标签id和用户id查询该用户下有没有此标签，如果不存在则进行添加
+						WmhUserTag usertag = new WmhUserTag();
+						usertag.setUserId(user.getId());
+						usertag.setTagId(tag.getId());
+						WmhUserTag userTag = this.wmhUserTagService.selectUserTagByCondition(usertag);
+						if(userTag == null){
+							WmhUserTag uTag = new WmhUserTag();
+							uTag.setId(UUIDUtil.getUUID());
+							uTag.setUserId(user.getId());
+							uTag.setTagId(tag.getId());
+							uTag.setTagName(tag.getTagName());
+							this.wmhUserTagService.insertSelective(uTag);
+						}
+					}
+					}
+				}
+			}else{
+				//根据userId删除该用户下所有标签
+				this.wmhUserTagService.deleteUserTagByUserId(user.getId());
+			}
+			jso.put("code", 0);
+			jso.put("msg", "编辑成功！");
+		}catch (Exception e){
+			log.error("异常日志：", e);
+		}
+		WebUtil.write(response, jso.toString());
+	}
+	
+	/**
+	 * 添加标签
+	 * @author 王鹏翔
+	 * @Date 2017年3月8日  上午10:38:07
+	 * @param response
+	 * @param userIdStr
+	 * @param tagName
+	 */
+	@RequestMapping("/web/addTag.htm")
+	public void addTag(HttpServletResponse response,String userIdStr,String tagName,WmhUser user){
+		JSONObject jso = new JSONObject();
+		int addSuccessNumber = 0;
+		try {
+			//单标签添加
+			WmhTagUse tagUse1 = this.wmhTagUseService.selectTagByTagName(tagName);
+			if(tagUse1 == null){
+				WmhTagUse tagUse = new WmhTagUse();
+				tagUse.setId(UUIDUtil.getUUID());
+				tagUse.setTagName(tagName);
+				tagUse.setLastUseTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+				this.wmhTagUseService.insertSelective(tagUse);
+				tagUse1 = tagUse;
+			}else{
+				//修改使用次数
+				tagUse1.setTagNumber(tagUse1.getTagNumber()+1);
+				tagUse1.setLastUseTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+				this.wmhTagUseService.updateByPrimaryKeySelective(tagUse1);
+			}
+			
+			//给当前页数据添加标签
+			if(!StringUtils.isEmpty(userIdStr)){
+				String[] userIds = userIdStr.split(",");
+				for (String userId : userIds) {
+					//  如果该用户有此标签则不为该用户添加，如果没有则添加
+					if(userId != null && userId != ""){
+						WmhUserTag usertag = new WmhUserTag();
+						usertag.setUserId(userId);
+						usertag.setTagId(tagUse1.getId());
+						WmhUserTag userTag = this.wmhUserTagService.selectUserTagByCondition(usertag);
+						if(userTag == null){
+							WmhUserTag uTag = new WmhUserTag();
+							uTag.setId(UUIDUtil.getUUID());
+							uTag.setUserId(userId);
+							uTag.setTagId(tagUse1.getId());
+							uTag.setTagName(tagName);
+							this.wmhUserTagService.insertSelective(uTag);
+							addSuccessNumber++;
+						}
+					}
+				}
+			}else{//给当前所有符合条件的用户添加该标签
+				// 根据条件查询所有符合条件的用户id集合，遍历集合添加标签
+				user.setTagNameList(user.getTagSearch().split(" "));
+				List<Map<String, Object>> userList = this.wmhUserManageService.selectWmhUserList(user);
+				for (Map<String, Object> map : userList) {
+					WmhUserTag usertag = new WmhUserTag();
+					usertag.setUserId((String)map.get("id"));
+					usertag.setTagId(tagUse1.getId());
+					WmhUserTag userTag = this.wmhUserTagService.selectUserTagByCondition(usertag);
+					if(userTag == null){
+						WmhUserTag uTag = new WmhUserTag();
+						uTag.setId(UUIDUtil.getUUID());
+						uTag.setUserId((String)map.get("id"));
+						uTag.setTagId(tagUse1.getId());
+						uTag.setTagName(tagName);
+						this.wmhUserTagService.insertSelective(uTag);
+						addSuccessNumber++;
+					}
+				}
+			}
+			jso.put("code", 0);
+			jso.put("msg", "添加成功！");
+			jso.put("addSuccessNumber", addSuccessNumber);
+		} catch (Exception e) {
+			log.error("异常日志：", e);
+		}
+		WebUtil.write(response, jso.toString());
+		
+	}
+	
+	/**
+	 * 删除标签
+	 * @author 王鹏翔
+	 * @Date 2017年3月9日  上午10:54:54
+	 * @param response
+	 * @param userIdStr
+	 * @param tagName
+	 */
+	@RequestMapping("/web/deleteTag.htm")
+	public void deleteTag(HttpServletResponse response,String userIdStr,String tagName,WmhUser user){
+		JSONObject jso = new JSONObject();
+		int deleteSuccessNumber = 0;
+		try{
+			if(!StringUtils.isEmpty(userIdStr)){
+				String[] userIds = userIdStr.split(",");
+				WmhTagUse tagUse = this.wmhTagUseService.selectTagByTagName(tagName);
+				if(tagUse!=null){
+					for (String userId : userIds) {
+						//如果该用户没有此标签则不删除，有的话根据id进行删除
+						if(userId != null && userId != ""){
+							WmhUserTag usertag = new WmhUserTag();
+							usertag.setUserId(userId);
+							usertag.setTagId(tagUse.getId());
+							WmhUserTag userTag = this.wmhUserTagService.selectUserTagByCondition(usertag);
+							if(userTag != null){
+								this.wmhUserTagService.deleteByPrimaryKey(userTag.getId());
+								deleteSuccessNumber++;
+							}
+						}
+					}
+				}else{
+					jso.put("code", 1);
+					jso.put("msg", "此标签不存在！");
+					WebUtil.write(response, jso.toString());
+					return;
+				}
+			}else{
+				//删除所有符合条件用户的此标签
+				// 据条件查询所有符合条件的用户id集合，遍历集合删除标签
+				user.setTagNameList(user.getTagSearch().split(" "));
+				WmhTagUse tagUse = this.wmhTagUseService.selectTagByTagName(tagName);
+				List<Map<String, Object>> userList = this.wmhUserManageService.selectWmhUserList(user);
+				for (Map<String, Object> map : userList) {
+					WmhUserTag usertag = new WmhUserTag();
+					usertag.setUserId((String)map.get("id"));
+					usertag.setTagId(tagUse.getId());
+					WmhUserTag userTag = this.wmhUserTagService.selectUserTagByCondition(usertag);
+					if(userTag != null){
+						this.wmhUserTagService.deleteByPrimaryKey(userTag.getId());
+						deleteSuccessNumber++;
+					}
+				}
+			}
+			jso.put("code", 0);
+			jso.put("msg", "删除成功！");
+			jso.put("deleteSuccessNumber", deleteSuccessNumber);
+		}catch (Exception e){
+			log.error("异常日志：", e);
+		}
+		WebUtil.write(response, jso.toString());
+	}
+	
+	/**
+	 * 到用户导入页面下载选择模板
+	 * @author 王鹏翔
+	 * @Date 2017年3月14日  上午11:10:55
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/web/goImportUserPage.htm")
+	public String goImportUserPage(HttpServletRequest request){
+		
+		return "";
+	}
+	
+	/**
+	 * 批量导入用户
+	 * @author 王鹏翔
+	 * @Date 2017年3月14日  上午11:58:17
+	 * @param request
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/web/importUser.htm")
+	public String importUser(HttpServletRequest request, HttpServletResponse response , ModelMap map){
+		JSONObject resObj = new JSONObject();
+		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+		MultipartFile file = multipartRequest.getFile("path");
+		String filename = file.getOriginalFilename();
+		if (filename == null || "".equals(filename)) {
+			resObj.put("code", 1);
+			resObj.put("msg", "文件不能为空");
+			WebUtil.write(response, resObj.toString());
+            return resObj.toString();
+        }
+		HSSFWorkbook wb = null;
+		List<Map<String, Object>> userList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> userFailList = new ArrayList<Map<String, Object>>();
+		List<String> errorMessageList = new ArrayList<String>();
+		List<String> phoneList = new ArrayList<String>();
+		int successNum = 0;
+		int failNum = 0;
+		
+		try {
+			InputStream input = file.getInputStream();//获取文件流
+			POIFSFileSystem fs = new POIFSFileSystem(input);//解析excel表格
+	    	wb = new HSSFWorkbook(fs);//得到文档对象
+	    	HSSFSheet sheet = wb.getSheetAt(0);//得到第一个表单
+	        HSSFRow row = sheet.getRow(0);
+	        int i = 1;
+	        do{
+	        	Map<String, Object> user = new HashMap<String, Object>();
+	        	String errorMessage = "";
+	        	row = sheet.getRow(i);
+                if(null == row){
+                	i = 0;
+                	continue;
+                }
+                //获取用户信息以及标签
+                String realName = ExportExcelUtil.getCellFormatValue(row.getCell(1));
+                String phone = ExportExcelUtil.getCellFormatValue(row.getCell(2));
+                String mail = ExportExcelUtil.getCellFormatValue(row.getCell(3));
+                String qq = ExportExcelUtil.getCellFormatValue(row.getCell(4));
+                String tagStr = ExportExcelUtil.getCellFormatValue(row.getCell(5));
+                String[] tags = tagStr.split(" "); 
+                /*List<String> tagList = new ArrayList<String>();
+                for (String string : tags) {
+                	tagList.add(string);
+                }*/
+	        	
+                if(StringUtils.isEmpty(realName) && StringUtils.isEmpty(phone) && StringUtils.isEmpty(mail)){
+                	i = 0;
+                	continue;
+                }
+                user.put("real_name", realName);
+                user.put("phone", phone);
+                user.put("mail", mail);
+                user.put("qq", qq);
+                user.put("tags", tags);
+                /*user.put("tagList", tagList);*/
+                
+                //验证user信息
+                JSONObject obj = this.wmhUserManageService.verifyUser(user);
+                Integer code = obj.getInt("code");
+                if(code == 0) {
+                	
+                }else{
+                	errorMessage += obj.get("msg") + ";";
+                }
+                
+                boolean phoneVerify = phoneList.contains(phone);
+                if(phoneVerify){
+                	errorMessage += "新增用户的手机号在文档中已存在,请修改后提交;";
+                }
+                
+                if(!StringUtils.isEmpty(errorMessage)){
+    				userFailList.add(user);
+    				errorMessageList.add(errorMessage);
+					failNum++;
+    			}else{
+    				userList.add(user);
+					successNum++;
+    			}
+                i++;
+	        }while(i>0);
+	        
+	        /*String[] rowTitle = {"序号","姓名","手机号码","身份证号","错误描述"};
+
+			String path = createWorkBook(userFailList, rowTitle, errorMessageList, request);
+			map.put("filePath", path);*/
+	        
+	        //操作数据库
+	        if(userList.size()>0){
+	        	this.wmhUserManageService.importUserList(userList);
+	        }
+	        map.put("errorMessageList", errorMessageList);
+	        map.put("userFailList", userFailList);
+	        map.put("successNum", successNum);
+            map.put("failNum", failNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("errorMessageList", errorMessageList);
+			map.put("userFailList", userFailList);
+	        map.put("successNum", successNum);
+            map.put("failNum", failNum);
+		}
+		return "/wmh/web/user/importFailList";
+	}
+	
+}

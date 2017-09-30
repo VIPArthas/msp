@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>校缘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="/resource/xyuan/css/index.css">
+
+</head>
+<body>
+<iframe id='view' name="view" src="/resource/xyuan/html/my/mycenter.html"></iframe>
+<nav>
+    <a class="youyuan" target="view" href="/resource/xyuan/html/youyuanren/youyuanren.html">
+        <span class="you-yuan-ren"></span>
+        <p>有缘人</p>
+    </a>
+    <a class="liaoyixai" target="view" href="/resource/xyuan/html/liaoyixai/liaoyixai.html">
+        <span class="liao-yi-xia"></span>
+        <p>聊一下</p>
+    </a>
+    <a class="mymessage" target="view" href="/resource/xyuan/html/my/mycenter.html">
+        <span class="wo-de"></span>
+        <p>我的</p>
+    </a>
+</nav>
+</body>
+</html>
+<script src="/resource/xyuan/js/jquery-3.1.1.js"></script>

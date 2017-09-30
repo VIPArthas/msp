@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../commons/css/english4.css?v=1">
+    <link rel="stylesheet" href="../commons/css/font1/font_n05k11gnykz9f6r/iconfont.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+    <title>四级成绩</title>
+</head>
+<body>
+      <div class="wrap">
+       <div class="classify">
+       	<span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</span>
+       	<span>张丰年</span>
+       </div>
+       <div class="classify1">
+       	<span>学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;校：</span>
+       	<span>河南工业大学</span>
+       </div>
+       <div class="classify1">
+       	<span>院&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;系：</span>
+       	<span>应用外语系</span>
+       </div>
+       <div class="classify1">
+       	<span>准考证号：</span>
+       	<span>411291119112233</span>
+       </div>
+       <div class="classify1">
+       	<span>身份证号：</span>
+       	<span>411433199512093214</span>
+       </div>
+       <div class="classify1">
+       	<span>考试时间：</span>
+       	<span>2016&nbsp;年&nbsp;6月</span>
+       </div>
+       <!--总分-->
+       <div class="total">
+       	<span class="icon iconfont icon-ruxuekaoshichengjichaxun"></span>
+       	<span>&nbsp;总分&nbsp;:</span>
+       	<span>&nbsp;449</span>
+       </div>
+       <!--4个园-->
+       <div class="sigeqiu">
+       	<div>
+       		159
+       	</div>
+       	<div>
+       		159
+       	</div>
+       	<div>35</div>
+       	<div>96</div>
+       	<p>听力</p>
+       	<p>阅读</p>
+       	<p>综合</p>
+       	<p>写作</p>
+       </div>
+      </div>
+</body>
+</html>
+<script src="../commons/js/rem.js" type="text/javascript" charset="utf-8"></script>

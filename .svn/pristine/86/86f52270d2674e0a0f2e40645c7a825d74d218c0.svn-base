@@ -1,0 +1,66 @@
+package com.wh.controller.xyf;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.wh.base.AjaxJson;
+import com.wh.controller.common.BaseController;
+import com.wh.service.xyf.XyfParamService;
+import com.wh.xyfentity.XyfParam;
+
+@Controller
+@RequestMapping("/xyf/xyfParam")
+public class XyfParamController extends BaseController {
+
+	@Resource
+	private XyfParamService xyfParamService;
+
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+
+	/**
+	 * 缘分值参数设置
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/setFateParam.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson setFateParam(HttpServletRequest req, HttpServletResponse resp, XyfParam xyfParam) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		if (xyfParam != null) {
+			xyfParam.setId(1);
+			flag = xyfParamService.update(xyfParam);
+			json.setSuccess(flag);
+		}
+
+		return json;
+	}
+
+	/**
+	 * 获取缘分值
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/getFateParam.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson getFateParam(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		XyfParam xyfParam = xyfParamService.load(1);
+		if (xyfParam != null) {
+			json.setObj(xyfParam);
+		}
+
+		return json;
+	}
+
+}

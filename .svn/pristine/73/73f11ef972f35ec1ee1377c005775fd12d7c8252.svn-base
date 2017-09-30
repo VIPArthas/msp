@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.xlwapp.UserLogsMapper" >
+  <resultMap type="java.util.Map" id="userLogsMap">
+	</resultMap>
+  <resultMap id="BaseResultMap" type="com.wh.entity.UserLogs" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="session_id" property="sessionId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
+    <result column="log_url" property="logUrl" jdbcType="VARCHAR" />
+    <result column="log_model" property="logModel" jdbcType="VARCHAR" />
+    <result column="log_function" property="logFunction" jdbcType="VARCHAR" />
+    <result column="log_type" property="logType" jdbcType="INTEGER" />
+    <result column="log_key" property="logKey" jdbcType="VARCHAR" />
+    <result column="log_tag" property="logTag" jdbcType="VARCHAR" />
+    <result column="log_remark" property="logRemark" jdbcType="VARCHAR" />
+    <result column="operate_ip" property="operateIp" jdbcType="VARCHAR" />
+    <result column="operate_terminal" property="operateTerminal" jdbcType="INTEGER" />
+    <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, session_id, user_id, open_id, log_url, log_model, log_function, log_type, log_key, log_tag, log_remark, 
+    operate_ip, operate_terminal, operate_time
+  </sql>
+  
+  <!-- 活跃用户数查询 -->
+  <select id="selectAtCount" parameterType="com.wh.dto.SourceDto" resultMap="userLogsMap">
+  	SELECT COUNT(1) FROM tb_wchatuser wu,`user_logs` ul 
+  	WHERE wu.`openId` = ul.`open_id` AND wu.`source`=#{source}
+  	<if test="startOperateTime != null and startOperateTime !='' and endOperateTime != null and endOperateTime!=''">
+		AND ul.operate_time BETWEEN #{startOperateTime} AND  #{endOperateTime} 
+	</if>
+  	GROUP BY wu.`openId`
+  </select>
+
+  <!--活跃用户统计，数据库中暂时就有一个服务号，就只统计user_logs表，不关联其他表。-->
+  <select id="selectActiveOpenIdCount" parameterType="com.wh.dto.SourceDto" resultMap="userLogsMap">
+    SELECT COUNT(ul.open_id) FROM tb_wchatuser tw LEFT JOIN user_logs ul on ul.open_id=tw.openId WHERE 1=1
+    <if test='source!=null and source!=""'>
+    and tw.source=#{source}
+    </if>
+    <if test="startOperateTime != null and startOperateTime !='' and endOperateTime != null and endOperateTime!=''">
+      AND ul.operate_time BETWEEN #{startOperateTime} AND  #{endOperateTime}
+    </if> GROUP BY openId;
+  </select>
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_logs
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="queryLastLog" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_logs
+    where session_id = #{sessionId,jdbcType=VARCHAR}
+    order by operate_time desc
+    limit 1
+  </select>
+  <select id="queryUserLogsByOpenId" resultMap="BaseResultMap" parameterType="com.wh.entity.UserLogs" >
+    select
+    <include refid="Base_Column_List" />
+    from user_logs
+    where open_id = #{openId,jdbcType=VARCHAR}  AND log_model = #{logModel,jdbcType=VARCHAR}
+    <if test='logKey != null and logKey != ""'>
+      AND log_key = #{logKey,jdbcType=VARCHAR}
+    </if>
+    ORDER BY operate_time DESC
+  </select>
+  <update id="updateHistoryByOpenId" parameterType="com.wh.entity.UserLogs">
+    UPDATE user_logs SET operate_time = #{operateTime} WHERE open_id = #{openId,jdbcType=VARCHAR}  AND log_key = #{logKey,jdbcType=VARCHAR}
+  </update>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_logs
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.UserLogs" >
+    insert into user_logs (id, session_id, user_id, open_id,
+      log_url, log_model, log_function, log_type, 
+      log_key, log_tag, log_remark, 
+      operate_ip, operate_terminal, operate_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{sessionId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR},
+      #{logUrl,jdbcType=VARCHAR}, #{logModel,jdbcType=VARCHAR}, #{logFunction,jdbcType=VARCHAR}, #{logType,jdbcType=INTEGER}, 
+      #{logKey,jdbcType=VARCHAR}, #{logTag,jdbcType=VARCHAR}, #{logRemark,jdbcType=VARCHAR}, 
+      #{operateIp,jdbcType=VARCHAR}, #{operateTerminal,jdbcType=INTEGER}, #{operateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.UserLogs" >
+    insert into user_logs
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sessionId != null" >
+        session_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="openId != null" >
+        open_id,
+      </if>
+      <if test="logUrl != null" >
+        log_url,
+      </if>
+      <if test="logModel != null" >
+        log_model,
+      </if>
+      <if test="logFunction != null" >
+        log_function,
+      </if>
+      <if test="logType != null" >
+        log_type,
+      </if>
+      <if test="logKey != null" >
+        log_key,
+      </if>
+      <if test="logTag != null" >
+        log_tag,
+      </if>
+      <if test="logRemark != null" >
+        log_remark,
+      </if>
+      <if test="operateIp != null" >
+        operate_ip,
+      </if>
+      <if test="operateTerminal != null" >
+        operate_terminal,
+      </if>
+      <if test="operateTime != null" >
+        operate_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionId != null" >
+        #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="logUrl != null" >
+        #{logUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="logModel != null" >
+        #{logModel,jdbcType=VARCHAR},
+      </if>
+      <if test="logFunction != null" >
+        #{logFunction,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null" >
+        #{logType,jdbcType=VARCHAR},
+      </if>
+      <if test="logKey != null" >
+        #{logKey,jdbcType=VARCHAR},
+      </if>
+      <if test="logTag != null" >
+        #{logTag,jdbcType=VARCHAR},
+      </if>
+      <if test="logRemark != null" >
+        #{logRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="operateIp != null" >
+        #{operateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="operateTerminal != null" >
+        #{operateTerminal,jdbcType=INTEGER},
+      </if>
+      <if test="operateTime != null" >
+        #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.UserLogs" >
+    update user_logs
+    <set >
+      <if test="sessionId != null" >
+        session_id = #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        open_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="logUrl != null" >
+        log_url = #{logUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="logModel != null" >
+        log_model = #{logModel,jdbcType=VARCHAR},
+      </if>
+      <if test="logFunction != null" >
+        log_function = #{logFunction,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null" >
+        log_type = #{logType,jdbcType=VARCHAR},
+      </if>
+      <if test="logKey != null" >
+        log_key = #{logKey,jdbcType=VARCHAR},
+      </if>
+      <if test="logTag != null" >
+        log_tag = #{logTag,jdbcType=VARCHAR},
+      </if>
+      <if test="logRemark != null" >
+        log_remark = #{logRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="operateIp != null" >
+        operate_ip = #{operateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="operateTerminal != null" >
+        operate_terminal = #{operateTerminal,jdbcType=INTEGER},
+      </if>
+      <if test="operateTime != null" >
+        operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.UserLogs" >
+    update user_logs
+    set session_id = #{sessionId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      open_id = #{openId,jdbcType=VARCHAR},
+      log_url = #{logUrl,jdbcType=VARCHAR},
+      log_model = #{logModel,jdbcType=VARCHAR},
+      log_function = #{logFunction,jdbcType=VARCHAR},
+      log_type = #{logType,jdbcType=VARCHAR},
+      log_key = #{logKey,jdbcType=VARCHAR},
+      log_tag = #{logTag,jdbcType=VARCHAR},
+      log_remark = #{logRemark,jdbcType=VARCHAR},
+      operate_ip = #{operateIp,jdbcType=VARCHAR},
+      operate_terminal = #{operateTerminal,jdbcType=INTEGER},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="selectIsFirstByOpenId" parameterType="com.wh.entity.UserLogs" resultType="com.wh.entity.UserLogs">
+
+  </select>
+
+</mapper>

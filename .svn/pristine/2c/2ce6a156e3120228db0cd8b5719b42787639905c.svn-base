@@ -1,0 +1,50 @@
+package com.wh.service.xyf;
+
+import java.util.List;
+import java.util.Map;
+
+import com.wh.service.base.BaseService;
+import com.wh.xyfentity.XyfChat;
+
+
+public interface XyfChatService extends BaseService<XyfChat, Integer>{
+	/**
+	 * 聊一下list
+	 * @param userId
+	 * @return
+	 */
+	List<Map<String, Object>> getMyChatList(String userId);
+	
+	/**
+	 * 获取与我正在通话的人的未读信息
+	 * @param fromUserId
+	 * @param toUserId
+	 * @return
+	 */
+	List<Map<String, Object>> getUnreadChatList(String fromUserId, String toUserId);
+	
+	/**
+	 * 更改聊天信息状态
+	 * @param fromUserId
+	 * @param toUserId
+	 * @return
+	 */
+	int updateStatus(String fromUserId, String toUserId);
+	
+	/**
+	 * 获取最新10条聊天信息
+	 * @param fromUserId
+	 * @param toUserId
+	 * @return
+	 */
+	List<Map<String, Object>> getLastChatInfo(String fromUserId, String toUserId);
+	
+	/**
+	 * 删除他人与我的聊天信息
+	 * @param fromUserId
+	 * @param toUserId
+	 * @return
+	 */
+	boolean deleteChatInfo(String fromUserId, String toUserId);
+
+}

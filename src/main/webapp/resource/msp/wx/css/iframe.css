@@ -1,0 +1,79 @@
+
+/*底部nav*/
+nav {
+
+    height: 55px;
+    width: 100%;
+    position: fixed;
+    bottom: 0px;
+    background-color: #fff;
+    border-top: 1px solid #efefef;
+}
+a { text-decoration:none;}
+nav a:active{-webkit-tap-highlight-color: transparent;}
+nav a:hover{-webkit-tap-highlight-color: transparent;}
+nav a {
+    float: left;
+    height: 50px;
+    width: 25%;
+    color: gray;
+    text-align: center;
+    text-decoration: none;
+}
+nav a p {
+    margin: 0px ;
+    line-height: 20px;
+    font-size: 12px;
+    /*background-color: #00f;*/
+    /*margin-bottom: 5px;*/
+}
+nav a span {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 0 auto;
+    /*background-color: red;*/
+    margin-top: 5px;
+    background-image: url(../img/icon.png);
+    -webkit-background-size: auto 800%;
+    background-size: auto 800%;
+    /*background-position: 0 -150px;*/
+}
+/*nav字体颜色变化*/
+
+
+
+nav .shouye span {
+    background-position: 0 0px;
+}
+
+nav .select-actived span.shou-ye {
+    background-position: 0 -25px;
+}
+/*nav图标变化*/
+nav .suishou span {
+    background-position: 0 -50px;
+}
+
+nav .select-actived span.sui-shou {
+    background-position: 0 -75px;
+}
+/*nav图标变化*/
+nav .xiaoxi span {
+    background-position: 0 -100px;
+}
+
+nav .select-actived span.xiao-xi {
+    background-position: 0 -125px;
+}
+nav .mymessage span {
+    background-position: 0 -150px;
+}
+
+nav .select-actived span.wo-de {
+    background-position: 0 -175px;
+
+
+}
+
+

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.xlwapp.UserRechargeMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.entity.UserRecharge" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="recharge_num" property="rechargeNum" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
+    <result column="recharge_money" property="rechargeMoney" jdbcType="DOUBLE" />
+    <result column="recharge_type" property="rechargeType" jdbcType="INTEGER" />
+    <result column="recharge_time" property="rechargeTime" jdbcType="TIMESTAMP" />
+    <result column="recharge_status" property="rechargeStatus" jdbcType="INTEGER" />
+    <result column="recharge_remark" property="rechargeRemark" jdbcType="VARCHAR" />
+    <result column="reply_time" property="replyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, recharge_num, user_id,open_id, recharge_money, recharge_type, recharge_time, recharge_status,
+    recharge_remark, reply_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_recharge
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_recharge
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.UserRecharge" >
+    insert into user_recharge (id, recharge_num, user_id, open_id,
+      recharge_money, recharge_type, recharge_time, 
+      recharge_status, recharge_remark, reply_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{rechargeNum,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR},  #{openId,jdbcType=VARCHAR},
+      #{rechargeMoney,jdbcType=DOUBLE}, #{rechargeType,jdbcType=INTEGER}, #{rechargeTime,jdbcType=TIMESTAMP}, 
+      #{rechargeStatus,jdbcType=INTEGER}, #{rechargeRemark,jdbcType=VARCHAR}, #{replyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.UserRecharge" >
+    insert into user_recharge
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="rechargeNum != null" >
+        recharge_num,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="openId != null" >
+        open_id,
+      </if>
+      <if test="rechargeMoney != null" >
+        recharge_money,
+      </if>
+      <if test="rechargeType != null" >
+        recharge_type,
+      </if>
+      <if test="rechargeTime != null" >
+        recharge_time,
+      </if>
+      <if test="rechargeStatus != null" >
+        recharge_status,
+      </if>
+      <if test="rechargeRemark != null" >
+        recharge_remark,
+      </if>
+      <if test="replyTime != null" >
+        reply_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargeNum != null" >
+        #{rechargeNum,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargeMoney != null" >
+        #{rechargeMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="rechargeType != null" >
+        #{rechargeType,jdbcType=INTEGER},
+      </if>
+      <if test="rechargeTime != null" >
+        #{rechargeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rechargeStatus != null" >
+        #{rechargeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="rechargeRemark != null" >
+        #{rechargeRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="replyTime != null" >
+        #{replyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.UserRecharge" >
+    update user_recharge
+    <set >
+      <if test="rechargeNum != null" >
+        recharge_num = #{rechargeNum,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        open_id = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargeMoney != null" >
+        recharge_money = #{rechargeMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="rechargeType != null" >
+        recharge_type = #{rechargeType,jdbcType=INTEGER},
+      </if>
+      <if test="rechargeTime != null" >
+        recharge_time = #{rechargeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rechargeStatus != null" >
+        recharge_status = #{rechargeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="rechargeRemark != null" >
+        recharge_remark = #{rechargeRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="replyTime != null" >
+        reply_time = #{replyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.UserRecharge" >
+    update user_recharge
+    set recharge_num = #{rechargeNum,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=VARCHAR},
+      recharge_money = #{rechargeMoney,jdbcType=DOUBLE},
+      recharge_type = #{rechargeType,jdbcType=INTEGER},
+      recharge_time = #{rechargeTime,jdbcType=TIMESTAMP},
+      recharge_status = #{rechargeStatus,jdbcType=INTEGER},
+      recharge_remark = #{rechargeRemark,jdbcType=VARCHAR},
+      reply_time = #{replyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+
+
+
+  <select id="selectByActiveListPage" resultType="java.util.Map" parameterType="com.wh.dto.system.UserSearchDto" >
+    SELECT
+    ur.*, u.real_name, u.phone
+    FROM
+    user_recharge ur
+    LEFT JOIN user u ON ur.user_id = u.id
+    WHERE
+    1 = 1
+    <if test="realName != null and realName != ''">
+      and u.real_name LIKE CONCAT('%',#{realName},'%')
+    </if>
+    <if test="phone != null and phone != ''">
+      and u.phone LIKE CONCAT('%',#{phone},'%')
+    </if>
+    <if test="registerTimeStart !=null and registerTimeStart !=''">
+      AND ur.recharge_time &gt;= #{registerTimeStart,jdbcType=TIMESTAMP}
+    </if>
+    <if test="registerTimeEnd !=null and registerTimeEnd !=''" >
+      AND ur.recharge_time &lt;= #{registerTimeEnd,jdbcType=TIMESTAMP}
+    </if>
+    <if test="sortName !=null and sortName !=''" >
+      order by ${sortName}
+    </if>
+    <if test="sortName ==null or sortName ==''" >
+      order by ur.recharge_time desc
+    </if>
+  </select>
+
+
+
+
+
+
+
+
+
+</mapper>

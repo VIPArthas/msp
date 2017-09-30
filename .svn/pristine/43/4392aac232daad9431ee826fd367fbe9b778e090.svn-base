@@ -1,0 +1,239 @@
+/**
+ * Created by User on 2017/8/8.
+ */
+//随拍展示,分页
+var type=1,start=1,length=5;
+var isNextPage = true,stop = true;
+//系统消息展示，分页
+var startmessage=1;lengthmessage=1;
+var isNextPagemessage = true,stopmessage = true;
+//评论回复
+var touserid = '',tousername = '';
+localStorage.setItem('userid','3c6ab5a0509d4972aaf31e22b674ba0f');
+localStorage.setItem('wxid','lixiaofeiaili');
+localStorage.setItem('myname','李晓飞');
+function formatDate(now){
+    var year=now.getYear();
+    var month=now.getMonth()+1;
+    var date=now.getDate();
+    var hour=now.getHours();
+    var minute=now.getMinutes();
+    var second=now.getSeconds();
+    return year+"-"+month+"-"+date+"   "+hour+":"+minute+":"+second;
+}
+function time(tim){
+    var timee;
+    if(tim<24){
+        timee = tim + '小时前';
+    }else {
+       var daay =  Math.floor(tim/24);
+       if(daay<31){
+    	   timee = daay + '天前';
+       }else{
+       var moun = Math.floor(tim/30);
+           timee = moun + '月前';
+       }
+       
+    }
+    return timee;
+}
+ function suipainum(first) {
+	 var firs = first?first:false;
+        $.ajax({
+            type: "GET",
+            url: SERVER_ROOT_PATH + "/msp/mspPhoto/wx/showList.htm",
+            data:{type:type,start:start,length:length},
+            dataType: "json",           
+            success: function (result) {
+            		if(!!result.obj.length){
+                        if(firs){
+                        	document.querySelector('.waterfall').innerHTML = '';
+                        }
+            	     pubu(result.obj);
+
+            		}else{
+            			isNextPage = false;
+            			if(firs){
+            				//添加一张提示图拍
+            			}else{
+            				var none = document.createElement('div');           			
+            		        none.className = 'nothing';
+            		        none.innerHTML = '我们是有底线的~';
+            		        none.style = 'color: #999;text-align: center;font-size: 3vw;margin: 3vw;'
+            				document.querySelector('body').appendChild(none);
+            			}
+            			
+            		}
+	            	
+            }
+        })
+    }
+ function pubu(obj){
+	 console.log(obj);
+	    var pbul = document.querySelector('.waterfall');
+	    for(var i = 0;i < obj.length;i++){
+	        var list = document.createElement('div');
+	        var id = obj[i].id
+	        var timee = time(obj[i].hournum);
+	        list.className = 'item';
+	        list.setAttribute('data-id',id);
+	        list.innerHTML = '<img src=' + obj[i].file_path + '><p><span class="name"><img src=' + obj[i].avatar + ' alt="">' +  obj[i].name + '</span><span class="time">' + timee + '</span></p>';
+	        pbul.appendChild(list);
+	    } 
+      $('.item').on('click',function () {
+    	  localStorage.setItem('detail',$(this).attr('data-id'));  
+     window.parent.location.href = 'showphoto.html';
+  });
+	    stop = true;
+}
+ 
+// 随拍详情
+function detail(){
+	var detid = localStorage.getItem('detail');
+	$.ajax({
+        type: "GET",
+        url: SERVER_ROOT_PATH + "/msp/mspPhoto/wx/showInfo.htm",
+        data:{photoId:detid},
+        dataType: "json",           
+        success: function (result) {
+        	console.log(result);
+        	if(!!result.obj && !!result.attributes){
+        		$('#sender-photo').attr('src',result.obj.avatar);
+        		$('#sender-name').text(result.obj.name);
+        		$('#sender-time').text(time(result.obj.hournum));
+        		var swip = document.querySelector('.swiper-wrapper');
+        		for(var i = 0;i<result.attributes.photoUrlList.length;i++){
+        			var list = document.createElement('div');
+        			list.className = 'swiper-slide';
+        			list.innerHTML = '<section class="yindaoone"><img src=' + result.attributes.photoUrlList[i].file_path + ' alt=""></section>';
+        			swip.appendChild(list);
+        		}
+        		$('#detail-msg').text(result.obj.msg);  
+        		$('#detail-num').text(result.obj.pageview_num);
+        		$('#detail-replyNum').text(!!result.attributes.replyNum?result.attributes.replyNum + '条评论':0 + '条评论');
+        		var talk = document.querySelector('.details_comment');
+        		if(!!result.attributes.replyList){
+        			for(var j = 0;j<result.attributes.replyList.length;j++){
+            			var talklist = document.createElement('div');
+            			talklist.setAttribute('onclick','replywho($(this))');
+            			talklist.innerHTML = !!result.attributes.replyList[j].to_userid?'<span id="firstname" class="name" data-firstid=' + result.attributes.replyList[j].from_userid + '>' + result.attributes.replyList[j].from_name + '</span>&nbsp;回复了&nbsp;<span class="name">' + result.attributes.replyList[j].to_name + '</span>：<span>' + result.attributes.replyList[j].msg + '</span>':'<span class="name">' + result.attributes.replyList[j].from_name + '</span>：<span class="wrap">' + result.attributes.replyList[j].msg + '</span>';
+            			talk.appendChild(talklist);
+            		}
+        		}
+        		
+        	}else{
+        		alert('加载失败！');
+        	}
+
+        	var mySwiper = new Swiper('.swiper-container', {
+                pagination: '.swiper-pagination',
+                paginationClickable: true,
+            })	
+        }
+    })
+	
+};
+function replywho(th){
+	var fromuserid = localStorage.getItem('userid');
+	console.log(th);
+	touserid = th.children('#firstname').attr('data-firstid');
+	if(fromuserid == touserid){
+		$('#replymsg').attr('placeholder','评论');
+		touserid = "";
+	}else{
+		$('#replymsg').attr('placeholder','回复' + th.children('#firstname').text() + ':');
+		tousername = th.children('#firstname').text();
+
+	}
+	
+	
+}
+function sendreply(){
+	var fromuserid = localStorage.getItem('userid');
+	var myname = localStorage.getItem('myname');
+	var detid = localStorage.getItem('detail');
+	var msg = $('#replymsg').val();
+	if(msg){
+		 $.ajax({
+		        type: "POST",
+		        url: SERVER_ROOT_PATH + "/msp/mspPhoto/wx/sendReply.htm",
+		        data:{photoId:detid,fromUserid:fromuserid,toUserid:touserid,msg:msg},
+		        dataType: "json",           
+		        success: function (result) {
+		        	if(result.success){
+		        		var talk = document.querySelector('.details_comment');
+		        		var talklist = document.createElement('div');
+		    			talklist.innerHTML = !!touserid?'<span class="name">' + myname + '</span>&nbsp;回复了&nbsp;<span class="name">' + tousername + '</span>：<span>' + msg + '</span>':'<span class="name">' + myname + '</span>：<span class="wrap">' + msg + '</span>';
+		    			talk.appendChild(talklist);
+		    			$('#replymsg').val('');
+		    			$('#replymsg').attr('placeholder','评论');
+		        	}else{
+		        		alert('评论失败');
+		        	}
+		            	
+		        }
+		    })
+	}
+   
+	
+}
+
+
+//系统消息
+function message(firs){
+	var wxid = localStorage.getItem('wxid');
+	 $.ajax({
+         type: "GET",
+         url: SERVER_ROOT_PATH + "/msp/mspMessage/wx/myMesList.htm",
+         data:{wxid:wxid,start:startmessage,length:lengthmessage},
+         dataType: "json",           
+         success: function (result) {
+         		if(!!result.obj){                     
+         	     showmessage(result.obj);
+         		}else{
+         			isNextPagemessage = false;
+         			if(firs){
+         				//添加一张提示图拍
+         			}else{
+         				var none = document.createElement('div');           			
+         		        none.className = 'nothing';
+         		        none.innerHTML = '我们是有底线的~';
+         		        none.style = 'color: #999;text-align: center;font-size: 3vw;margin: 3vw;'
+         				document.querySelector('body').appendChild(none);
+         			}
+         			
+         		}
+	            	
+         }
+     })
+	
+}
+function showmessage(obj){
+	var messageul = document.querySelector('.message-con');
+    for(var i = 0;i < obj.length;i++){
+        var list = document.createElement('section');
+        var dayy = new Date(obj[i].createTime);
+        list.className = 'message-content';
+        list.innerHTML = '<div><span>系统公告</span><span>' + formatDate(dayy) + '</span></div><article class="wrap">' + obj[i].content + '</article>';
+        messageul.appendChild(list);
+    } 
+    stopmessage = true;
+}
+$(function () {
+    //随手拍
+    $('header div').click(function () {
+        $(this).addClass('active_type').siblings().removeClass('active_type');
+        type = $(this).attr('data-type');
+        start = 1;
+        isNextPage = true;
+        stop = true;
+        suipainum(true);
+        $('.nothing').remove();
+    });
+
+    $('.icon-xiangji1fill').on('click',function () {
+
+        window.location.href = SERVER_ROOT_PATH + '/msp/mspPhoto/wx/goSendPhoto.htm';
+    });
+    
+})

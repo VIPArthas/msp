@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.msp.MspClassMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.mspentity.MspClass" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="headmaster_id" property="headmasterId" jdbcType="VARCHAR" />
+    <result column="instructor_id" property="instructorId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, headmaster_id, instructor_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from msp_class
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from msp_class
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.mspentity.MspClass" >
+    insert into msp_class (id, name, headmaster_id, 
+      instructor_id)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{headmasterId,jdbcType=VARCHAR}, 
+      #{instructorId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.mspentity.MspClass" >
+    insert into msp_class
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="headmasterId != null" >
+        headmaster_id,
+      </if>
+      <if test="instructorId != null" >
+        instructor_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="headmasterId != null" >
+        #{headmasterId,jdbcType=VARCHAR},
+      </if>
+      <if test="instructorId != null" >
+        #{instructorId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.mspentity.MspClass" >
+    update msp_class
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="headmasterId != null" >
+        headmaster_id = #{headmasterId,jdbcType=VARCHAR},
+      </if>
+      <if test="instructorId != null" >
+        instructor_id = #{instructorId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.mspentity.MspClass" >
+    update msp_class
+    set name = #{name,jdbcType=VARCHAR},
+      headmaster_id = #{headmasterId,jdbcType=VARCHAR},
+      instructor_id = #{instructorId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,13 @@
+package com.wh.service.msp;
+
+
+
+import com.wh.mspentity.MspUser;
+import com.wh.service.base.BaseService;
+
+
+public interface MspUserService extends BaseService<MspUser, Integer> {
+
+
+
+}

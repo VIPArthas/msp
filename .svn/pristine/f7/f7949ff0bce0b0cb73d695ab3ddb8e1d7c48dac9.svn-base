@@ -1,0 +1,61 @@
+package com.wh.service.xyf.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.wh.dao.xyf.XyfLovedSongMapper;
+import com.wh.service.base.impl.BaseServiceImpl;
+import com.wh.service.xyf.XyfLovedSongService;
+import com.wh.xyfentity.XyfLovedSong;
+
+@Service
+public class XyfLovedSongServiceImpl extends BaseServiceImpl<XyfLovedSong, Integer> implements XyfLovedSongService {
+	@Resource
+	XyfLovedSongMapper dao;
+
+	@Resource
+	public void setBaseDAO(XyfLovedSongMapper xyfLovedSongMapper) {
+		this.dao = xyfLovedSongMapper;
+		this.baseDAO = xyfLovedSongMapper;
+	}
+
+	@Override
+	public List<XyfLovedSong> getLoveSongs(String myId, String otherId) {
+		
+		return dao.getLoveSongs(myId,otherId);
+	}
+
+	@Override
+	public List<Map<String, Object>> getMyLovedFateUsers(String myId) {
+		
+		return dao.getMyLovedFateUsers(myId);
+	}
+
+	@Override
+	public int getMyLovedSongsCount(String myId) {
+		
+		return dao.getMyLovedSongsCount(myId);
+	}
+
+	@Override
+	public Map<String, Object> getLovedFateUser(String myId, String otherId) {
+		
+		return dao.getLovedFateUser(myId,otherId);
+	}
+
+	@Override
+	public int getSongTotalNum(String myId, String musicId) {
+		
+		return dao.getSongTotalNum(myId,musicId);
+	}
+
+	@Override
+	public void deleteByMusicId(String id) {
+		dao.deleteByMusicId(id);
+		
+	}
+}

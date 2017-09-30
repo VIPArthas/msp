@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.xlwapp.UserPayMapper" >
+	<resultMap type="java.util.Map" id="userPayMap">
+    </resultMap>
+  <resultMap id="BaseResultMap" type="com.wh.entity.UserPay" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="pay_num" property="payNum" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="receiver_id" property="receiverId" jdbcType="VARCHAR" />
+    <result column="pay_school_money" property="paySchoolMoney" jdbcType="DOUBLE" />
+    <result column="school_money" property="schoolMoney" jdbcType="DOUBLE" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="order_info" property="orderInfo" jdbcType="VARCHAR" />
+    <result column="pay_status" property="payStatus" jdbcType="INTEGER" />
+    <result column="pay_type" property="payType" jdbcType="INTEGER" />
+    <result column="pay_remark" property="payRemark" jdbcType="VARCHAR" />
+    <result column="pay_note" property="payNote" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pay_num, user_id, receiver_id, pay_school_money, school_money, pay_time, order_info, 
+    pay_status, pay_type,pay_remark, pay_note,remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_pay
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_pay
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.UserPay" >
+    insert into user_pay (id, pay_num, user_id, 
+      receiver_id, pay_school_money, school_money, 
+      pay_time, order_info, pay_status, 
+      pay_remark, pay_note,remark)
+    values (#{id,jdbcType=VARCHAR}, #{payNum,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, 
+      #{receiverId,jdbcType=VARCHAR}, #{paySchoolMoney,jdbcType=DOUBLE}, #{schoolMoney,jdbcType=DOUBLE}, 
+      #{payTime,jdbcType=TIMESTAMP}, #{orderInfo,jdbcType=VARCHAR}, #{payStatus,jdbcType=INTEGER}, 
+      #{payRemark,jdbcType=VARCHAR}, #{payNote,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.UserPay" >
+    insert into user_pay
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="payNum != null" >
+        pay_num,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="receiverId != null" >
+        receiver_id,
+      </if>
+      <if test="paySchoolMoney != null" >
+        pay_school_money,
+      </if>
+      <if test="schoolMoney != null" >
+        school_money,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="orderInfo != null" >
+        order_info,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="payRemark != null" >
+        pay_remark,
+      </if>
+      <if test="payNote != null" >
+        pay_note,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="payNum != null" >
+        #{payNum,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverId != null" >
+        #{receiverId,jdbcType=VARCHAR},
+      </if>
+      <if test="paySchoolMoney != null" >
+        #{paySchoolMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="schoolMoney != null" >
+        #{schoolMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderInfo != null" >
+        #{orderInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=INTEGER},
+      </if>
+      <if test="payRemark != null" >
+        #{payRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="payNote != null" >
+        #{payNote,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.UserPay" >
+    update user_pay
+    <set >
+      <if test="payNum != null" >
+        pay_num = #{payNum,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverId != null" >
+        receiver_id = #{receiverId,jdbcType=VARCHAR},
+      </if>
+      <if test="paySchoolMoney != null" >
+        pay_school_money = #{paySchoolMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="schoolMoney != null" >
+        school_money = #{schoolMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderInfo != null" >
+        order_info = #{orderInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=INTEGER},
+      </if>
+      <if test="payRemark != null" >
+        pay_remark = #{payRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="payNote != null" >
+        pay_note = #{payNote,jdbcType=VARCHAR},
+      </if>
+       <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.UserPay" >
+    update user_pay
+    set pay_num = #{payNum,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=VARCHAR},
+      receiver_id = #{receiverId,jdbcType=VARCHAR},
+      pay_school_money = #{paySchoolMoney,jdbcType=DOUBLE},
+      school_money = #{schoolMoney,jdbcType=DOUBLE},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      order_info = #{orderInfo,jdbcType=VARCHAR},
+      pay_status = #{payStatus,jdbcType=INTEGER},
+      pay_remark = #{payRemark,jdbcType=VARCHAR},
+      pay_note = #{payNote,jdbcType=VARCHAR},
+       remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+
+
+
+  <select id="selectByActiveListPage" resultType="java.util.Map" parameterType="com.wh.dto.system.UserSearchDto" >
+    SELECT
+    up.*, u.real_name,
+    u.phone,
+    us.school_name
+    FROM
+    user_pay up
+    LEFT JOIN user u ON up.user_id = u.id
+    AND u.user_status = 0
+    LEFT JOIN user_student us ON up.user_id = us.user_id
+    AND us. STATUS = 0
+    WHERE
+    1 = 1
+    <if test="realName != null and realName != ''">
+      and u.real_name LIKE CONCAT('%',#{realName},'%')
+    </if>
+    <if test="phone != null and phone != ''">
+      and u.phone LIKE CONCAT('%',#{phone},'%')
+    </if>
+    <if test="schoolName != null and schoolName != ''">
+      and us.school_name LIKE CONCAT('%',#{schoolName},'%')
+    </if>
+    <if test="registerTimeStart !=null and registerTimeStart !=''">
+      AND up.pay_time &gt;= #{registerTimeStart,jdbcType=TIMESTAMP}
+    </if>
+    <if test="registerTimeEnd !=null and registerTimeEnd !=''" >
+      AND up.pay_time &lt;= #{registerTimeEnd,jdbcType=TIMESTAMP}
+    </if>
+    <if test="sortName !=null and sortName !=''" >
+      order by ${sortName}
+    </if>
+    <if test="sortName ==null or sortName ==''" >
+      order by up.pay_time desc
+    </if>
+  </select>
+  <select id="selectNowMaxNum" resultType="java.lang.Long">
+    SELECT MAX(up.pay_num) pay_num FROM user_pay up WHERE DATE_FORMAT(up.pay_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d');
+  </select>
+  
+  <!-- 根据用户id查询收支明细 -->
+  <select id="selectUserPayByUserIdListPage" parameterType="com.wh.entity.UserPay" resultMap="BaseResultMap">
+    SELECT * FROM user_pay WHERE pay_type = 10 AND user_id= #{userId,jdbcType=VARCHAR} 
+    UNION ALL 
+    SELECT * FROM user_pay WHERE pay_type = 11 AND receiver_id= #{userId,jdbcType=VARCHAR} 
+    UNION ALL  
+  	SELECT * FROM user_pay WHERE (user_id = #{userId,jdbcType=VARCHAR} OR receiver_id=#{userId,jdbcType=VARCHAR}) and pay_type not in (1,2,10,11) ORDER BY pay_time DESC
+  </select>
+  
+  <!-- selectFreezeUserPayByUserId -->
+  <select id="selectFreezeUserPayByUserId" parameterType="com.wh.entity.UserPay" resultMap="BaseResultMap">
+  	SELECT * FROM user_pay WHERE (user_id = #{userId,jdbcType=VARCHAR} OR receiver_id=#{userId,jdbcType=VARCHAR}) and pay_type in (1,2) ORDER BY pay_time DESC
+  </select>
+  
+  <delete id="deleteBzj" parameterType="com.wh.entity.UserPay" >
+    DELETE FROM user_pay WHERE (user_id = #{userId,jdbcType=VARCHAR} AND receiver_id = #{receiverId,jdbcType=VARCHAR} AND pay_type in (1,2) AND pay_note = #{payNote,jdbcType=VARCHAR}) OR 
+    (user_id = #{receiverId,jdbcType=VARCHAR} AND receiver_id = #{userId,jdbcType=VARCHAR} AND pay_type in (1,2) AND pay_note = #{payNote,jdbcType=VARCHAR})
+  </delete>
+  
+  <delete id="deleteUserPayRecord" parameterType="com.wh.entity.UserPay">
+  	DELETE FROM user_pay WHERE (user_id = #{userId,jdbcType=VARCHAR} AND receiver_id = #{receiverId,jdbcType=VARCHAR} AND pay_type in (1,2)) OR 
+    (user_id = #{receiverId,jdbcType=VARCHAR} AND receiver_id = #{userId,jdbcType=VARCHAR} AND pay_type in (1,2))
+  </delete>
+  
+  <!-- 支付记录查询 -->
+  <select id="selectWmhPayListPage" parameterType="com.wh.entity.UserPay" resultMap="userPayMap">
+  	SELECT 
+	  up.id,
+	  u.real_name,
+	  up.`pay_school_money`,
+	  up.remark,
+	  CASE
+	    up.`pay_type` 
+	    WHEN 12 
+	    THEN '考试费' 
+	    WHEN 13 
+	    THEN '学费' 
+	    WHEN 14 
+	    THEN '资料费' 
+	    WHEN 15 
+	    THEN '爱心捐助' 
+	    ELSE up.`pay_type` 
+	  END pay_type,
+	  up.pay_time 
+	FROM
+	  wmh_user u
+	  LEFT JOIN user_pay up 
+	    ON u.id = up.user_id
+	    WHERE up.pay_status = 1 and up.pay_type BETWEEN 12 AND 15
+	 <if test="payType != null">
+	 	and up.pay_type = #{payType,jdbcType=INTEGER}
+	 </if>
+	 <if test="payTime != null">
+	 	and up.pay_time &gt;= #{beginPayTime,jdbcType=TIMESTAMP} 
+	 	and up.pay_time &lt;= #{endPayTime,jdbcType=TIMESTAMP}
+	 </if>
+	 <if test="realName != null and realName != '' ">
+	 	AND u.real_name LIKE
+       CONCAT('%',#{realName},'%')
+	 </if>   ORDER by pay_time DESC
+  </select>
+  
+  <!-- 根据payType类型获取记录数 -->
+  	<select id="getPayCountPageWx" resultType="int">
+	SELECT 
+COUNT(1)
+FROM
+  wmh_user u 
+  LEFT JOIN user_pay up 
+    ON u.id = up.user_id 
+WHERE up.pay_status = 1 
+  AND up.pay_type BETWEEN 12 
+  AND 15 
+    <if test="payType != null">
+	 	and up.pay_type = #{payType,jdbcType=INTEGER}
+	 </if> 
+	</select>
+  
+  
+  
+  <!-- 根据payType查询最大流水单号 -->
+  <select id="selectMaxWmhPayNum" parameterType="java.lang.Integer" resultType="java.lang.Long">
+  	SELECT MAX(pay_num) FROM user_pay WHERE pay_type = #{payType,jdbcType=INTEGER} AND pay_status = 1 AND DATE_FORMAT(pay_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
+  </select>
+
+</mapper>

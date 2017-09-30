@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.xyf.XyfLovedSongMapper">
+	<resultMap id="BaseResultMap" type="com.wh.xyfentity.XyfLovedSong">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="song_id" property="songId" jdbcType="VARCHAR" />
+		<result column="song_name" property="songName" jdbcType="VARCHAR" />
+		<result column="singer" property="singer" jdbcType="VARCHAR" />
+		<result column="singer_id" property="singerId" jdbcType="VARCHAR" />
+		<result column="picurl" property="picurl" jdbcType="VARCHAR" />
+		<result column="source" property="source" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, song_id, song_name, singer, singer_id, picurl,source
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from xyf_loved_song
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from xyf_loved_song
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.wh.xyfentity.XyfLovedSong">
+		insert into xyf_loved_song (id, user_id, song_id,
+		song_name, singer, singer_id, picurl,
+		source)
+		values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR},
+		#{songId,jdbcType=VARCHAR},
+		#{songName,jdbcType=VARCHAR}, #{singer,jdbcType=VARCHAR}, #{singerId,jdbcType=VARCHAR},
+		#{picurl,jdbcType=VARCHAR},
+		#{source,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.wh.xyfentity.XyfLovedSong">
+		insert into xyf_loved_song
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="songId != null">
+				song_id,
+			</if>
+			<if test="songName != null">
+				song_name,
+			</if>
+			<if test="singer != null">
+				singer,
+			</if>
+			<if test="singerId != null">
+				singer_id,
+			</if>
+			<if test="picurl != null">
+				picurl,
+			</if>
+			<if test="source != null">
+				source,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="songId != null">
+				#{songId,jdbcType=VARCHAR},
+			</if>
+			<if test="songName != null">
+				#{songName,jdbcType=VARCHAR},
+			</if>
+			<if test="singer != null">
+				#{singer,jdbcType=VARCHAR},
+			</if>
+			<if test="singerId != null">
+				#{singerId,jdbcType=VARCHAR},
+			</if>
+			<if test="picurl != null">
+				#{picurl,jdbcType=VARCHAR},
+			</if>
+			<if test="source != null">
+				#{source,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wh.xyfentity.XyfLovedSong">
+		update xyf_loved_song
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="songId != null">
+				song_id = #{songId,jdbcType=VARCHAR},
+			</if>
+			<if test="songName != null">
+				song_name = #{songName,jdbcType=VARCHAR},
+			</if>
+			<if test="singer != null">
+				singer = #{singer,jdbcType=VARCHAR},
+			</if>
+			<if test="singerId != null">
+				singer_id = #{singerId,jdbcType=VARCHAR},
+			</if>
+			<if test="picurl != null">
+				picurl = #{picurl,jdbcType=VARCHAR},
+			</if>
+			<if test="source != null">
+				source = #{source,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wh.xyfentity.XyfLovedSong">
+		update xyf_loved_song
+		set user_id = #{userId,jdbcType=VARCHAR},
+		song_id = #{songId,jdbcType=VARCHAR},
+		song_name = #{songName,jdbcType=VARCHAR},
+		singer = #{singer,jdbcType=VARCHAR},
+		singer_id = #{singerId,jdbcType=VARCHAR},
+		picurl = #{picurl,jdbcType=VARCHAR},
+		source = #{source,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 获取我和她共同喜欢的歌曲详情 -->
+	<select id="getLoveSongs" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		SELECT * FROM `xyf_loved_song` WHERE
+		user_id=#{myId,jdbcType=VARCHAR} AND song_id IN
+		(SELECT song_id FROM
+		`xyf_loved_song` WHERE user_id=#{otherId,jdbcType=VARCHAR}) ORDER
+		BY id
+		DESC
+
+	</select>
+
+
+
+
+	<!-- 根据用户音乐id获取其有缘人 按数量多少获取最多的10个用户 听得音乐代表心情 喜欢的音乐代表性格 -->
+	<select id="getMyLovedFateUsers" resultType="java.util.Map"
+		parameterType="java.lang.String">
+
+
+		SELECT t1.user_id AS user_id,t1.cnt AS cnt1,t2.cnt AS
+		cnt2,t3.cnt AS cnt3
+		FROM
+		(SELECT
+		t1.`user_id`,
+		COUNT(1) AS cnt
+		FROM
+		(SELECT
+		*
+		FROM
+		xyf_loved_song
+		WHERE user_id = #{myId,jdbcType=VARCHAR}) t
+		INNER
+		JOIN xyf_loved_song t1
+		ON t.song_id = t1.song_id
+		AND t.user_id !=
+		t1.user_id
+		GROUP BY t1.`user_id`
+		) t1
+		LEFT OUTER JOIN
+		(
+		SELECT
+		t1.`user_id`,
+		COUNT(1) AS cnt
+		FROM
+		(SELECT
+		*
+		FROM
+		xyf_loved_song
+		WHERE
+		user_id = #{myId,jdbcType=VARCHAR}) t
+		INNER JOIN xyf_loved_song t1
+		ON
+		t.song_name = t1.`song_name`
+		AND t.user_id != t1.user_id
+		AND t.song_id
+		!= t1.song_id
+		GROUP BY t1.`user_id`)t2 ON t1.`user_id` = t2.`user_id`
+
+		LEFT OUTER JOIN
+		(SELECT
+		t1.`user_id`,
+		COUNT(1) AS cnt
+		FROM
+		(SELECT
+		*
+		FROM
+		xyf_loved_song
+		WHERE user_id = #{myId,jdbcType=VARCHAR}) t
+		INNER JOIN
+		xyf_loved_song t1
+		ON t.singer_id = t1.`singer_id`
+		AND t.user_id !=
+		t1.user_id
+		AND t.song_name != t1.song_name
+		GROUP BY t1.`user_id`) t3 ON
+		t1.user_id =t3.user_id
+
+	</select>
+
+
+	<!-- 获取我喜欢的歌曲总数 -->
+	<select id="getMyLovedSongsCount" resultType="int" parameterType="java.lang.String">
+		SELECT
+		COUNT(1) FROM `xyf_loved_song` WHERE user_id=#{myId,jdbcType=VARCHAR}
+	</select>
+	
+	
+		<!-- 获取两人之间喜欢的歌曲的各个数量 -->
+	<select id="getLovedFateUser" resultType="java.util.Map"
+		parameterType="java.lang.String">
+SELECT 
+  t1.user_id AS user_id,
+  t1.cnt AS cnt1,
+  t2.cnt AS cnt2,
+  t3.cnt AS cnt3 
+FROM
+  ( SELECT #{otherId,jdbcType=VARCHAR} user_id, COUNT(1) cnt FROM (     
+  SELECT   
+    t.song_name
+  FROM
+    (SELECT 
+      * 
+    FROM
+      xyf_loved_song 
+    WHERE user_id = #{myId,jdbcType=VARCHAR}) t 
+    INNER JOIN xyf_loved_song t1 
+      ON t.song_name = t1.song_name 
+      AND t.singer_id=t1.`singer_id`
+      AND t1.user_id = #{otherId,jdbcType=VARCHAR}  GROUP BY t.song_name ) t1) t1 
+  LEFT OUTER JOIN 
+    (SELECT 
+  #{otherId,jdbcType=VARCHAR} user_id, COUNT(1) cnt
+FROM
+  (SELECT DISTINCT 
+    t1.user_id,
+    t.song_id,
+    t.song_name,
+    t.singer 
+  FROM
+    (SELECT 
+      * 
+    FROM
+      xyf_loved_song 
+    WHERE user_id = #{myId,jdbcType=VARCHAR}) t 
+    INNER JOIN xyf_loved_song t1 
+      ON t.song_name = t1.`song_name` 
+      AND t1.user_id = #{otherId,jdbcType=VARCHAR} 
+      AND t.singer_id != t1.singer_id 
+  UNION
+  SELECT DISTINCT 
+    t.user_id,
+    t.song_id,
+    t.song_name,
+    t.singer 
+  FROM
+    (SELECT 
+      * 
+    FROM
+      xyf_loved_song 
+    WHERE user_id = #{otherId,jdbcType=VARCHAR}) t 
+    INNER JOIN xyf_loved_song t1 
+      ON t.song_name = t1.`song_name` 
+      AND t1.user_id = #{myId,jdbcType=VARCHAR} 
+      AND t.singer_id != t1.singer_id) t2 
+WHERE song_id NOT IN 
+  (SELECT 
+    t.song_id 
+  FROM
+    (SELECT 
+      * 
+    FROM
+      xyf_loved_song 
+    WHERE user_id = #{myId,jdbcType=VARCHAR}) t 
+    INNER JOIN xyf_loved_song t1 
+      ON t.song_name = t1.song_name 
+      AND t.singer_id = t1.`singer_id` 
+      AND t1.user_id = #{otherId,jdbcType=VARCHAR}
+  GROUP BY t.song_name)
+  ) t2 
+    ON t1.`user_id` = t2.`user_id` 
+  LEFT OUTER JOIN 
+    (SELECT 
+      #{otherId,jdbcType=VARCHAR} user_id,
+      COUNT(1) AS cnt 
+    FROM
+      (SELECT 
+        * 
+      FROM
+        (SELECT 
+          song_name 
+        FROM
+          xyf_loved_song 
+        WHERE user_id =#{myId,jdbcType=VARCHAR}
+          AND singer_id IN 
+          (SELECT 
+            singer_id 
+          FROM
+            xyf_loved_song 
+          WHERE user_id = #{otherId,jdbcType=VARCHAR}) 
+          UNION
+          SELECT 
+            song_name 
+          FROM
+            xyf_loved_song 
+          WHERE user_id = #{otherId,jdbcType=VARCHAR}
+            AND singer_id IN 
+            (SELECT 
+              singer_id 
+            FROM
+              xyf_loved_song 
+            WHERE user_id = #{myId,jdbcType=VARCHAR})) t 
+        WHERE song_name NOT IN 
+          (SELECT 
+            t.song_name song_name 
+          FROM
+            (SELECT 
+              * 
+            FROM
+              xyf_loved_song 
+            WHERE user_id = #{myId,jdbcType=VARCHAR}) t 
+            INNER JOIN xyf_loved_song t1 
+               ON t.song_name = t1.song_name
+              and t.singer_id= t1.singer_id
+              AND t1.user_id = #{otherId,jdbcType=VARCHAR}) 
+          AND song_name NOT IN 
+          (SELECT 
+            * 
+          FROM
+            (SELECT DISTINCT 
+              t.song_name 
+            FROM
+              (SELECT 
+                * 
+              FROM
+                xyf_loved_song 
+              WHERE user_id = #{myId,jdbcType=VARCHAR}) t 
+              INNER JOIN xyf_loved_song t1 
+                ON t.song_name = t1.`song_name` 
+                AND t1.user_id = #{otherId,jdbcType=VARCHAR}
+                AND t.song_id != t1.song_id 
+            UNION
+            SELECT DISTINCT 
+              t.song_name 
+            FROM
+              (SELECT 
+                * 
+              FROM
+                xyf_loved_song 
+              WHERE user_id = #{otherId,jdbcType=VARCHAR}) t 
+              INNER JOIN xyf_loved_song t1 
+                ON t.song_name = t1.`song_name` 
+                AND t1.user_id = #{myId,jdbcType=VARCHAR} 
+                AND t.song_id != t1.song_id) t)) t3) t3 
+      ON t1.user_id = t3.user_id 
+
+	</select>
+	
+	
+	
+	<!-- 有缘人与我听歌的歌曲总数 -->
+	<select id="getSongTotalNum" resultType="int" parameterType="java.lang.String">
+
+		SELECT SUM(cnt) totalnum FROM (
+		SELECT COUNT(1) AS cnt FROM `xyf_loved_song` WHERE
+		user_id=#{myId,jdbcType=VARCHAR}
+		UNION ALL
+		SELECT COUNT(1) AS cnt FROM `xyf_loved_song` WHERE
+		user_id=#{otherId,jdbcType=VARCHAR}
+
+		) AS countdata
+
+	</select>
+
+	
+	<!-- 根据user_id删除歌曲 -->
+	<delete id="deleteByMusicId"  parameterType="java.lang.String">
+		DELETE FROM xyf_loved_song
+		WHERE user_id = #{userId,jdbcType=VARCHAR}
+	</delete>
+	
+</mapper>

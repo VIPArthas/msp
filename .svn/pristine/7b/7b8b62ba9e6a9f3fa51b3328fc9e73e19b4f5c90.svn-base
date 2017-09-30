@@ -1,0 +1,52 @@
+package com.wh.service.xyf;
+
+import java.util.List;
+import java.util.Map;
+
+import com.wh.service.base.BaseService;
+import com.wh.xyfentity.XyfLovedSong;
+
+
+public interface XyfLovedSongService extends BaseService<XyfLovedSong, Integer>{
+	
+	/**
+	 * 获取我和她共同喜欢的歌曲详情
+	 * @param myId
+	 * @param otherId
+	 * @return
+	 */
+	List<XyfLovedSong> getLoveSongs(String myId, String otherId);
+	
+	/**
+	 * 获取我   喜欢歌曲的有缘人
+	 * @param myId
+	 * @return
+	 */
+	List<Map<String, Object>> getMyLovedFateUsers(String myId);
+	
+	/**
+	 * 获取我喜欢的歌曲总数
+	 * @param myId
+	 * @return
+	 */			
+	int getMyLovedSongsCount(String myId);
+	
+	/**
+	 * 获取两人之间喜欢的歌曲的各个数量
+	 * @param myId
+	 * @param otherId
+	 * @return
+	 */
+	Map<String, Object> getLovedFateUser(String myId, String otherId);
+	
+	/**
+	 * 获取两人喜欢的歌曲总数
+	 * @param myId
+	 * @param musicId
+	 * @return
+	 */
+	int getSongTotalNum(String myId, String musicId);
+
+	void deleteByMusicId(String id);
+
+}

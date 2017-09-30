@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.xyf.XyfParamMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.xyfentity.XyfParam" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="param1" property="param1" jdbcType="VARCHAR" />
+    <result column="param2" property="param2" jdbcType="VARCHAR" />
+    <result column="param3" property="param3" jdbcType="VARCHAR" />
+    <result column="param4" property="param4" jdbcType="VARCHAR" />
+    <result column="param5" property="param5" jdbcType="VARCHAR" />
+    <result column="param6" property="param6" jdbcType="VARCHAR" />
+    <result column="param7" property="param7" jdbcType="VARCHAR" />
+    <result column="param8" property="param8" jdbcType="VARCHAR" />
+    <result column="param9" property="param9" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, param1, param2, param3, param4, param5, param6, param7, param8, param9
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from xyf_param
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from xyf_param
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wh.xyfentity.XyfParam" >
+    insert into xyf_param (id, param1, param2, 
+      param3, param4, param5, 
+      param6, param7, param8, 
+      param9)
+    values (#{id,jdbcType=INTEGER}, #{param1,jdbcType=VARCHAR}, #{param2,jdbcType=VARCHAR}, 
+      #{param3,jdbcType=VARCHAR}, #{param4,jdbcType=VARCHAR}, #{param5,jdbcType=VARCHAR}, 
+      #{param6,jdbcType=VARCHAR}, #{param7,jdbcType=VARCHAR}, #{param8,jdbcType=VARCHAR}, 
+      #{param9,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.xyfentity.XyfParam" >
+    insert into xyf_param
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="param1 != null" >
+        param1,
+      </if>
+      <if test="param2 != null" >
+        param2,
+      </if>
+      <if test="param3 != null" >
+        param3,
+      </if>
+      <if test="param4 != null" >
+        param4,
+      </if>
+      <if test="param5 != null" >
+        param5,
+      </if>
+      <if test="param6 != null" >
+        param6,
+      </if>
+      <if test="param7 != null" >
+        param7,
+      </if>
+      <if test="param8 != null" >
+        param8,
+      </if>
+      <if test="param9 != null" >
+        param9,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="param1 != null" >
+        #{param1,jdbcType=VARCHAR},
+      </if>
+      <if test="param2 != null" >
+        #{param2,jdbcType=VARCHAR},
+      </if>
+      <if test="param3 != null" >
+        #{param3,jdbcType=VARCHAR},
+      </if>
+      <if test="param4 != null" >
+        #{param4,jdbcType=VARCHAR},
+      </if>
+      <if test="param5 != null" >
+        #{param5,jdbcType=VARCHAR},
+      </if>
+      <if test="param6 != null" >
+        #{param6,jdbcType=VARCHAR},
+      </if>
+      <if test="param7 != null" >
+        #{param7,jdbcType=VARCHAR},
+      </if>
+      <if test="param8 != null" >
+        #{param8,jdbcType=VARCHAR},
+      </if>
+      <if test="param9 != null" >
+        #{param9,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.xyfentity.XyfParam" >
+    update xyf_param
+    <set >
+      <if test="param1 != null" >
+        param1 = #{param1,jdbcType=VARCHAR},
+      </if>
+      <if test="param2 != null" >
+        param2 = #{param2,jdbcType=VARCHAR},
+      </if>
+      <if test="param3 != null" >
+        param3 = #{param3,jdbcType=VARCHAR},
+      </if>
+      <if test="param4 != null" >
+        param4 = #{param4,jdbcType=VARCHAR},
+      </if>
+      <if test="param5 != null" >
+        param5 = #{param5,jdbcType=VARCHAR},
+      </if>
+      <if test="param6 != null" >
+        param6 = #{param6,jdbcType=VARCHAR},
+      </if>
+      <if test="param7 != null" >
+        param7 = #{param7,jdbcType=VARCHAR},
+      </if>
+      <if test="param8 != null" >
+        param8 = #{param8,jdbcType=VARCHAR},
+      </if>
+      <if test="param9 != null" >
+        param9 = #{param9,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.xyfentity.XyfParam" >
+    update xyf_param
+    set param1 = #{param1,jdbcType=VARCHAR},
+      param2 = #{param2,jdbcType=VARCHAR},
+      param3 = #{param3,jdbcType=VARCHAR},
+      param4 = #{param4,jdbcType=VARCHAR},
+      param5 = #{param5,jdbcType=VARCHAR},
+      param6 = #{param6,jdbcType=VARCHAR},
+      param7 = #{param7,jdbcType=VARCHAR},
+      param8 = #{param8,jdbcType=VARCHAR},
+      param9 = #{param9,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

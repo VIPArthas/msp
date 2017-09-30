@@ -1,0 +1,27 @@
+package com.wh.service.xyf.impl;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+import com.wh.dao.xyf.XyfRelateMapper;
+import com.wh.service.base.impl.BaseServiceImpl;
+import com.wh.service.xyf.XyfRelateService;
+import com.wh.xyfentity.XyfRelate;
+
+@Service
+public class XyfRelateServiceImpl extends BaseServiceImpl<XyfRelate, Integer> implements XyfRelateService {
+	@Resource
+	XyfRelateMapper dao;
+
+	@Resource
+	public void setBaseDAO(XyfRelateMapper xyfRelateMapper) {
+		this.dao = xyfRelateMapper;
+		this.baseDAO = xyfRelateMapper;
+	}
+
+	@Override
+	public boolean blackOtherPerson(String userId, String toUserId) {
+		
+		return dao.blackOtherPerson(userId,toUserId)>0?true:false;
+	}
+	
+}

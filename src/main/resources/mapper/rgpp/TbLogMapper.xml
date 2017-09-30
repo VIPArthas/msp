@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.rgpp.TbLogMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.entity.TbLog" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="doContent" property="docontent" jdbcType="VARCHAR" />
+    <result column="doTime" property="dotime" jdbcType="TIMESTAMP" />
+    <result column="doType" property="dotype" jdbcType="VARCHAR" />
+    <result column="project" property="project" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, doContent, doTime, doType, project, user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_log
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据user_id和doType='location'查询数据 -->
+  <select id="queryTbLogByParam" parameterType="com.wh.entity.TbLog" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+  	from tb_log
+  	where user_id = #{userId} and doType = 'location'
+  </select>
+  
+  <!--查询所有用户 -->
+	<select id="queryLogByUserIdListPage" parameterType="com.wh.entity.TbUser"
+		resultMap="BaseResultMap">
+		select * from tb_log where 1 = 1 
+		
+		<if test="userId !=null and userId !=''">
+			and user_id = #{userId,jdbcType=VARCHAR}
+		</if>
+		
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tb_log
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.TbLog" >
+    insert into tb_log (id, doContent, doTime, 
+      doType, project, user_id
+      )
+    values (#{id,jdbcType=VARCHAR}, #{docontent,jdbcType=VARCHAR}, #{dotime,jdbcType=TIMESTAMP}, 
+      #{dotype,jdbcType=VARCHAR}, #{project,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelectiveLog" parameterType="com.wh.entity.TbLog" >
+    insert into tb_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="docontent != null" >
+        doContent,
+      </if>
+        doTime,
+      <if test="dotype != null" >
+        doType,
+      </if>
+      <if test="project != null" >
+        project,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="ticket != null" >
+        ticket,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="docontent != null" >
+        #{docontent,jdbcType=VARCHAR},
+      </if>
+        now(),
+      <if test="dotype != null" >
+        #{dotype,jdbcType=VARCHAR},
+      </if>
+      <if test="project != null" >
+        #{project,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="ticket != null" >
+        #{ticket,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.TbLog" >
+    update tb_log
+    <set >
+      <if test="docontent != null" >
+        doContent = #{docontent,jdbcType=VARCHAR},
+      </if>
+      <if test="dotime != null" >
+        doTime = #{dotime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dotype != null" >
+        doType = #{dotype,jdbcType=VARCHAR},
+      </if>
+      <if test="project != null" >
+        project = #{project,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.TbLog" >
+    update tb_log
+    set doContent = #{docontent,jdbcType=VARCHAR},
+      doTime = #{dotime,jdbcType=TIMESTAMP},
+      doType = #{dotype,jdbcType=VARCHAR},
+      project = #{project,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

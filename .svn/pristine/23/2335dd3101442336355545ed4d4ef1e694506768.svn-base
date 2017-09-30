@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.wv.WvApplyMapper">
+    <resultMap id="BaseResultMap" type="com.wh.entity.WvApply">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="openid" property="openid" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="card_id" property="cardId" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="school_id" property="schoolId" jdbcType="VARCHAR"/>
+        <result column="school_number" property="schoolNumber" jdbcType="VARCHAR"/>
+        <result column="qq_number" property="qqNumber" jdbcType="VARCHAR"/>
+        <result column="wechat_number" property="wechatNumber" jdbcType="VARCHAR"/>
+        <result column="key2" property="key2" jdbcType="INTEGER"/>
+        <result column="vacation_time" property="vacationTime" jdbcType="VARCHAR"/>
+        <result column="factory" property="factory" jdbcType="VARCHAR"/>
+        <result column="pay_type" property="payType" jdbcType="VARCHAR"/>
+        <result column="pay_status" property="payStatus" jdbcType="VARCHAR"/>
+        <result column="key1" property="key1" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="pay_money" property="payMoney" jdbcType="REAL"/>
+        <result column="shcool_name" property="shcoolName" jdbcType="VARCHAR"/>
+        <result column="other_explain" property="otherExplain" jdbcType="VARCHAR"/>
+        <result column="ji_fen" property="jiFen" jdbcType="INTEGER"/>
+        <result column="gift1" property="gift1" jdbcType="INTEGER"/>
+        <result column="gift2" property="gift2" jdbcType="INTEGER"/>
+        <result column="gift3" property="gift3" jdbcType="INTEGER"/>
+        <result column="gift4" property="gift4" jdbcType="INTEGER"/>
+        <result column="gift5" property="gift5" jdbcType="INTEGER"/>
+        <result column="gift6" property="gift6" jdbcType="INTEGER"/>
+        <result column="gift7" property="gift7" jdbcType="INTEGER"/>
+        <result column="start_date" property="startDate" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, openid, name, card_id, phone, school_id, school_number, qq_number, wechat_number, 
+    key2, vacation_time, factory, pay_type, pay_status, key1, create_time, pay_money, 
+    shcool_name,other_explain,ji_fen,gift1,gift2,gift3,gift4,gift5,gift6,gift7,start_date
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from wv_apply
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from wv_apply
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.wh.entity.WvApply">
+    insert into wv_apply (id, openid, name, 
+      card_id, phone, school_id, 
+      school_number, qq_number, wechat_number, 
+      key2, vacation_time, factory, 
+      pay_type, pay_status, key1, 
+      create_time, pay_money, shcool_name,other_explain,ji_fen,gift1,gift2,gift3,gift4,gift5,gift6,gift7,start_date
+      )
+    values (#{id,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{cardId,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{schoolId,jdbcType=VARCHAR}, 
+      #{schoolNumber,jdbcType=VARCHAR}, #{qqNumber,jdbcType=VARCHAR}, #{wechatNumber,jdbcType=VARCHAR}, 
+      #{key2,jdbcType=INTEGER}, #{vacationTime,jdbcType=VARCHAR}, #{factory,jdbcType=VARCHAR}, 
+      #{payType,jdbcType=VARCHAR}, #{payStatus,jdbcType=VARCHAR}, #{key1,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=VARCHAR}, #{payMoney,jdbcType=REAL}, #{shcoolName,jdbcType=VARCHAR},#{otherExplain,jdbcType=VARCHAR},
+      #{jiFen,jdbcType=INTEGER},#{gift1,jdbcType=INTEGER},#{gift2,jdbcType=INTEGER},#{gift3,jdbcType=INTEGER},#{gift4,jdbcType=INTEGER}
+      ,#{gift5,jdbcType=INTEGER},#{gift6,jdbcType=INTEGER},#{gift7,jdbcType=INTEGER}, #{startDate,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.wh.entity.WvApply">
+        insert into wv_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="openid != null">
+                openid,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="cardId != null">
+                card_id,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="schoolId != null">
+                school_id,
+            </if>
+            <if test="schoolNumber != null">
+                school_number,
+            </if>
+            <if test="qqNumber != null">
+                qq_number,
+            </if>
+            <if test="wechatNumber != null">
+                wechat_number,
+            </if>
+            <if test="key2 != null">
+                key2,
+            </if>
+            <if test="vacationTime != null">
+                vacation_time,
+            </if>
+            <if test="factory != null">
+                factory,
+            </if>
+            <if test="payType != null">
+                pay_type,
+            </if>
+            <if test="payStatus != null">
+                pay_status,
+            </if>
+            <if test="key1 != null">
+                key1,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="payMoney != null">
+                pay_money,
+            </if>
+            <if test="shcoolName != null">
+                shcool_name,
+            </if>
+            <if test="otherExplain != null">
+                other_explain,
+            </if>
+            <if test="jiFen != null">
+                ji_fen,
+            </if>
+            <if test="gift1 != null">
+                gift1,
+            </if>
+            <if test="gift2 != null">
+                gift2,
+            </if>
+            <if test="gift3 != null">
+                gift3,
+            </if>
+            <if test="gift4 != null">
+                gift4,
+            </if>
+            <if test="gift5 != null">
+                gift5,
+            </if>
+            <if test="gift6 != null">
+                gift6,
+            </if>
+            <if test="gift7 != null">
+                gift7,
+            </if>
+            <if test="startDate != null">
+                start_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="openid != null">
+                #{openid,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="cardId != null">
+                #{cardId,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolId != null">
+                #{schoolId,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolNumber != null">
+                #{schoolNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="qqNumber != null">
+                #{qqNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="wechatNumber != null">
+                #{wechatNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="key2 != null">
+                #{key2,jdbcType=INTEGER},
+            </if>
+            <if test="vacationTime != null">
+                #{vacationTime,jdbcType=VARCHAR},
+            </if>
+            <if test="factory != null">
+                #{factory,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null">
+                #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="payStatus != null">
+                #{payStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="key1 != null">
+                #{key1,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="payMoney != null">
+                #{payMoney,jdbcType=REAL},
+            </if>
+            <if test="shcoolName != null">
+                #{shcoolName,jdbcType=VARCHAR},
+            </if>
+            <if test="otherExplain != null">
+                #{otherExplain,jdbcType=VARCHAR},
+            </if>
+            <if test="jiFen != null">
+                #{jiFen,jdbcType=INTEGER},
+            </if>
+            <if test="gift1 != null">
+                #{gift1,jdbcType=INTEGER},
+            </if>
+            <if test="gift2 != null">
+                #{gift2,jdbcType=INTEGER},
+            </if>
+            <if test="gift3 != null">
+                #{gift3,jdbcType=INTEGER},
+            </if>
+            <if test="gift4 != null">
+                #{gift4,jdbcType=INTEGER},
+            </if>
+            <if test="gift5 != null">
+                #{gift5,jdbcType=INTEGER},
+            </if>
+            <if test="gift6 != null">
+                #{gift6,jdbcType=INTEGER},
+            </if>
+            <if test="gift7 != null">
+                #{gift7,jdbcType=INTEGER},
+            </if>
+            <if test="startDate != null">
+                #{startDate,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.WvApply">
+        update wv_apply
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="cardId != null">
+                card_id = #{cardId,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolId != null">
+                school_id = #{schoolId,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolNumber != null">
+                school_number = #{schoolNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="qqNumber != null">
+                qq_number = #{qqNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="wechatNumber != null">
+                wechat_number = #{wechatNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="key2 != null">
+                key2 = #{key2,jdbcType=INTEGER},
+            </if>
+            <if test="vacationTime != null">
+                vacation_time = #{vacationTime,jdbcType=VARCHAR},
+            </if>
+            <if test="factory != null">
+                factory = #{factory,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null">
+                pay_type = #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="payStatus != null">
+                pay_status = #{payStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="key1 != null">
+                key1 = #{key1,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="payMoney != null">
+                pay_money = #{payMoney,jdbcType=REAL},
+            </if>
+            <if test="shcoolName != null">
+                shcool_name = #{shcoolName,jdbcType=VARCHAR},
+            </if>
+            <if test="otherExplain != null">
+                other_explain = #{otherExplain,jdbcType=VARCHAR},
+            </if>
+            <if test="jiFen != null">
+                ji_fen = #{jiFen,jdbcType=INTEGER},
+            </if>
+            <if test="gift1 != null">
+                gift1 = #{gift1,jdbcType=INTEGER},
+            </if>
+            <if test="gift2 != null">
+                gift2 = #{gift2,jdbcType=INTEGER},
+            </if>
+            <if test="gift3 != null">
+                gift3 = #{gift3,jdbcType=INTEGER},
+            </if>
+            <if test="gift4 != null">
+                gift4 = #{gift4,jdbcType=INTEGER},
+            </if>
+            <if test="gift5 != null">
+                gift5 = #{gift5,jdbcType=INTEGER},
+            </if>
+            <if test="gift6 != null">
+                gift6 = #{gift6,jdbcType=INTEGER},
+            </if>
+            <if test="gift7 != null">
+                gift7 = #{gift7,jdbcType=INTEGER},
+            </if>
+            <if test="startDate != null">
+                start_date = #{startDate,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where openid = #{openid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.wh.entity.WvApply">
+    update wv_apply
+    set openid = #{openid,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      card_id = #{cardId,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      school_id = #{schoolId,jdbcType=VARCHAR},
+      school_number = #{schoolNumber,jdbcType=VARCHAR},
+      qq_number = #{qqNumber,jdbcType=VARCHAR},
+      wechat_number = #{wechatNumber,jdbcType=VARCHAR},
+      key2 = #{key2,jdbcType=INTEGER},
+      vacation_time = #{vacationTime,jdbcType=VARCHAR},
+      factory = #{factory,jdbcType=VARCHAR},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      pay_status = #{payStatus,jdbcType=VARCHAR},
+      key1 = #{key1,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      pay_money = #{payMoney,jdbcType=REAL},
+      shcool_name = #{shcoolName,jdbcType=VARCHAR},
+       other_explain = #{otherExplain,jdbcType=VARCHAR},
+        ji_fen = #{jiFen,jdbcType=INTEGER},
+         gift1 = #{gift1,jdbcType=INTEGER},
+          gift2 = #{gift2,jdbcType=INTEGER},
+           gift3 = #{gift3,jdbcType=INTEGER},
+            gift4 = #{gift4,jdbcType=INTEGER},
+             gift5 = #{gift5,jdbcType=INTEGER},
+              gift6 = #{gift6,jdbcType=INTEGER},
+                     gift7 = #{gift7,jdbcType=INTEGER},
+                     start_date = #{startDate,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <select id="selectByKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select *     from wv_apply
+    where key2 = #{key,jdbcType=INTEGER}
+  </select>
+    <select id="selectByOpenId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select * from wv_apply
+    where openid = #{openId,jdbcType=VARCHAR}
+  </select>
+    <select id="getPresenteeList" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select *     from wv_apply
+    where key1 = #{key2,jdbcType=INTEGER}
+  </select>
+    <!-- 后台列表 -->
+    <select id="searchAllListPage" resultMap="BaseResultMap" parameterType="com.wh.entity.WvApply">
+        select * from wv_apply WHERE 1=1
+        <if test="name != null and name != ''">
+          AND name=#{name,jdbcType=VARCHAR}
+        </if>
+        <if test="phone != null and phone != ''">
+          AND phone=#{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="cardId != null and cardId != ''">
+          AND card_id=#{cardId,jdbcType=VARCHAR}
+        </if>
+        <if test="schoolNumber != null and schoolNumber != ''">
+          AND school_number=#{schoolNumber,jdbcType=VARCHAR}
+        </if>
+        <if test="selectType ==1">
+          AND create_time IS null
+        </if>
+        <if test="selectType ==2">
+          AND (pay_status  IS NULL OR   pay_status ='2') AND create_time  IS NOT NULL
+        </if>
+        <if test="selectType ==3">
+          AND pay_status =1 AND create_time  IS NOT NULL
+        </if>
+  </select>
+    <select id="searchByCardId" resultMap="BaseResultMap" parameterType="com.wh.entity.WvApply">
+    SELECT * from wv_apply where card_id = #{cardId,jdbcType=VARCHAR}
+  </select>
+    <select id="searchBySchoolNumber" resultMap="BaseResultMap" parameterType="com.wh.entity.WvApply">
+    SELECT * from wv_apply where school_number = #{schoolNumber,jdbcType=VARCHAR}
+  </select>
+    <select id="searchByName" resultMap="BaseResultMap" parameterType="com.wh.entity.WvApply">
+    SELECT * from wv_apply where name = #{name,jdbcType=VARCHAR}
+  </select>
+    <select id="searchByPhone" resultMap="BaseResultMap" parameterType="com.wh.entity.WvApply">
+    SELECT * from wv_apply where phone = #{phone,jdbcType=VARCHAR}
+  </select>
+
+    <select id="notApplyData" resultMap="BaseResultMap">
+        select * from wv_apply WHERE  create_time IS null
+    </select>
+    <select id="notPay" resultMap="BaseResultMap">
+       SELECT * FROM wv_apply WHERE  pay_status !=1 AND create_time  IS NOT NULL
+    </select>
+    <select id="payEd" resultMap="BaseResultMap">
+         SELECT * FROM wv_apply WHERE  pay_status =1 AND create_time  IS NOT NULL
+    </select>
+</mapper>

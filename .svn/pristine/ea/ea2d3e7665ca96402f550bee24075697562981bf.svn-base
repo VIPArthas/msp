@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.wchat.TbPlatformMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.entity.TbPlatform" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="access_token" property="accessToken" jdbcType="VARCHAR" />
+    <result column="appAccout" property="appaccout" jdbcType="VARCHAR" />
+    <result column="appId" property="appid" jdbcType="VARCHAR" />
+    <result column="appSecret" property="appsecret" jdbcType="VARCHAR" />
+    <result column="appToken" property="apptoken" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="contact" property="contact" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="jsapi_ticket" property="jsapiTicket" jdbcType="VARCHAR" />
+    <result column="lastTokenTime" property="lasttokentime" jdbcType="TIMESTAMP" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="menuJson" property="menuJson" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, access_token, appAccout, appId, appSecret, appToken, code, contact, createTime, 
+    jsapi_ticket, lastTokenTime, mobile, name, type,menuJson
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="com.wh.dao.wchat.TbPlatformMapper.BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_platform
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <!--查询所有微信平台信息 -->
+  <select id="queryAll" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_platform
+  </select>
+  <!--根据平台Id查询平台相关信息-->
+  <select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_platform
+    	where 1=1
+    <if test="id !=null and id !=''">
+			and id = #{id}
+	</if>
+  </select>
+  <!--根据平台Id查询平台相关信息-->
+  <select id="queryByAppId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_platform
+    	where 1=1
+    <if test="appid !=null and appid !=''">
+			and appId = #{appid,jdbcType=VARCHAR}
+	</if>
+  </select>
+  <!--根据平台Id查询平台相关信息-->
+  <select id="queryByAccout" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_platform
+    	where 1=1
+    <if test="accout !=null and accout !=''">
+			and appAccout = #{accout,jdbcType=VARCHAR}
+	</if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tb_platform
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.TbPlatform" >
+    insert into tb_platform
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="accessToken != null" >
+        access_token,
+      </if>
+      <if test="appaccout != null" >
+        appAccout,
+      </if>
+      <if test="appid != null" >
+        appId,
+      </if>
+      <if test="appsecret != null" >
+        appSecret,
+      </if>
+      <if test="apptoken != null" >
+        appToken,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="contact != null" >
+        contact,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="jsapiTicket != null" >
+        jsapi_ticket,
+      </if>
+      <if test="lasttokentime != null" >
+        lastTokenTime,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="menuJson != null" >
+        menuJson,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="accessToken != null" >
+        #{accessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="appaccout != null" >
+        #{appaccout,jdbcType=VARCHAR},
+      </if>
+      <if test="appid != null" >
+        #{appid,jdbcType=VARCHAR},
+      </if>
+      <if test="appsecret != null" >
+        #{appsecret,jdbcType=VARCHAR},
+      </if>
+      <if test="apptoken != null" >
+        #{apptoken,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null" >
+        #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jsapiTicket != null" >
+        #{jsapiTicket,jdbcType=VARCHAR},
+      </if>
+      <if test="lasttokentime != null" >
+        #{lasttokentime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="menuJson != null" >
+        #{menuJson,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.TbPlatform" >
+    update tb_platform
+    <set >
+      <if test="accessToken != null" >
+        access_token = #{accessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="appaccout != null" >
+        appAccout = #{appaccout,jdbcType=VARCHAR},
+      </if>
+      <if test="appid != null" >
+        appId = #{appid,jdbcType=VARCHAR},
+      </if>
+      <if test="appsecret != null" >
+        appSecret = #{appsecret,jdbcType=VARCHAR},
+      </if>
+      <if test="apptoken != null" >
+        appToken = #{apptoken,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null" >
+        contact = #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jsapiTicket != null" >
+        jsapi_ticket = #{jsapiTicket,jdbcType=VARCHAR},
+      </if>
+      <if test="lasttokentime != null" >
+        lastTokenTime = #{lasttokentime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="menuJson != null" >
+        menuJson = #{menuJson,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

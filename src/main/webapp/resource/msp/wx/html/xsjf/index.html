@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title>学生缴费</title>
+		<script src="/resource/msp/wx/js/jquery-3.1.1.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="/resource/msp/wx/css/index.css" />
+		<script type="text/javascript">
+		$(document).ready(function(){
+			$.ajax({
+				type:"get",
+				url:"/msp/mspOracle/wx/xsjf.htm",
+				dataType:"json",
+				success:function(data){
+					if(data.obj!=null){
+					var trHTML;
+					for(var i=0;i<data.obj.length;i++){
+						trHTML+="<tr><td>"+data.obj[i].SFQJMC+"</td><td>"+data.obj[i].SFXMMC+"</td><td>"+data.obj[i].YJJE+"</td><td>"+data.obj[i].SJJE+"</td><td>"+data.obj[i].JMJE+"</td><td>"+data.obj[i].QFJE+"</td></tr>"
+					}
+					$("#xsjf tbody").append(trHTML);
+					$("#xsjf tfoot").html("<tr><td colspan='2'>合计</td><td>"+data.attributes.YJJE+"</td><td>"+data.attributes.SJJE+"</td><td>"+data.attributes.JMJE+"</td><td>"+data.attributes.QFJE+"</td></tr>")
+					trHTML="";
+					}else{
+						$("#xsjf tfoot").html("<tr><td colspan='6'>暂无数据</td></tr>")
+					}
+				}
+			})
+		 });
+		</script>
+	</head>
+	<body style="background-color:#fff;">
+	<table cellpadding="0" cellspacing="1" id="xsjf">
+	<thead>
+	<tr>
+	<th>收费学年</th>
+	<th>收费项</th>
+	<th>应收金额</th>
+	<th>已交金额</th>
+	<th>减免金额</th>
+	<th>欠款金额</th>
+	</tr>
+	</thead>
+	<tbody></tbody>
+	<tfoot>
+	</tfoot>
+	</table>
+	</body>
+</html>

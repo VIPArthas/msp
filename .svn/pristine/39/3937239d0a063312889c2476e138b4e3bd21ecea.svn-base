@@ -1,0 +1,538 @@
+/**
+ * Created by User on 2017/8/8.
+ */
+//随拍展示,分页
+var start=1,length=6;
+var isNextPage = true,stop = true;
+//系统消息展示，分页
+var startmessage=1;lengthmessage=10;
+var isNextPagemessage = true,stopmessage = true;
+//评论回复
+var touserid = '',tousername = '';
+function formatDate(timestamp) {
+	var time = new Date(timestamp);
+	var year = time.getFullYear();
+	var month = (time.getMonth() + 1) > 9 && (time.getMonth() + 1) || ('0' + (time.getMonth() + 1))
+	var date = time.getDate() > 9 && time.getDate() || ('0' + time.getDate())
+	var hour = time.getHours() > 9 && time.getHours() || ('0' + time.getHours())
+	var minute = time.getMinutes() > 9 && time.getMinutes() || ('0' + time.getMinutes())
+	var second = time.getSeconds() > 9 && time.getSeconds() || ('0' + time.getSeconds())
+	var YmdHis = year + '-' + month + '-' + date
+		+ ' ' + hour + ':' + minute + ':' + second;
+	return YmdHis;
+}
+function time(tim){
+    var timee;
+    if(tim<24){
+        timee = tim + '小时前';
+    }else {
+       var daay =  Math.floor(tim/24);
+       if(daay<31){
+    	   timee = daay + '天前';
+       }else{
+       var moun = Math.floor(tim/30);
+           timee = moun + '月前';
+       }
+       
+    }
+    return timee;
+}
+ function suipainum(first) {
+	 var firs = first?first:false;
+	 var type = $('.active_type').attr('data-type');
+
+        $.ajax({
+            type: "GET",
+            url: SERVER_ROOT_PATH + "/msp/mspPhoto/wx/showList.htm",
+            data:{type:type,start:start,length:length},
+            dataType: "json",           
+            success: function (result) {
+            		if(!!result.obj.length){
+                        if(firs){
+                      	    localStorage.setItem('spobj',JSON.stringify(result.obj));  
+                        	document.querySelector('.waterfall').innerHTML = '';
+                        }else{
+                        	var puboobj = JSON.parse(localStorage.getItem('spobj'));
+                        	for(var i=0;i<result.obj.length;i++){
+                        		puboobj.push(result.obj[i]);
+                        	}
+                        	localStorage.setItem('spobj',JSON.stringify(puboobj));
+                        }
+            	        pubu(result.obj);
+
+            		}else{
+            			isNextPage = false;
+            			if(firs){
+            				//添加一张提示图拍
+            			}else{
+            				var none = document.createElement('div');           			
+            		        none.className = 'nothing';
+            		        none.innerHTML = '我们是有底线的~';
+            		        none.style = 'color: #999;text-align: center;font-size: 3vw;margin: 3vw;'
+            				document.querySelector('body').appendChild(none);
+            			}
+            			
+            		}
+	            	
+            }
+        })
+    }
+ function pubu(obj){
+	    var pbul = document.querySelector('.waterfall');
+	    for(var i = 0;i < obj.length;i++){
+	        var list = document.createElement('div');
+	        var id = obj[i].id;
+	        var timee = time(obj[i].hournum);
+	        list.className = 'item';
+	        list.setAttribute('data-id',id);
+	        list.innerHTML = '<img src=' + obj[i].file_path + '><p><span class="name"><img src=' + obj[i].avatar + ' alt="">' +  obj[i].name + '</span><span class="time">' + timee + '</span></p>';
+	        pbul.appendChild(list);
+	    } 
+      $('.item').on('click',function () {
+    	  localStorage.setItem('sppage',start);  
+    	  localStorage.setItem('sptype',$('.active_type').index());  
+    	  localStorage.setItem('detail',$(this).attr('data-id'));  
+     window.parent.location.href = 'showphoto.html';
+  });
+	    stop = true;
+}
+ 
+// 随拍详情
+function detail(){
+	var detid = localStorage.getItem('detail');
+	$.ajax({
+        type: "GET",
+        url: SERVER_ROOT_PATH + "/msp/mspPhoto/wx/showInfo.htm",
+        data:{photoId:detid},
+        dataType: "json",           
+        success: function (result) {
+        	if(!!result.obj && !!result.attributes){
+        		$('#sender-photo').attr('src',result.obj.avatar);
+        		$('#sender-name').text(result.obj.name);
+        		$('#sender-time').text(time(result.obj.hournum));
+        		var swip = document.querySelector('.swiper-wrapper');
+        		for(var i = 0;i<result.attributes.photoUrlList.length;i++){
+        			var list = document.createElement('div');
+        			list.className = 'swiper-slide';
+        			list.innerHTML = '<section class="yindaoone"><img src=' + result.attributes.photoUrlList[i].file_path + ' alt=""></section>';
+        			swip.appendChild(list);
+        		}
+        		$('#detail-msg').text(result.obj.msg);  
+        		$('#detail-num').text(result.obj.pageview_num);
+        		$('#reply_Num').text(!!result.attributes.replyNum?result.attributes.replyNum:0);
+        		var talk = document.querySelector('.details_comment');
+        		if(!!result.attributes.replyList){
+        			for(var j = 0;j<result.attributes.replyList.length;j++){
+            			var talklist = document.createElement('div');
+            			talklist.setAttribute('onclick','replywho($(this))');
+            			talklist.innerHTML = !!result.attributes.replyList[j].to_userid?'<span id="firstname" class="name" data-firstid=' + result.attributes.replyList[j].from_userid + '>' + result.attributes.replyList[j].from_name + '</span>&nbsp;回复了&nbsp;<span class="name">' + result.attributes.replyList[j].to_name + '</span>：<span>' + result.attributes.replyList[j].msg + '</span>':'<span id="firstname" class="name" data-firstid=' + result.attributes.replyList[j].from_userid + '>' + result.attributes.replyList[j].from_name + '</span>：<span class="wrap">' + result.attributes.replyList[j].msg + '</span>';
+            			talk.appendChild(talklist);
+            		}
+        		}
+        		
+        	}else{
+        		alert('加载失败！');
+        	}
+
+        	var mySwiper = new Swiper('.swiper-container', {
+                pagination: '.swiper-pagination',
+                paginationClickable: true,
+            })	
+        }
+    })
+	
+};
+function replywho(th){
+	var fromuserid = localStorage.getItem('userid');
+	touserid = th.children('#firstname').attr('data-firstid');
+	if(fromuserid == touserid){
+		$('#replymsg').attr('placeholder','评论');
+		touserid = "";
+	}else{
+		$('#replymsg').attr('placeholder','回复' + th.children('#firstname').html() + ':');
+		tousername = th.children('#firstname').text();
+
+	}
+}
+function sendreply(){
+	var fromuserid = localStorage.getItem('userid');
+	var myname = localStorage.getItem('myname');
+	var detid = localStorage.getItem('detail');
+	var msg = $('#replymsg').val();
+	if(msg){
+		 $.ajax({
+		        type: "POST",
+		        url: SERVER_ROOT_PATH + "/msp/mspPhoto/wx/sendReply.htm",
+		        data:{photoId:detid,fromUserid:fromuserid,toUserid:touserid,msg:msg},
+		        dataType: "json",           
+		        success: function (result) {
+		        	if(result.success){
+		        		var talk = document.querySelector('.details_comment');
+		        		var talklist = document.createElement('div');
+            			talklist.setAttribute('onclick','replywho($(this))');
+		    			talklist.innerHTML = !!touserid?'<span id="firstname" class="name" data-firstid=' + fromuserid + '>' + myname + '</span>&nbsp;回复了&nbsp;<span class="name">' + tousername + '</span>：<span>' + msg + '</span>':'<span id="firstname" class="name" data-firstid=' + fromuserid + '>' + myname + '</span>：<span class="wrap">' + msg + '</span>';
+		    			talk.appendChild(talklist);
+		    			$('#replymsg').val('');
+		    			$('#replymsg').attr('placeholder','评论');
+		    			$('#reply_Num').text(Number($('#reply_Num').text())+1);
+		        	}else{
+		        		alert('评论失败');
+		        	}
+		            	
+		        }
+		    })
+	}
+   
+	
+}
+
+
+//系统消息
+function message(firs){
+	var wxid = localStorage.getItem('wxid');
+	 $.ajax({
+         type: "GET",
+         url: SERVER_ROOT_PATH + "/msp/mspMessage/wx/myMesList.htm",
+         data:{wxid:wxid,start:startmessage,length:lengthmessage},
+         dataType: "json",           
+         success: function (result) {
+         		if(!!result.obj){                     
+         	     showmessage(result.obj);
+         		}else{
+         			isNextPagemessage = false;
+         			if(firs){
+         				//添加一张提示图拍
+         			}else{
+         				var none = document.createElement('div');           			
+         		        none.className = 'nothing';
+         		        none.innerHTML = '我们是有底线的~';
+         		        none.style = 'color: #999;text-align: center;font-size: 3vw;margin: 3vw;'
+         				document.querySelector('body').appendChild(none);
+         			}
+         			
+         		}
+	            	
+         }
+     })
+	
+}
+function showmessage(obj){
+	var messageul = document.querySelector('.message-con');
+    for(var i = 0;i < obj.length;i++){
+        var list = document.createElement('section');
+        var dayy = formatDate(obj[i].createTime);
+        list.className = 'message-content';
+        list.innerHTML = '<div><span>系统公告</span><span>' + dayy + '</span></div><article class="wrap">' + obj[i].content + '</article>';
+        messageul.appendChild(list);
+    } 
+    stopmessage = true;
+}
+//个人中心
+function mycenter(){
+	var userid = localStorage.getItem('userid');
+	 $.ajax({
+	        type: "GET",
+	        url: SERVER_ROOT_PATH + "/msp/mspUser/wx/myInfo.htm",
+	        data:{userid:userid},
+	        dataType: "json",           
+	        success: function (result) {
+	        	if(result.success){
+	        		localStorage.setItem('mymessage',JSON.stringify(result.obj));
+	        		$('.my-img').attr('src',result.obj.avatar);
+	        		$('#my_name').text(result.obj.name);
+	        		$('#my_phone').text(result.obj.mobile?result.obj.mobile:'无');
+	        		$('#my_email').text(result.obj.email?result.obj.email:'无');
+	        		$('#my-father').text(result.obj.father_name?result.obj.father_name:'');
+	        		$('#my-mother').text(result.obj.mother_name?result.obj.mother_name:'');
+	        		$('#father-phone').text(result.obj.father_phone?result.obj.father_phone:'');
+	        		$('#mother-phone').text(result.obj.mother_phone?result.obj.mother_phone:'');
+	        	}else{
+	        		alert('加载失败~');
+	        	}
+	        }
+	    })
+}
+//编辑家庭信息
+function familymessage(){
+	var famsg = JSON.parse(localStorage.getItem('mymessage'));
+	$('#editfn').val(famsg.father_name?famsg.father_name:'');
+	$('#editfp').val(famsg.father_phone?famsg.father_phone:'');
+	$('#editmn').val(famsg.mother_name?famsg.mother_name:'');
+	$('#editmp').val(famsg.mother_phone?famsg.mother_phone:'');
+}
+function editfamsg(){
+	var userid = localStorage.getItem('userid');
+	var fatherName = $('#editfn').val(),fatherPhone = $('#editfp').val(),motherPhone = $('#editmp').val(),motherName = $('#editmn').val();
+	if(fatherName&&fatherPhone&&motherPhone&&motherName){
+			if(!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(fatherPhone))){ 
+				  alert("父亲手机号格式不正确！"); 
+				  return false; 
+				 } 
+			if(!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(motherPhone))){ 
+				  alert("母亲手机号格式不正确！"); 
+				  return false; 
+				 } 
+		 $.ajax({
+		        type: "POST",
+		        url: SERVER_ROOT_PATH + "/msp/mspUser/wx/updateUser.htm",
+		        data:{id:userid,fatherName:fatherName,fatherPhone:fatherPhone,motherPhone:motherPhone,motherName:motherName},
+		        dataType: "json",           
+		        success: function (result) {
+		        	if(result.success){
+		        		 window.location.href = 'mycenter.html';
+		        	}else{
+		        		alert('编辑失败~');
+		        	}
+		        }
+		    })
+	}else{
+		alert('父母信息不能为空！')
+	}
+	
+	
+}
+//带班信息
+function daiban(){
+	var userid = localStorage.getItem('userid');
+	$.ajax({
+        type: "GET",
+        url: SERVER_ROOT_PATH + "/msp/mspTeacherClass/wx/teacherClassList.htm",
+        data:{userid:userid},
+        dataType: "json",           
+        success: function (result) {
+        	if(result.success){       		
+        		if(result.obj && result.attributes){
+        			localStorage.setItem('classna',JSON.stringify(result));
+        			showdaiban(result);
+        		}else{
+        			$('body').html('<img src="../../img/empty1.png" class="empty_db" alt="">');
+        		}
+        	}else{
+        		alert('查询失败~');
+        	}
+        }
+    })
+}
+function showdaiban(result){
+	if(result.obj){
+		
+		var classul = document.querySelector('#class_ul');
+	    for(var i = 0;i < result.obj.length;i++){
+	        var list = document.createElement('li');
+	        var id = result.obj[i].mcid;
+	        list.setAttribute('data-id',id);
+	        list.className = 'tittle_list';
+	        list.innerHTML = '<span class="tittle_list_color"></span><p class="tittle_list_text"><span>' + result.obj[i].mcname + '</span></p>';
+	        classul.appendChild(list);
+	    }
+	    $("#leftList").move({
+			width: 0,
+			height: $(window).height()-200,
+			x: false,
+			y: true
+		});
+	    if(!!localStorage.getItem('classindex')){
+		    $('.tittle_list').eq(localStorage.getItem('classindex')).addClass('on');
+	    }else{
+		    $('.tittle_list').eq(0).addClass('on');
+	    }
+	   
+		$('#class_ul li').bind('click',function (event) {
+			//event.stopPropagation();			
+			localStorage.removeItem('top');
+			localStorage.setItem('classindex',$(this).index());
+			$(this).addClass('on').siblings().removeClass('on');
+			daibanserch();
+		});
+		
+	}
+	if(result.attributes.muList){
+		var stuul = document.querySelector('#student_ul');
+		stuul.innerHTML = '';
+		for(var j = 0;j < result.attributes.muList.length;j++){
+			var stulist = document.createElement('li');
+	        var stuid = result.attributes.muList[j].id;
+	        stulist.setAttribute('data-id',stuid);
+	        stulist.className = 'tittle_main';
+	        stulist.innerHTML = (result.attributes.muList[j].gender==1?'<span class="tittle_main_ico_t icon iconfont icon-iconwohover color_1"></span>':'<span class="tittle_main_ico_t icon iconfont icon-iconwohover color_2"></span>')
+				                +'<span class="tittle_main_name">' + result.attributes.muList[j].name + '</span>'
+				                +'<a href="tel:'+result.attributes.muList[j].mobile+'" class="tittle_main_ico_f icon iconfont icon-boda"></a>';
+	        stuul.appendChild(stulist);
+	    	
+	    }
+		
+		if(!!localStorage.getItem('top')){
+			$('#student_ul').css('top',localStorage.getItem('top'));
+		}else{
+			$('#student_ul').css('top','0');
+
+		}
+		$('.tittle_main').bind('click', function (event) {
+			event.stopPropagation();
+			localStorage.setItem('top',$('#student_ul').css('top'));
+			localStorage.setItem('studentid',$(this).attr('data-id'));
+			window.location.href = 'someone-message.html';
+		})
+		
+		$('.icon-boda').bind('click',function (event) {
+			event.stopPropagation();
+			if($(this).attr('href') === 'tel:null'){
+				event.preventDefault();
+				alert('该学生没有提供手机号。');
+			}
+			
+		})
+		$("#rightlist").move({
+			width: 0,
+			height: $(window).height()-200,
+			x: false,
+			y: true
+		});
+		
+	}
+	
+}
+function daibanserch(){
+
+	var classId = $('.on').attr('data-id');
+	var search = $('#suo-content').val()?$('#suo-content').val():null;
+	 $.ajax({
+	        type: "POST",
+	        url: SERVER_ROOT_PATH + "/msp/mspTeacherClass/wx/classMemberList.htm",
+	        data:{classId:classId,search:search},
+	        dataType: "json",           
+	        success: function (result) {
+	        	if(result.success){
+	        		if(result.attributes){	
+	        			var classna =  JSON.parse(localStorage.getItem('classna'));
+	        			classna.attributes.muList = result.attributes.muList;
+	        			localStorage.setItem('classna',JSON.stringify(classna));
+	        			showdaiban(result);
+	        		}else{	        		
+	        			
+	        			alert('未查询到相关学生');
+	        		}
+
+	        	}else{
+	        		alert('查询失败~');
+	        	}
+	        }
+	    })
+	   
+}
+//学生信息
+function stucenter(){
+	var userid = localStorage.getItem('studentid');
+	 $.ajax({
+	        type: "GET",
+	        url: SERVER_ROOT_PATH + "/msp/mspUser/wx/myInfo.htm",
+	        data:{userid:userid},
+	        dataType: "json",           
+	        success: function (result) {
+	        	if(result.success){
+	        		$('.icon-iconwohover').addClass(result.obj.gender==1?"stu_man":"stu_girl" )
+	        		$('#stuname').text(result.obj.name);
+	        		$('#stuphone').html((result.obj.mobile?result.obj.mobile:'无') + '<a id="stuboda" class="icon iconfont icon-boda"></a>');
+	        		$('#stuclass').text(result.obj.classname?result.obj.classname:'');
+	        		$('#stuemail').text(result.obj.email?result.obj.email:'无');
+	        		$('#stufather').text(result.obj.father_name?result.obj.father_name:'');
+	        		$('#stumother').text(result.obj.mother_name?result.obj.mother_name:'');
+	        		$('#fatherphone').text(result.obj.father_phone?result.obj.father_phone:'');
+	        		$('#motherphone').text(result.obj.mother_phone?result.obj.mother_phone:'');
+	        		$('#stuboda').attr('href',(result.obj.mobile?'tel:'+result.obj.mobile:'javascript:void(0) '));
+	        		$('#fatherboda').attr('href',(result.obj.father_phone?'tel:'+result.obj.father_phone:'javascript:void(0) '));
+	        		$('#motherboda').attr('href',(result.obj.mother_phone?'tel:'+result.obj.mother_phone:'javascript:void(0) '));
+	        	}else{
+	        		alert('加载失败~');
+	        	}
+	        }
+	    })
+}
+//校历展示
+function showxiaoli(){
+	$.ajax({
+        type: "GET",
+        url: SERVER_ROOT_PATH + "/msp/mspPhoto/wx/showCalendar.htm",
+        data:{},
+        dataType: "json",  
+        success: function (result) {
+        	if(result.success){
+        		$('.xiaoli').attr('src',result.obj.file_path);
+        	}else{
+        		alert('展示校历失败~');
+        	}
+        }
+    })
+}
+//登录
+function login(){	
+		if($("#name").val() != "" && $("#password").val() != "") {
+			var zhanghao = $("#name").val();
+			var password = $("#password").val();
+			if(!(/^\d{8,12}$/.test(zhanghao))){
+				layermsg("学号/职工号格式不正确！"); 
+				  return false; 
+			}
+			$.ajax({
+		        type: "POST",
+		        url: urlPix + "/msp/mspLogin/wx/login.htm",
+		        data:{username:zhanghao,password:password},
+		        dataType: "json",           
+		        success: function (result) {
+		        	if(result.success){
+		        		localStorage.setItem('userid',result.obj.id);
+		        		localStorage.setItem('wxid',result.obj.userId);
+		        		localStorage.setItem('myname',result.obj.name);
+		        		window.location.href = SERVER_ROOT_PATH + '/wmh/wmhUser/wx/goIndex.htm';
+		        	}else{
+		        		alert('登录失败~');
+		        	}
+		        }
+		    })
+			
+		} else if($("#name").val() == "") {
+			layermsg("学号/职工号为空，请填写！");
+		} else if($("#password").val() == "") {
+			layermsg("密码为空，请填写！");
+		}
+
+}
+
+//退出
+function unbind(){
+	var userid = localStorage.getItem('userid');
+	 $.ajax({
+	        type: "GET",
+	        url: SERVER_ROOT_PATH + "/msp/mspUser/web/unBindUser.htm",
+	        data:{id:userid},
+	        dataType: "json",           
+	        success: function (result) {
+	        	if(result.success){
+	        		 window.location.href = SERVER_ROOT_PATH + '/msp/mspLogin/wx/loginOut.htm';
+
+	        	}else{
+	        		alert('退出失败~');
+	        	}
+	        }
+	    })
+}
+
+$(function (){
+    //随手拍
+    $('header div').click(function () {
+    	localStorage.removeItem('spobj');
+    	localStorage.removeItem('sppage');
+        $(this).addClass('active_type').siblings().removeClass('active_type');
+        start = 1;
+        isNextPage = true;
+        stop = true;
+        suipainum(true);
+        $('.nothing').remove();
+    });
+
+    $('.icon-xiangji1fill').on('click',function () {
+
+        window.location.href = SERVER_ROOT_PATH + '/msp/mspPhoto/wx/goSendPhoto.htm';
+    });
+	
+})

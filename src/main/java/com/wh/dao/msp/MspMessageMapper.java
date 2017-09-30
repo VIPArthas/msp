@@ -1,0 +1,20 @@
+package com.wh.dao.msp;
+
+import org.springframework.stereotype.Repository;
+
+import com.wh.base.BaseMapper;
+import com.wh.mspentity.MspMessage;
+@Repository
+public interface MspMessageMapper extends BaseMapper<MspMessage, Integer>{
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(MspMessage record);
+
+    int insertSelective(MspMessage record);
+
+    MspMessage selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(MspMessage record);
+
+    int updateByPrimaryKey(MspMessage record);
+}

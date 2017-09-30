@@ -1,0 +1,363 @@
+*{box-sizing: border-box; padding:0; margin:0; list-style: none;font-family: 微软雅黑；}
+.list-ul{ overflow: hidden;margin-top: 0.05rem;}
+.list-li{ position:relative;
+    -webkit-transform: translateX(0px);
+}
+
+a { text-decoration:none;}
+a:active{-webkit-tap-highlight-color: transparent;}
+a:hover{-webkit-tap-highlight-color: transparent;}
+input,textarea{outline: none;border: none;font-family: 微软雅黑；}
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: #999;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #999999;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #999;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #999;
+}
+::-webkit-textarea-placeholder { /* WebKit browsers */
+    color: #999;
+}
+:-ms-textarea-placeholder { /* Internet Explorer 10+ */
+    color: #999;
+}
+/*聊一下*/
+.btn{ position: absolute; top: 0; right: -160px; color: #fff; width: 160px;height: 100%}
+.btn div{width: 100%;height: 100%;}
+.btn span{line-height: 1.60rem;float: left; font-size: 0.30rem;display: inline-block;width: 80px;height: 100%;text-align: center;border: 0;padding: 0;margin: 0;}
+@media only screen and (min-width: 321px) and (max-width: 376px) {
+    .btn{right: -180px; width: 180px;}
+    .btn span{width: 90px;}
+}
+@media only screen and (min-width: 376px) and (max-width: 415px) {
+    .btn{right: -200px; width: 200px;}
+    .btn span{width: 100px;}
+}
+.lahei{background-color: #a8a8a8;}
+.del{background-color: #ff2e2e;}
+.con{height: 1.60rem;display: flex;justify-content: flex-start;align-items: center;padding: 0 0.24rem;}
+.con img{width: 1.02rem;margin-right: 0.18rem;border-radius: 50%;}
+.liao-peopel{width:calc(100% - 1.5rem) }
+.liao-name{font-size: 0.3rem;color: #343434;}
+.liao-time{font-size: 0.22rem;color: #777777}
+.liao-content{font-size: 0.26rem; color: #777777; overflow: hidden; /*自动隐藏文字*/
+    text-overflow: ellipsis;/*文字隐藏后添加省略号*/
+    white-space: nowrap;/*强制不换行*/
+    width: 20em;}
+.liao-content img{width: 0.35rem;height: 0.35rem}
+.liao-num{line-height: 0.35rem;text-align: center;font-size: 0.2rem;font-family: Arial;color: white;display: inline-block;width: 0.32rem;height: 0.32rem;border-radius: 50%;background-color: red}
+.liao-peopel>div:nth-child(1){margin-bottom: 0.1rem;}
+.liao-peopel>div{display: flex;justify-content: space-between}
+
+/*我的关注*/
+.boy{background-color: #9fdaff;}
+.girl{background-color: #fea7b7;}
+.addattention{width: 1.5rem;height: 0.54rem;border-radius: 0.1rem;border: 1px solid #2abcb4;font-size: 0.26rem;color: #2abcb4;display: flex;align-items: center;justify-content: space-around;padding: 0 0.1rem;}
+.attention-people{display: flex;justify-content: space-between;align-items: center;width:calc(100% - 1.5rem)}
+.attentioned{width: 1.5rem;height: 0.54rem;border-radius: 0.1rem;border: 1px solid #bfbfbf;font-size: 0.26rem;color: #777777;display: flex;align-items: center;justify-content: space-around;padding: 0 0.1rem;}
+.attention-message .icon{font-size: 0.22rem}
+.attention-message{font-size: 0.22rem;color: white;width: 0.84rem;height: 0.32rem;border-radius: 0.16rem;display: flex;justify-content: space-around;align-items: center;padding: 0 0.1rem}
+.attention-person{display: flex;height: 1.02rem;flex-direction: column;justify-content: space-around;}
+
+/*个人/好友中心*/
+.mycenter,.mymusic{background-color: white;}
+.margin{background-color: #f6f6f6;height: 0.2rem;}
+.centerBJ{background-image: url(../img/touxiangbj.jpg);
+    background-repeat: no-repeat;background-size: 100%;
+    height: 4.5rem;width: 100%;
+}
+.mymessage{height: 2.6rem;position: relative;padding-top: 1.23rem;border-bottom:1px solid #e6e6e6;padding-bottom: 0.2rem;}
+.myphoto{position: absolute;top: -0.91rem;text-align: center;width: 100%;height: 1.82rem}
+.myphoto img{width: 1.82rem;height: 1.82rem;box-shadow: 0 0 0.2rem #ccc;border-radius: 50%}
+.myphoto div{width: 0.72rem;height: 0.72rem;position: absolute;right: 0.3rem;top: 0.58rem; color: #666666;box-shadow: 0 0 0.2rem #ccc;background-color: white;border-radius: 50%;display: flex;justify-content: center;align-items: center;}
+.myphoto div .icon-ai61{font-size: 0.4rem}
+.mymessage p{font-size: 0.32rem;color: #343434;text-align: center;}
+.myxiangxi{font-size: 0.26rem;text-align: center;padding: 0.2rem 0 0 0;}
+.myxiangxi .mysexage .icon{font-size: 0.26rem;margin-right: 0.1rem}
+.myxiangxi .boysexage{color:#50bbff;margin-right: 0.3rem;}
+.myxiangxi .girlsexage{color:#ff658b;margin-right: 0.3rem;}
+.myxiangxi .mywhere{color:#fbac24;}
+.guan-fen{font-size: 0.26rem;color:#777777;height: 1.28rem; display: flex;justify-content: space-around;align-items: center;padding: 0 0.8rem}
+.myguan,.myfen{display: flex;flex-direction: column;justify-content: center;align-items: center;}
+.myshuxian{width: 1px;height: 0.48rem;background-color: #b2b2b2;}
+
+/*个人中心*/
+.mymusic{padding: 0.2rem 0.2rem;}
+.mymusic .musictitile{font-size: 0.28rem;color: #343434;margin-bottom: 0.4rem}
+.mymusic .musictitile .icon-music{font-size: 0.5rem;margin-right: 0.2rem}
+.mymusic .musictitile .icon-xiayiye{float: right;color: #c0c0c0;position: relative;
+    top: 0.1rem;}
+.musicquan{display: flex;margin-left: 0.7rem;}
+.musicquan>div{font-size: 0;display: flex;margin-right: 0.64rem;}
+.musicquan>div>div{display: flex;flex-direction: column;justify-content: center;}
+.musicquan>div>img{width: 0.74rem;height: 0.74rem;margin-right: 0.18rem}
+.musicquan>div>div>span:nth-child(1){font-size: 0.26rem;color: #343434;}
+.musicquan>div>div>span:nth-child(2){font-size: 0.24rem;color: #999;}
+
+/*好友主页*/
+.tayuanfen{padding: 0.5rem 0.3rem}
+.tayuanfen .musictitile{font-size: 0.28rem;color: #343434;margin-bottom: 0.15rem}
+.tayuanfen .musictitile .icon-music{font-size: 0.5rem;margin-right: 0.2rem}
+.tayuanfen .musictitile .icon-taoxin{font-size: 0.4rem;margin-right: 0.2rem}
+.tayuanfen .musictitile .icon-xiayiye{float: right;color: #c0c0c0;position: relative; top: 0.1rem;}
+.yuanfenzhi{display: flex;align-items: center;margin-left: 0.2rem;
+    padding-left: 0.5rem;border-left: 1px solid #d4d4d4}
+.yuanfenzhi>img:nth-child(2n+1){width: 0.94rem;height: 0.94rem;border-radius: 50%;}
+.yuanfenzhi>img:nth-child(2){width: 1.60rem;margin: 0 0.1rem;}
+.yuanfenzhi span{color: #ff415d;font-size: 0.42rem;font-weight: bold;position: relative;top: -0.15rem;}
+.yuanfenNum{margin-left: 0.4rem;}
+
+
+.friendawhat{background-color: #2abcb4;height: 0.98rem;width: 100%}
+.friendawhat{color: white;font-size: 0.26rem;display: flex;justify-content: space-around;align-items: center;padding: 0 0.8rem; position: fixed; bottom: 0px;}
+.friendawhat .myshuxian{background-color: white;height: 0.44rem;}
+.friend-guanzhu,.friend-liao{display: flex;justify-content: center;align-items: center;}
+.friend-liao span:nth-child(1){margin-right: 0.2rem;position: relative;top: 0.06rem;}
+.friend-guanzhu span:nth-child(1){margin-right: 0.2rem;position: relative;top: 0.04rem;}
+.friend-guanzhu .icon-jiahao{font-size: 0.25rem}
+.friend-liao .icon-xiaoxi{font-size: 0.25rem}
+.songNum{float: right;position: relative; top: 0.15rem;}
+.songNum span:last-child{margin-left: 0.2rem;color: #a8a8a8;}
+.alllikeSongs{flex-direction: column; justify-content: center; margin-left: 0.2rem;
+    padding-left: 0.5rem;border-left: 1px solid #d4d4d4;padding-top: 0.1rem;padding-bottom: 0.44rem;display: none}
+.likesong-li{display: flex;align-items: center;margin: 0.19rem 0;}
+.alllikeSongs img{width: 0.9rem;height: 0.9rem;margin-right: 0.24rem}
+.like-music{width: 100%;}
+.music-message{display: flex;flex-direction: column;justify-content: space-around;font-size: 0.28rem;width: 100%}
+.music-message div{width: 4.5rem; overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;}
+.music-name{color: #343434;margin-bottom: 0.1rem}
+.music-singer{color: #999999;}
+.lately-songs{flex-direction: column; justify-content: center; margin-left: 0.2rem;
+    padding-left: 0.5rem;border-left: 1px solid #d4d4d4;padding-top: 0.1rem;padding-bottom: 0.44rem;display: none}
+.lately-songs img{width: 0.9rem;height: 0.9rem;margin-right: 0.24rem}
+/*展示歌曲脚本添加类名*/
+.alllikeSongsshow{display: flex;}
+
+
+/*填写个人信息页面*/
+.tianxie-message{display: flex;flex-direction: column;align-items: center;height: 12rem;padding: 0.96rem 0.38rem 0 0.38rem;}
+.touxiang-photo{height: 1.84rem;width: 1.84rem;border-radius: 50%;margin-bottom: 0.5rem;box-shadow: 0 0 0.2rem #ccc;}
+.xiangxi-message{display: flex;flex-direction: column;width: 100%}
+.xiangxi-message>div{width: 100%;height: 0.98rem;display: flex;align-items: center;border-bottom: 1px solid #e6e6e6;padding-left: 0.12rem;}
+.xiangxi-message>div:last-child{border-bottom: none;}
+
+.xiangxi-message>div>span{color: #343434;font-size: 0.28rem;width: 1.96rem;}
+.xiangxi-message input{font-size: 0.28rem;color: #343434;}
+.select-sex{font-size: 0.28rem;color: #343434;margin-right: 0.66rem;display: flex;}
+.select-sex>div{font-size: 0.28rem;color: #343434;margin-right: 0.66rem;display: flex;}
+
+.select-sex span{color: white;margin-right: 0.2rem;width: 0.44rem;height: 0.44rem;border-radius: 50%;background-color: #e3e3e3;display: flex;align-items: center;justify-content: center;}
+.mymessage-submit{margin-top: 1.18rem;font-size: 0.3rem; width: 100%;height: 0.82rem;border-radius: 0.1rem;background-color: #2abcb4;color: white;text-align: center;line-height: 0.82rem;}
+.select-sex .icon{font-size: 0.3rem;}
+
+/*选择头像*/
+.touxiangselect{width:100%;flex-direction: column; padding-top: 0.28rem;align-items: center;font-size: 0; display: none; }
+.touxiangselect .div{display: flex;width: 100%;justify-content: space-around;padding: 0.22rem 0}
+.div div{font-size: 0;position: relative;}
+.div div .photo-selected{position: absolute;background-color:#2abcb4;display: inline-block;right: 0;bottom: 0;border-radius: 50%;width: 0.36rem;height: 0.36rem;color: white;line-height: 0.36rem;text-align: center; }
+.touxiangselect img{width: 1.4rem;height: 1.4rem;border-radius: 50%;}
+.touxiang-submit{margin: 0.4rem auto 0.5rem auto;font-size: 0.3rem; width: 84%;height: 0.82rem;border-radius: 0.1rem;background-color: #2abcb4;color: white;text-align: center;line-height: 0.82rem;}
+.touxiangselect .closephoto{width: 0.7rem;height: 0.7rem;border-radius: 50%;box-shadow: 0 0 0.1rem #999;padding: 0.1rem;margin: 0 auto;}
+
+
+/*性别选择脚本*/
+.selected-sex .icon-nan{background-color: #3aacf0;}
+.selected-sex .icon-iconfontshouyezhuyetubiao07{background-color:#ff658b; }
+
+
+/*音乐圈绑定*/
+.music-ul{padding: 0 0.3rem}
+.musicbangding{display: flex;height: 1.26rem;align-items: center;justify-content: space-between;}
+.musicbangding>section{display: flex;align-items: center;}
+.musicbangding img{width: 0.74rem;height: 0.74rem;margin-right: 0.18rem;}
+.musicbangding>section:nth-child(1)>div{font-size:0.28rem;color: #343434; }
+.musicbangding>section:nth-child(2)>div{margin-right: 0.2rem;font-size:0.26rem;color: #999999; }
+.musicbangding .icon-xiayiye{font-size: 0.28rem;color: #999}
+.next-go{display: inline-block; width: 6.8rem;height: 0.82rem;font-size: 0.3rem;color: white;line-height: 0.82rem;text-align: center;background-color: #999;border-radius: 0.1rem;margin-top: 1.18rem;margin-left: 4.5%}
+.nextcolor{background-color: #2abbb4}
+
+/*网易音乐圈登录*/
+.loginbj{width: 100%;height: 100%;background: url(../img/login1.jpg) no-repeat; background-size: 100%;padding-top: 4.6rem}
+.loginmessage{display: flex;flex-direction: column;align-items: center;}
+.select-login{display: flex;justify-content: space-around;margin-bottom: 0.3rem;width: 80%;}
+.select-login div{font-size: 0.3rem;color: #343434;}
+/*.select-login div:first-child{margin-right: 1.1rem}*/
+.logincontent{width: 100%;display: none;flex-direction: column;align-items: center;padding: 0 0.88rem;}
+.logincontent input{padding-left: 0.05rem; background-color: transparent;height: 0.98rem;line-height: 0.98rem;border-bottom: 1px solid #c8c8c8;width: 100%;}
+.loginzm{margin-top: 1.06rem;font-size: 0.3rem;color: white;line-height: 0.82rem;height: 0.82rem;background-color:#2abcb4;width: 100%;text-align: center;border-radius: 0.1rem}
+.logincontentid{width: 100%;display: flex;flex-direction: column;align-items: center;padding: 0 0.88rem;}
+.logincontentid input{padding-left: 0.05rem; background-color: transparent;height: 0.98rem;line-height: 0.98rem;border-bottom: 1px solid #c8c8c8;width: 100%;}
+.loginid{margin-top: 1.06rem;font-size: 0.3rem;color: white;line-height: 0.82rem;height: 0.82rem;background-color:#2abcb4;width: 100%;text-align: center;border-radius: 0.1rem}
+
+.logincontentlj{width: 100%;display: none;flex-direction: column;align-items: center;padding: 0 0.88rem;}
+.logincontentlj textarea{resize: none;width: 100%;font-size: 0.26rem;height: 1.72rem;padding: 0.25rem 0.25rem 0.25rem 0.25rem;border: 1px solid #c8c8c8;}
+.loginlj{margin-top: 1.06rem;font-size: 0.3rem;color: white;line-height: 0.82rem;height: 0.82rem;background-color:#2abcb4;width: 100%;text-align: center;border-radius: 0.1rem}
+/*网易选中登录方式脚本*/
+.loginbj .select-login .loginactive{color: #cb383d;}
+/*虾米登录*/
+.xiamiloginbj{width: 100%;height: 100%;background: url(../img/login2.jpg) no-repeat; background-size: 100%;padding-top: 4.6rem}
+/*虾米选中登录方式脚本*/
+.xiamiloginbj .select-login .loginactive{color: #ff6400;}
+
+
+/*有缘人*/
+header{background-color: white; color: #343434;font-size: 0.26rem; height: 0.9rem;width: 100%;padding: 0 0.3rem;display: flex;align-items: center;justify-content: space-between;}
+header .icon{font-size: 0.12rem;margin-left: 0.15rem}
+.youyuan-person{background-color: white; margin-top: 0.2rem;height: 3.92rem;width: 100%;padding: 0.26rem 0;display: flex;  }
+.value-Num{width: 2rem;height: 100%;display: flex;flex-direction: column;align-items: center;}
+.value-Num>img{width: 1.4rem;height: 1.4rem;border-radius: 50%;margin-bottom: 0.28rem;}
+.value-Num>div{background-color: #fef2f3;width: 1.3rem;height: 0.46rem;display: flex;align-items: center;justify-content: center;border-radius: 0.23rem;}
+.value-Num>div>img{width: 0.3rem;height: 0.3rem;margin-right: .1rem}
+.value-Num>div>span{font-size: 0.24rem;color: #ff3e5f;}
+.value-content{width: calc(100% - 2rem);height: 100%;}
+.value-content div{font-size: 0;}
+.value-content>div:first-child{border-bottom: 1px solid #e0e0e0;padding-bottom: 0.28rem;margin-bottom: 0.28rem}
+.value-person{display: flex;justify-content: space-between;padding-right: 0.3rem;margin-bottom: 0.23rem;}
+.value-person div:first-child{font-size: 0.34rem;color: #343434;}
+.value-person div:last-child{font-size: 0.24rem;color: #999;}
+.value-person div:last-child .icon-ditu1{color: #e0e0e0;font-size: 0.24rem;margin-right: 0.05rem}
+.value-sw>span{display:inline-block; height: 0.36rem;border-radius: 0.18rem;padding: 0 0.15rem;line-height: 0.3rem;}
+.zidingy{
+    margin-right: 0.6rem;
+    color: #2abcb4;
+}
+.zidingy i{
+    margin-right: 0.1rem;
+}
+.zhe_zhao{width: 100%;height: calc(100vh - 0.9rem);position: absolute;top: 0.9rem;left: 0;box-shadow: 0 -3px 3px #eee;}
+.zdy-dis{display: none}
+.zhe_zhao .sectio_n{background-color: white;opacity: 1;height: 7.84rem;}
+.zhezhaoc{background-color: #666;opacity: .6;height: calc(100vh - 8.74rem)}
+.zdy_sel{color: #97a6a2;font-size: 0.3rem;text-align: center;padding: 0.7rem 0 0.4rem 0;}
+.zdy_sex{display: flex;justify-content: space-around;}
+.zdy_sex>div>p{color: #444;font-size: 0.26rem;text-align: center;margin-top: 0.16rem}
+.zdy_sex>div>span {
+    display: block;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    background-image: url(../img/Sex.png);
+    -webkit-background-size: auto 600%;
+    background-size: auto 600%;
+
+}
+.zdy_sex>div:nth-child(1) span {
+    background-position: 0 -80px;
+}
+.zdy_sex>div:nth-child(2) span {
+    background-position: 0 -240px;
+}
+.zdy_sex>div:nth-child(3) span {
+    background-position: 0 -400px;
+}
+.zdy_sex>div.sel_sex span.sex_boy {
+    background-position: 0 0px;
+}
+.zdy_sex>div.sel_sex span.sex_girl {
+    background-position: 0 -160px;
+}
+.zdy_sex>div.sel_sex span.sex_all {
+    background-position: 0 -320px;
+}
+.sel_sex{position: relative;}
+.sex-selected{position: absolute;right: 0;bottom: 0.6rem;color: white;background-color: #2abcb4;display: inline-block;width: 0.3rem;height: 0.3rem;border-radius: 50%;font-size: 0.12rem;text-align: center;line-height: 0.3rem;}
+.sec_tion{
+    width: 100%;
+    height: 0.5rem;
+    padding: 0 0.75rem;
+}
+.sec_tion>div{display: flex;flex-direction: column;float: left;position: relative;}
+.sec_tion>div>div{
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.15rem;
+    background-color: #2abcb4;
+}
+.sec_tion>div:first-child>div{
+    border-bottom-left-radius: 30%;
+    border-top-left-radius: 30%;
+}
+.sec_tion>div:last-child>div{
+    border-bottom-right-radius: 30%;
+    border-top-right-radius: 30%;
+}
+.sec_tion>div>.on_age{
+    background-color: #e8e8e8;
+}
+.sec_tion span{text-align: center;font-size: 0.26rem;visibility: hidden;margin-bottom: 0.16rem;color: #2abcb4}
+.sec_tion span:first-child{margin-bottom: 0.3rem}
+.sec_tion>.sel_age span{visibility: visible;}
+.fff_yuan{position: absolute;background-color: white;display: inline-block;border-radius: 50%;
+    width: 0.5rem;height: 0.5rem;border: 1px #DFDFDF solid;bottom: -0.3rem;left: 0;box-shadow: 0 0 4px #afafaf}
+.zdy_submit{margin-top: 1.2rem}
+.zdy_submit div{float: right;font-size: 0.3rem;margin-right: 0.8rem}
+.zdysub{color: #2abcb4}
+.zdyquxiao{color: #666}
+/*男*/
+.value-sB>span{font-size: 0.24rem;}
+.value-sB{border: 1px solid #52c3ff;color: #52c3ff;margin-right: 0.1rem}
+.value-sB .icon-nan{font-size: 0.24rem;margin-right: 0.05rem }
+/*女*/
+.value-sG>span{font-size: 0.24rem;}
+.value-sG{border: 1px solid #ff658b;color: #ff658b;margin-right: 0.1rem}
+.value-sG .icon-iconfontshouyezhuyetubiao07{font-size: 0.24rem;margin-right: 0.05rem }
+
+.value-sw .value-swhere{border:1px solid #f7b135;color: #f7b135;font-size: 0.24rem;line-height: 0.33rem}
+.value-songs>div{font-size: 0.26rem;color: #777;}
+.value-songs>div:first-child{margin-bottom: 0.06rem}
+.value-songs>div:nth-child(2){margin-bottom: 0.2rem}
+.value-songs>div span{font-size: 0.28rem;color: #2abbb4;}
+.value-what{display: flex;}
+.value-what div{height: 0.5rem;line-height: 0.5rem;text-align: center;border-radius: 0.05rem;width: 1.66rem}
+.value-what div:first-child{background-color: #68d0ca;margin-right: 0.42rem}
+.value-what div:last-child{background-color: #ffcb65}
+.value-what div .icon{font-size: 0.24rem;color: white;margin-right: 0.1rem}
+.value-what div span{color: white;font-size: 0.24rem;}
+
+/*选择排序方式*/
+.paixu-select{width: 1.76rem;box-shadow: 0 0.05rem 0.3rem #cecece;position: absolute;
+    top: 0.9rem;right: 0;display: none;}
+.paixu-select div{height: 0.86rem;border-bottom: 1px solid #e6e6e6;color: #777777;font-size: 0.26rem;background-color: white;text-align: center;line-height: 0.86rem;}
+.paixu-select div:last-child{border: none;}
+/*选中样式*/
+.paixu-select .paixu-selectdiv{color: #2abbb4;}
+div.selectdiv-show{display: block;}
+
+
+/*聊天界面*/
+nav{height: 0.8rem;background-color: #2abbb4;display: flex;justify-content: center;align-items: center;}
+nav img{width: 0.6rem;height: 0.6rem;border-radius: 50%;margin-right: 0.15rem;}
+nav span{color: white;font-size: 0.3rem;}
+.talking-content{overflow-y: scroll; width: 100%; background-color:#f4f4f4;height: 82.5vh;border-bottom: 1px solid #E0E0E0;padding: 0 0.2rem 0.2rem 0.2rem;display: flex;align-items: center;flex-direction: column }
+.talking-content>div{margin: 0.15rem 0;width: 100%}
+.talking-content>div>section{padding: 0.2rem 0.3rem;max-width: 6rem;word-break: break-word;}
+.talking-time div{margin: 0 auto; width: 1.71rem;height: 0.5rem; background-color: #e8e8e8;font-size: 0.24rem;color: #777;display: flex;justify-content: center;align-items: center;border-radius: 0.25rem;}
+
+.talking-mine{color: white;font-size: 0.26rem}
+.talking-mine section{background-color: #2abbb4;border-radius: 0.3rem;float: right;}
+.talking-ta{color: #343434;font-size: 0.26rem}
+.talking-ta section{background-color: white;border-radius: 0.3rem;float: left}
+.talking-shuru{width: 100%;height: 17.5vh;font-size: 0;padding: 0 0.25rem 0 0.25rem}
+/*.talking-shuru textarea{resize: none;width: 100%;font-size: 0.26rem;height: 1.26rem;padding: 0.25rem 0.25rem 0 0.25rem}*/
+.talking-shuru article{border: none;width: 100%;font-size: 0.26rem;outline: none;height: 1.01rem;overflow-y: scroll;}
+/*.max-H{height: 1.03rem;width: 100%;}*/
+
+.sendtalking{font-size: 0.26rem;}
+.talking-bottom{height: 0.93rem;display: flex;align-items: center;justify-content: space-between;padding: 0 0.05rem;}
+.talking-bottom .icon{color: #2abbb4;font-size: 0.4rem;}
+.icon-smile{margin-right: 0.5rem}
+.sendtalking{width: 1rem;display: inline-block;padding: 0.05rem 0;text-align: center;color: #999;border-radius: 0.1rem}
+.value-send{background-color: #2abbb4;color: white;}
+
+.article-span{color: #999;}
+
+/*处理空数据*/
+.empty_img{width: 50%;margin: 30% 0 0 25%;}
+

@@ -1,0 +1,112 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="keywords" content="校联网,微门户" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <title>校联网微门户-后台管理</title>
+    <link href="<%=request.getContextPath() %>/resource/wmh/web/commons/css/font/iconfont.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+       <link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/resource/wmh/web/commons/css/font/font_5y12bci07sbdquxr/iconfont.css"/>
+    <link href="<%=request.getContextPath() %>/resource/wmh/web/commons/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+    <script src="http://cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="<%=request.getContextPath() %>/resource/wmh/web/commons/js/public.js"></script>
+</head>
+<body>
+<div class="page-container">
+    <div class="left-content">
+        <div class="mother-grid-inner">
+            <!--header start here-->
+            <div class="header-main fixed">
+                <div class="header-left mt10">
+                    <!--学校名称-box-->
+                    <h3>河南职业技术学院微门户后台管理</h3>
+                    <!--//end-search-box-->
+                    <div class="clearfix"> </div>
+                </div>
+                <div class="header-right">
+
+                    <!--notification menu end -->
+                    <div class="profile_details mt10" >
+                        <ul>
+                            <li class="dropdown profile_details_drop">
+                                <a href="<%=request.getContextPath() %>/wmh/userManage/web/goLogin.htm" class="dropdown-toggle"  aria-expanded="false"><span class="text-blue"><i class="fa fa-zhuxiao"></i> 注销</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"> </div>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+            <!--heder end here-->
+            <!-- script-for sticky-nav -->
+            <!-- <script>
+                $(document).ready(function() {
+                    var navoffeset=$(".header-main").offset().top;
+                    $(window).scroll(function(){
+                        var scrollpos=$(window).scrollTop();
+                        if(scrollpos >=navoffeset){
+                            $(".header-main").addClass("fixed");
+                        }else{
+                            $(".header-main").removeClass("fixed");
+                        }
+                    });
+
+                });
+            </script> -->
+            <!-- /script-for sticky-nav -->
+            <!--inner block start here-->
+            <div class="inner-block">
+                <iframe id="myiframe" name="myiframe" src="<%=request.getContextPath() %>/wmh/userManage/web/goUserManageList.htm" scrolling="no" frameborder="0" onload="this.height=100;" width="100%"></iframe>
+                <script type="text/javascript">
+                function reinitIframe(){
+                    var iframe = document.getElementById("myiframe");
+                    try{
+                        var bHeight = iframe.contentWindow.document.body.scrollHeight;
+                        var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+                        var height = Math.max(bHeight, dHeight);
+                        iframe.height =  height;
+                    }catch (ex){}
+                }
+                window.setInterval("reinitIframe()", 200);
+            </script>
+            </div>
+            <!--inner block end here-->
+            <!--copy rights start here-->
+            <div class="copyrights fixed">
+                <p>官方微信号：jinghuajiaoyu</p><br>
+                <p>Copyright © 2017 精华教育.版权所有 信产部备案:豫ICP备12007142号</p>
+            </div>
+            <!--COPY rights end here-->
+        </div>
+    </div>
+    <!--slider menu-->
+    <div class="sidebar-menu">
+        <a href="index.html"><div class="logo">
+         </div></a>
+        <div class="menu">
+            <ul id="menu" >
+                <li class="active"><a href="<%=request.getContextPath() %>/wmh/userManage/web/goUserManageList.htm" target="myiframe"><i class="fa fa-yonghuguanli"></i><span>用户管理</span></a></li>
+                <li><a href="<%=request.getContextPath() %>/wmh/message/web/toMessagePush.htm" target="myiframe"><i class="fa fa-xiaoxituisong"></i><span>消息推送</span><span class="fa fa-angle-right" style="float: right"></span></a>
+                <ul>
+                    <li><a href="<%=request.getContextPath() %>/wmh/message/web/toMessagePush.htm" target="myiframe"><i class="fa fa-fasongxiaoxi"></i><span>发送消息</span></a></li>
+                    <li><a href="<%=request.getContextPath() %>/wmh/message/web/pushMessageHistory.htm" target="myiframe"><i class="fa fa-chakanxiaoxi"></i><span>查看历史消息</span></a></li>
+                </ul>
+                </li>
+                <li><a href="<%=request.getContextPath() %>/wmh/news/web/goNewsList.htm" target="myiframe"><i class="fa fa-xinwen"></i><span>新闻展示</span></a></li>
+                <li><a href="<%=request.getContextPath() %>/wmh/payManage/web/goPayRecordPage.htm" target="myiframe"><i class="fa fa-money"></i><span>在线支付</span></a></li>
+            <li><a href="<%=request.getContextPath() %>/wmh/malFunction/web/malFunctionList.htm" target="myiframe"><i class="fa icon iconfont icon-guzhang"></i><span>故障报修</span></a></li>
+               
+            </ul>
+        </div>
+    </div>
+    <div class="clearfix"> </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+$(document).ready(function(){
+	var DepId=1;
+	var innerUserData=function(models){
+		$(".thistable tbody").html("");
+		for(var i=0;i<models.length;i++){
+			var bandSF=models[i].memeberId;
+			if(bandSF!=null){
+				bandSF="<a href='javascript:void(0)' class='removeBand'>解绑</a>";
+			}else{
+				bandSF="未绑定";
+			}
+			   $("<tr><td data-id='"+models[i].id+"'>"+models[i].name+"</td><td>"+models[i].mobile+"</td><td>"+models[i].email+"</td><td>父亲："+models[i].fatherName+" "+models[i].fatherPhone+"</td><td>"+bandSF+"</td></tr>").appendTo($(".thistable tbody"));
+		    }
+	}
+	//页面装载初始数据
+	$.ajax({
+		type:"get",
+		dataType:"json",
+		cache:false,
+		url:urlPix+"/msp/mspUser/web/showAddressBook.htm",
+		async:false,
+		data:{
+		start:1,
+		length:10
+		},
+	    success:function(data){
+	    $("<li data-id="+data.obj.id+"><span data-switch='on' name='child'><i class='fa'>&#xe63b;</i>"+data.obj.name+"</span></li>").appendTo($(".result-list").eq(0));
+	    innerUserData(data.attributes.muList)
+	    }
+	});
+	//请求子频道信息将所请求频道人员信息置入客户端
+	$(".result-list li").on("click","span[data-switch]",function(){
+		var parentLi=$(this).parent();
+		var childId=parentLi.data("id");
+		DepId=childId;
+		var dataModel={};
+		$.ajax({
+			 type:"get",
+			 dataType:"json",
+			 cache:false,
+			 url:urlPix+"/msp/mspUser/web/showAddressBook.htm",
+			 async:false,
+			 data:{
+			 depID:childId,
+			 start:1,
+			 length:10
+			 },
+			 success:function(data){
+				 dataModel=data;
+			 }
+		 })
+		if($(this).data("switch")=="on"){
+			 if(dataModel.obj.childDepList!=null){
+				 var ChildList="<ul>"
+				 for(var i=0;i<dataModel.obj.childDepList.length;i++){
+					 ChildList+="<li data-id='"+dataModel.obj.childDepList[i].id+"'><span data-switch='on' name='child'><i class='fa'>&#xe63b;</i>"+dataModel.obj.childDepList[i].name+"</span></li>"
+					 innerUserData(dataModel.attributes.muList);
+				 }
+				 ChildList+="</ul>";
+				 $(ChildList).appendTo(parentLi);
+				 }else{
+					 if(dataModel.attributes.muList==undefined){
+						 $(".thistable tbody").html("");
+						 $("<tr><td colspan='5'>暂无数据</td></tr>").appendTo($(".thistable tbody"));
+					 }else{
+					 innerUserData(dataModel.attributes.muList);
+					 }
+				 }
+		 $(this).data("switch","off");
+		}else{
+			if(dataModel.attributes.muList==undefined){
+				 $(".thistable tbody").html("");
+				 $("<tr><td colspan='5'>暂无数据</td></tr>").appendTo($(".thistable tbody"));
+			 }else{
+			 innerUserData(dataModel.attributes.muList);
+			 }
+		}
+	})
+	//解绑
+ $(".thistable td").on("click",".removeBand",function(){
+	 var thisTD=$(this).parent();
+	 var uid=thisTD.parent().find("td").first().data("id");
+	 $.ajax({
+			type:"get",
+			dataType:"json",
+			cache:false,
+			url:urlPix+"/msp/mspUser/web/unBindUser.htm",
+			async:false,
+			data:{
+				id:uid,
+			},
+			success:function(data){
+				alert(data.msg);
+				thisTD.text("未绑定");
+			}
+		})	 
+ })
+ //搜索
+ $("#search").click(function(){
+	 var keyWord=$.trim($(this).prev().val());
+	 if(keyWord!=""){
+		 $.ajax({
+				type:"get",
+				dataType:"json",
+				cache:false,
+				url:urlPix+"/msp/mspUser/web/GetDepMemberList.htm",
+				async:false,
+				data:{
+					depID:DepId,
+					start:1,
+					length:10,
+					search:keyWord
+				},
+		       success:function(data){
+		    	   if(data.obj!=null){
+		    	   innerUserData(data.obj)
+		    	   }else{
+		    		   $(".thistable tbody").html("");
+						 $("<tr><td colspan='5'>没有找到姓名或手机号码为　"+keyWord+"　的人员请确认</td></tr>").appendTo($(".thistable tbody"));
+		    	   }
+		       }
+			})
+	 }else{
+		 alert("请输入搜索内容");
+	 }
+	 })
+})

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.wmh.WmhMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.entity.WmhMessage" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="to_user" property="toUser" jdbcType="VARCHAR" />
+    <result column="template_type" property="templateType" jdbcType="INTEGER" />
+    <result column="parm1" property="parm1" jdbcType="VARCHAR" />
+    <result column="parm2" property="parm2" jdbcType="VARCHAR" />
+    <result column="parm3" property="parm3" jdbcType="VARCHAR" />
+    <result column="parm4" property="parm4" jdbcType="VARCHAR" />
+    <result column="parm5" property="parm5" jdbcType="VARCHAR" />
+    <result column="parm6" property="parm6" jdbcType="VARCHAR" />
+    <result column="wx_send" property="wxSend" jdbcType="INTEGER" />
+    <result column="sms_send" property="smsSend" jdbcType="INTEGER" />
+    <result column="mail_send" property="mailSend" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, to_user, template_type, parm1, parm2, parm3, parm4, parm5, parm6, wx_send, sms_send, 
+    mail_send
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from wmh_message
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from wmh_message
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.WmhMessage" >
+    insert into wmh_message (id, to_user, template_type, 
+      parm1, parm2, parm3, 
+      parm4, parm5, parm6, 
+      wx_send, sms_send, mail_send
+      )
+    values (#{id,jdbcType=VARCHAR}, #{toUser,jdbcType=VARCHAR}, #{templateType,jdbcType=INTEGER}, 
+      #{parm1,jdbcType=VARCHAR}, #{parm2,jdbcType=VARCHAR}, #{parm3,jdbcType=VARCHAR}, 
+      #{parm4,jdbcType=VARCHAR}, #{parm5,jdbcType=VARCHAR}, #{parm6,jdbcType=VARCHAR}, 
+      #{wxSend,jdbcType=INTEGER}, #{smsSend,jdbcType=INTEGER}, #{mailSend,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.WmhMessage" >
+    insert into wmh_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="toUser != null" >
+        to_user,
+      </if>
+      <if test="templateType != null" >
+        template_type,
+      </if>
+      <if test="parm1 != null" >
+        parm1,
+      </if>
+      <if test="parm2 != null" >
+        parm2,
+      </if>
+      <if test="parm3 != null" >
+        parm3,
+      </if>
+      <if test="parm4 != null" >
+        parm4,
+      </if>
+      <if test="parm5 != null" >
+        parm5,
+      </if>
+      <if test="parm6 != null" >
+        parm6,
+      </if>
+      <if test="wxSend != null" >
+        wx_send,
+      </if>
+      <if test="smsSend != null" >
+        sms_send,
+      </if>
+      <if test="mailSend != null" >
+        mail_send,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="toUser != null" >
+        #{toUser,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null" >
+        #{templateType,jdbcType=INTEGER},
+      </if>
+      <if test="parm1 != null" >
+        #{parm1,jdbcType=VARCHAR},
+      </if>
+      <if test="parm2 != null" >
+        #{parm2,jdbcType=VARCHAR},
+      </if>
+      <if test="parm3 != null" >
+        #{parm3,jdbcType=VARCHAR},
+      </if>
+      <if test="parm4 != null" >
+        #{parm4,jdbcType=VARCHAR},
+      </if>
+      <if test="parm5 != null" >
+        #{parm5,jdbcType=VARCHAR},
+      </if>
+      <if test="parm6 != null" >
+        #{parm6,jdbcType=VARCHAR},
+      </if>
+      <if test="wxSend != null" >
+        #{wxSend,jdbcType=INTEGER},
+      </if>
+      <if test="smsSend != null" >
+        #{smsSend,jdbcType=INTEGER},
+      </if>
+      <if test="mailSend != null" >
+        #{mailSend,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.WmhMessage" >
+    update wmh_message
+    <set >
+      <if test="toUser != null" >
+        to_user = #{toUser,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null" >
+        template_type = #{templateType,jdbcType=INTEGER},
+      </if>
+      <if test="parm1 != null" >
+        parm1 = #{parm1,jdbcType=VARCHAR},
+      </if>
+      <if test="parm2 != null" >
+        parm2 = #{parm2,jdbcType=VARCHAR},
+      </if>
+      <if test="parm3 != null" >
+        parm3 = #{parm3,jdbcType=VARCHAR},
+      </if>
+      <if test="parm4 != null" >
+        parm4 = #{parm4,jdbcType=VARCHAR},
+      </if>
+      <if test="parm5 != null" >
+        parm5 = #{parm5,jdbcType=VARCHAR},
+      </if>
+      <if test="parm6 != null" >
+        parm6 = #{parm6,jdbcType=VARCHAR},
+      </if>
+      <if test="wxSend != null" >
+        wx_send = #{wxSend,jdbcType=INTEGER},
+      </if>
+      <if test="smsSend != null" >
+        sms_send = #{smsSend,jdbcType=INTEGER},
+      </if>
+      <if test="mailSend != null" >
+        mail_send = #{mailSend,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.WmhMessage" >
+    update wmh_message
+    set to_user = #{toUser,jdbcType=VARCHAR},
+      template_type = #{templateType,jdbcType=INTEGER},
+      parm1 = #{parm1,jdbcType=VARCHAR},
+      parm2 = #{parm2,jdbcType=VARCHAR},
+      parm3 = #{parm3,jdbcType=VARCHAR},
+      parm4 = #{parm4,jdbcType=VARCHAR},
+      parm5 = #{parm5,jdbcType=VARCHAR},
+      parm6 = #{parm6,jdbcType=VARCHAR},
+      wx_send = #{wxSend,jdbcType=INTEGER},
+      sms_send = #{smsSend,jdbcType=INTEGER},
+      mail_send = #{mailSend,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="searchAllMobileListPage" resultMap="BaseResultMap" parameterType="com.wh.entity.WmhMessage">
+    SELECT * from wmh_message
+  </select>
+  
+  <select id="selectMessagesCount" resultType="java.util.Map">
+  	SELECT COUNT(1) message_count  FROM wmh_message
+  </select>
+</mapper>

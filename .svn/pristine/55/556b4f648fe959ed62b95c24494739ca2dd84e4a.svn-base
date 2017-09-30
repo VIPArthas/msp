@@ -1,0 +1,164 @@
+/*common start*/
+
+html {
+    width: 100%;
+    height: 100%;
+    background-color: #ECECEC
+}
+
+body {
+    font-family: "微软雅黑";
+    width: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    /*box-sizing: border-box;*/
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-touch-callout: none;
+}
+
+.unselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+ul li {
+    list-style: none;
+}
+
+img {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    background-color: transparent;
+}
+
+a:active,
+a:hover {
+    outline: 0;
+}
+
+abbr[title] {
+    border-bottom: 1px dotted;
+}
+
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+button[disabled],
+html input[disabled] {
+    cursor: default;
+}
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    height: auto;
+}
+
+input[type="search"] {
+    -webkit-appearance: textfield;
+    box-sizing: content-box;
+}
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+input[type=search]::-webkit-search-cancel-button,
+input[type=search]::-webkit-search-decoration,
+input[type=search]::-webkit-search-results-button,
+input[type=search]::-webkit-search-results-decoration {
+    display: none
+}
+
+.clear {
+    clear: both;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    zoom: 1;
+}
+
+html,
+body {
+    max-width: 640px;
+    min-width: 320px;
+    margin: 0 !important;
+}
+
+dd {
+    -webkit-margin-start: 0;
+}
+
+
+/*common end*/
+
+.t_gray {
+    color: #8a8a8a !important;
+}
+
+.t_black {
+    color: #444
+}
+
+.t1 {
+    color: #4DC7EF !important;
+}
+
+.t2 {
+    color: #9ACC34 !important;
+}
+
+.t3 {
+    color: #FDB847 !important;
+}
+
+.t4 {
+    color: #FE6D6A !important;
+}
+
+.b_white {
+    background-color: #fff!important;
+}
+
+
+/*在线支付样式*/
+.payMoney{background-color: white;height: 3.72rem;padding: 0.12rem 0.44rem 0.12rem 0.44rem;border-bottom: 1px solid #dfdfdf }
+.payMoney span{font-size: 0.28rem; margin-left: 0.22rem; }
+.payMoney .after{border-bottom: 1px solid #dfdfdf;padding-left: 0.16rem;}
+.payMoney .after dt{ height: 0.9rem; display: flex;align-items: center;display: -webkit-flex;-webkit-align-items: center;}
+.payMoney .after dt i{font-size: 0.3rem}
+.payMoney .after:last-child{border-bottom: none;}
+.payMoney .after a{display: flex;justify-content: space-between;display: -webkit-flex;-webkit-justify-content: space-between}
+.payMoney .after dd{height: 0.9rem; display: flex;align-items: center;display: -webkit-flex;-webkit-align-items: center;color: #a8a8a8}

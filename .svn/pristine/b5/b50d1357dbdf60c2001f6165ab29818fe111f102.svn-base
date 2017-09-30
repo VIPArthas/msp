@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>关注TA的</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../../css/font/iconfont.css">
+    <script type="text/javascript" src="../../js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="../../js/rem.js"></script>
+	    <link rel="stylesheet" href="../../css/css.css">
+   <script type="text/javascript" src="../../js/path.js"></script>
+        
+    
+</head>
+<body>
+<section class="list">
+    <ul class="list-ul">
+    </ul>
+</section>
+</body>
+</html>
+<script>
+var attentsomeone = localStorage.getItem('someonezhuye');
+    $.ajax({
+        type: "GET",
+        url: SERVER_ROOT_PATH + "/xyf/xyfGz/wx/gzOtherList.htm",
+        data:{otherUserId:attentsomeone},
+        dataType: "json",
+        success: function (result) {
+        	console.log(result);
+            var ul = document.querySelector('.list-ul');
+            if(result.obj){
+            for (var i = 0; i < result.obj.length; i++) {
+                var list = document.createElement('li');
+                list.className = 'list-li';
+                if(result.obj[i].gender == 1){
+                    list.innerHTML = '<div class="con"><img src=' + result.obj[i].headimage + ' alt="">'
+                            + '<section class="attention-people">'
+                            + '<div class="attention-person"><div class="liao-name">' + result.obj[i].nickName + '</div><div class="attention-message boy"><i class="icon iconfont icon-nan"></i><span>' + result.obj[i].age + '</span></div></div>'
+                            + '</section></div>';
+                }else{
+                    list.innerHTML = '<div class="con"><img src=' + result.obj[i].headimage + ' alt="">'
+                            + '<section class="attention-people">'
+                            + '<div class="attention-person"><div class="liao-name">' + result.obj[i].nickName + '</div><div class="attention-message girl"><i class="icon iconfont icon-iconfontshouyezhuyetubiao07"></i><span>' + result.obj[i].age + '</span></div></div>'
+                            + '</section></div>';
+                }
+
+                ul.appendChild(list);
+            }
+            }else{
+            	ul.innerHTML = '<img class="empty_img" src="../../img/empty_4.jpg" alt="">';
+
+            }
+        }
+
+    });
+</script>

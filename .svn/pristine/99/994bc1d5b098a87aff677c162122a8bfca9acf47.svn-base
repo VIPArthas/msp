@@ -1,0 +1,72 @@
+package com.wh.dao.xyf;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import com.wh.base.BaseMapper;
+
+import com.wh.xyfentity.XyfListenedSong;
+
+@Repository
+public interface XyfListenedSongMapper extends BaseMapper<XyfListenedSong, Integer> {
+	int deleteByPrimaryKey(Integer id);
+
+	int insert(XyfListenedSong record);
+
+	int insertSelective(XyfListenedSong record);
+
+	XyfListenedSong selectByPrimaryKey(Integer id);
+
+	int updateByPrimaryKeySelective(XyfListenedSong record);
+
+	int updateByPrimaryKey(XyfListenedSong record);
+
+	/**
+	 * 获取我和她都听过的歌曲详情
+	 * 
+	 * @param myId
+	 *            我的网易id或虾米id
+	 * @param otherId
+	 *            她的网易id 或虾米id
+	 * @return
+	 */
+	List<XyfListenedSong> getListenedSongs(@Param(value = "myId") String myId,
+			@Param(value = "otherId") String otherId);
+	
+	/**
+	 * 根据用户音乐id获取其有缘人 按数量多少获取最多的10个用户 听得音乐代表心情 喜欢的音乐代表性格
+	 * @param myId
+	 * @return
+	 */
+	List<Map<String, Object>> getMyListenedFateUsers(@Param(value = "myId")String myId);
+	
+	/**
+	 * 有缘人与我听歌的歌曲总数
+	 * @param myId
+	 * @param otherId
+	 * @return
+	 */
+	int getSongTotalNum(@Param(value = "myId")String myId, @Param(value = "otherId")String otherId);
+	/**
+	 * 获取我听过的歌曲总数
+	 * @param myId
+	 * @return
+	 */
+	int getMyListenedSongsCount(@Param(value = "myId")String myId);
+	
+	/**
+	 * 获取两人之间听歌的缘分
+	 * @param myId
+	 * @param otherId
+	 * @return
+	 */
+	Map<String, Object> getListenedFateUser(@Param(value = "myId")String myId, @Param(value = "otherId")String otherId);
+	/**
+	 * 根据user_id 删除
+	 * @param id
+	 */
+	void deleteByMusicId(@Param(value = "userId")String id);
+}

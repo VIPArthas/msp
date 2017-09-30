@@ -1,0 +1,16 @@
+package place;
+
+import java.util.Random;
+
+/**
+ * Created by Administrator on 2016-11-22.
+ */
+public class test_random {
+    public static void main(String[] args) {
+    	String touser="2|34|";
+    	String []tuArray = touser.split("\\|");
+    	for (int i = 0; i < tuArray.length; i++) {
+			System.out.println(tuArray[i]);
+		}
+    }
+}

@@ -1,0 +1,354 @@
+package com.wh.work;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.wh.base.AjaxJson;
+import com.wh.base.PageBounds;
+import com.wh.mspentity.MspDepartment;
+import com.wh.mspentity.MspPlatform;
+import com.wh.service.msp.MspDepartmentService;
+import com.wh.service.msp.MspPlatformService;
+import com.wh.util.StringUtil;
+import com.wh.util.msp.Constants;
+import com.wh.util.msp.EnumMethod;
+import com.wh.util.msp.HttpRequestUtil;
+
+import net.sf.json.JSONObject;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+
+/**
+ * 企业号组织架构定时维护
+ * 
+ * @author Administrator
+ *
+ */
+@Component
+public class QiyeDepartjob {
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+	@Autowired
+	private MspPlatformService mspPlatformService;
+	
+	@Resource
+	private MspDepartmentService mspDepartmentService;
+	// 每天凌晨1点触发一次     对MSP项目组织架构进行新增,更新,删除
+	//@Scheduled(cron = "0/10 * * * * ? ")
+	@Scheduled(cron = "0 0 1 * * ?   ")
+	public void updateAccessToken() {
+		log.info("移动校园平台组织架构定时维护开始...");
+		long begin = System.currentTimeMillis();
+		try {
+			//新增,更新
+			departToQiye();
+			//删除
+			deletedepartFromQiye();
+		} catch (Exception e) {
+			log.error("{}", e);
+		}
+		long end = System.currentTimeMillis();
+		log.info("移动校园平台组织架构定时任务结束，共耗时：[" + (end - begin) / 1000 + "]秒");
+
+	}
+	
+	
+	
+	
+	
+	
+
+	/**
+	 * 定时保持组织架构一直(本地---->企业号)
+	 * 新增,更新操作
+	 * @param req
+	 * @param resp
+	 * @param muList
+	 * @return
+	 */
+
+	public AjaxJson departToQiye() {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		// 获取本地组织架构
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<MspDepartment> localDepList = mspDepartmentService.findList(map, new PageBounds());
+
+		// 获取企业号组织架构
+
+		List<MspDepartment> qyDepList = DepListFromQY1();
+
+		// 如果企业号有则去除
+
+		for (int i = 0; i < localDepList.size(); i++) {
+			MspDepartment localDep = localDepList.get(i);
+			for (int j = 0; j < qyDepList.size(); j++) {
+			MspDepartment	qyDep=qyDepList.get(j);
+				// 如果有相同的,则去除,剩余的是需要新增的
+				if (localDep.getName().equals(qyDep.getName()) && localDep.getParentid() == qyDep.getParentid()
+						&& localDep.getId() == qyDep.getId()) {
+					localDepList.remove(i);
+					qyDepList.remove(j);
+					i = i - 1;
+					j=j-1;
+					break;
+				}
+			}
+		}
+		//对本地的进行新增,更新
+		for (MspDepartment localDep : localDepList) {
+			System.out.println(localDep.getName());
+			flag = addDepart(localDep);
+			if (!flag) {
+				flag = updateDepart(localDep);
+			}
+
+		}
+
+		
+		json.setSuccess(flag);
+		return json;
+	}
+	
+	/**
+	 * 删除操作
+	 * @return
+	 */
+	public AjaxJson deletedepartFromQiye() {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		// 获取本地组织架构
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<MspDepartment> localDepList = mspDepartmentService.findList(map, new PageBounds());
+
+		// 获取企业号组织架构
+
+		List<MspDepartment> qyDepList = DepListFromQY1();
+
+		// 如果企业号有则去除
+
+		for (int i = 0; i < localDepList.size(); i++) {
+			MspDepartment localDep = localDepList.get(i);
+			for (int j = 0; j < qyDepList.size(); j++) {
+			MspDepartment	qyDep=qyDepList.get(j);
+				// 如果有相同的,则去除,剩余的是需要新增的
+				if (localDep.getName().equals(qyDep.getName()) && localDep.getParentid() == qyDep.getParentid()
+						&& localDep.getId() == qyDep.getId()) {
+					localDepList.remove(i);
+					qyDepList.remove(j);
+					i = i - 1;
+					j=j-1;
+					break;
+				}
+			}
+		}
+
+		//先对企业号未删除的排序.大的在前,小的在后,否则有子部门无法删除
+		if (qyDepList!=null &&qyDepList.size()>1) {
+			try {
+				listSortById(qyDepList);
+			} catch (Exception e) {
+				
+				e.printStackTrace();
+			}
+		}
+		
+		//对企业号的进行删除
+		for (MspDepartment qyDep : qyDepList) {
+			System.out.println(qyDep.getName());
+			flag = deleteDepart(qyDep);
+			
+		}
+		
+		
+		json.setSuccess(flag);
+		return json;
+	}
+	
+
+	/**
+	 * 对部门按id倒序排列
+	 * @param qyDepList
+	 * @throws Exception
+	 */
+	public void listSortById(List<MspDepartment> qyDepList ) throws Exception {
+		// 返回的结果集
+		Collections.sort(qyDepList, new Comparator<MspDepartment>() {
+			public int compare(MspDepartment o1, MspDepartment o2) {
+				// o1，o2，可以在其内取得值，按其排序，此例为降序，s1和s2是排序字段值
+				    Integer s1=o1.getId();
+				    Integer s2=o2.getId();
+
+					if (s1 < s2) {
+						return 1;
+					} else {
+						return -1;
+					}
+			
+			}
+		});
+
+	}
+	
+	/**
+	 * 添加部门
+	 * 
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	public boolean addDepart(MspDepartment mspDepartment) {
+		JSONObject jsonObject = null;
+		MspPlatform mspPlatform = mspPlatformService.load(Constants.ALPLATFORMID);
+		String requestUrl = Constants.CREATE_DEPARTMENT_URL;
+		String accessToken = mspPlatform.getAccessToken();
+		if (StringUtil.isNotEmpty(accessToken)) {
+			requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken);
+			String PostData = "{\"name\":\"%s\",\"parentid\":%s,\"id\":%s}";
+			// %s 文本替代
+			String outputStr = String.format(PostData, mspDepartment.getName(), mspDepartment.getParentid(),
+					mspDepartment.getId());
+			jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.POST.name(), outputStr);
+			if (jsonObject == null) {
+				jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.POST.name(), outputStr);
+			}
+			// 如果请求成功
+			if (null != jsonObject) {
+
+				int errcode = jsonObject.getInt("errcode");
+				if (errcode == 0) {
+					log.info("添加部门成功!部门名称---->" + mspDepartment.getName() + "部门id----->" + mspDepartment.getId());
+					return true;
+				} else {
+					log.error("添加部门失败 errcode:{} errmsg:{}", jsonObject.getInt("errcode"),
+							jsonObject.getString("errmsg"));
+				}
+			}
+		} else {
+			log.info("添加多个部门:accessToken获取为空!");
+		}
+
+		return false;
+	}
+
+	/**
+	 * 更新部门
+	 * 
+	 * @param mspDepartment
+	 * @return
+	 */
+	public boolean updateDepart(MspDepartment mspDepartment) {
+
+		JSONObject jsonObject = null;
+		MspPlatform mspPlatform = mspPlatformService.load(Constants.ALPLATFORMID);
+		String requestUrl = Constants.UPDATE_DEPARTMENT_URL;
+		String accessToken = mspPlatform.getAccessToken();
+		if (StringUtil.isNotEmpty(accessToken)) {
+			requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken);
+			String PostData = "{\"name\":\"%s\",\"parentid\":%s,\"id\":%s}";
+			// %s 文本替代
+			String outputStr = String.format(PostData, mspDepartment.getName(), mspDepartment.getParentid(),
+					mspDepartment.getId());
+			jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.POST.name(), outputStr);
+			if (jsonObject == null) {
+				jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.POST.name(), outputStr);
+			}
+			// 如果请求成功
+			if (null != jsonObject) {
+				int errcode = jsonObject.getInt("errcode");
+				if (errcode == 0) {
+					log.info("更新部门成功!部门名称---->" + mspDepartment.getName() + "部门id----->" + mspDepartment.getId());
+					return true;
+				} else {
+					log.error("更新部门失败 errcode:{} errmsg:{}", jsonObject.getInt("errcode"),
+							jsonObject.getString("errmsg"));
+				}
+			}
+		} else {
+			log.info("添加多个部门:accessToken获取为空!");
+		}
+		return false;
+	}
+	
+	/**
+	 * 删除部门(有人员或子部门时无法删除)
+	 * @param mspDepartment
+	 * @return
+	 */
+	public boolean deleteDepart(MspDepartment mspDepartment) {
+
+		JSONObject jsonObject = null;
+		MspPlatform mspPlatform = mspPlatformService.load(Constants.ALPLATFORMID);
+		String requestUrl = Constants.DELETE_DEPARTMENT_URL;
+		String accessToken = mspPlatform.getAccessToken();
+		if (StringUtil.isNotEmpty(accessToken)) {
+			requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken).replace("ID", mspDepartment.getId().toString());
+			
+			jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.GET.name(), null);
+			if (jsonObject == null) {
+				jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.GET.name(), null);
+			}
+			// 如果请求成功
+			if (null != jsonObject) {
+				int errcode = jsonObject.getInt("errcode");
+				if (errcode == 0) {
+					log.info("删除部门成功!部门名称---->" + mspDepartment.getName() + "部门id----->" + mspDepartment.getId());
+					return true;
+				} else {
+					log.error("删除部门失败 errcode:{} errmsg:{}", jsonObject.getInt("errcode"),
+							jsonObject.getString("errmsg"));
+				}
+			}
+		} else {
+			log.info("添加多个部门:accessToken获取为空!");
+		}
+		return false;
+	}
+	
+	public List<MspDepartment> DepListFromQY1() {
+		AjaxJson json = new AjaxJson();
+		JSONObject jsonObject = null;
+		List<MspDepartment> departmentList = null;
+		MspPlatform mspPlatform = mspPlatformService.load(Constants.ALPLATFORMID);
+		String requestUrl = Constants.DEPARTMENT_LIST_URL;
+		String accessToken = mspPlatform.getAccessToken();
+
+		if (StringUtil.isNotEmpty(accessToken)) {
+			requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken);
+			jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.GET.name(), null);
+			if (jsonObject == null) {
+				jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.GET.name(), null);
+			}
+			// 如果请求成功
+			if (null != jsonObject) {
+
+				int errcode = jsonObject.getInt("errcode");
+				if (errcode == 0) {
+					Gson gson = new GsonBuilder().create();
+					departmentList = gson.fromJson(jsonObject.get("department").toString(),
+							new TypeToken<List<MspDepartment>>() {
+							}.getType());
+
+					json.setObj(departmentList);
+				} else {
+					log.error("获取部门list errcode:{} errmsg:{}", jsonObject.getInt("errcode"),
+							jsonObject.getString("errmsg"));
+				}
+			}
+		} else {
+			log.info("根据accesstoken获取部门list:accessToken获取为空!");
+		}
+
+		return departmentList;
+	}
+}

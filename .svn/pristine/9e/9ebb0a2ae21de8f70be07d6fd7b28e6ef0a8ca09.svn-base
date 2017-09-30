@@ -1,0 +1,25 @@
+log4j.rootLogger=DEBUG, stdout, logfile
+log4j.category.org.springframework=ERROR
+log4j.category.org.apache=INFO
+
+#输出日志到控制台
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d %p [%c] - %m%n
+
+#输出日志到文件
+log4j.appender.logfile=org.apache.log4j.RollingFileAppender
+log4j.appender.logfile.File=E://wmhWeblogs/log.log
+log4j.appender.logfile.MaxFileSize=1024KB
+log4j.appender.logfile.MaxBackupIndex=10240
+log4j.appender.logfile.layout=org.apache.log4j.PatternLayout
+log4j.appender.logfile.layout.ConversionPattern=%d %p [%c] - %m%n
+
+# mybatis日志配置 ###
+log4j.logger.com.ibatis=error
+log4j.logger.com.ibatis.common.jdbc.SimpleDataSource=error
+log4j.logger.com.ibatis.common.jdbc.ScriptRunner=error
+log4j.logger.com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate=error
+log4j.logger.java.sql.Connection=DEBUG
+log4j.logger.java.sql.Statement=DEBUG
+log4j.logger.java.sql.PreparedStatement=DEBUG

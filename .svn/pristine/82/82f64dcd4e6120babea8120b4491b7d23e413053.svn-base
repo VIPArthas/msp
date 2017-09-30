@@ -1,0 +1,31 @@
+/**
+ * Created by User on 2017/8/8.
+ */
+$(function () {
+    //随手拍
+    function suipainum() {
+
+        $.ajax({
+            type: "GET",
+            url: SERVER_ROOT_PATH + "/msp/mspPhoto/wx/showList.htm",
+            data:{type:1,start:1,length:10},
+            dataType: "json",
+            success: function (result) {
+                console.log(result);
+            }
+        });
+
+    }
+
+    $('header div').click(function () {
+        $(this).addClass('active_type').siblings().removeClass('active_type');
+    });
+
+    $('.icon-xiangji1fill').on('click',function () {
+
+        window.parent.location.href = 'sendphoto.html';
+    });
+    $('.item').on('click',function () {
+        window.parent.location.href = 'showphoto.html';
+    });
+})

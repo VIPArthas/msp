@@ -1,0 +1,1209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="jquery-1.8.0.min.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="specimen_files/specimen_stylesheet.css" type="text/css" charset="utf-8" />
+	<link rel="stylesheet" href="iconfont.css" type="text/css" charset="utf-8" />
+
+
+</head>
+
+<body>
+<div id="container">
+	   <h2 class="nav">样式名称调用示例</h2>
+	   <div class="iconstyle">
+		<dl>
+			<dt><span class="iconfont icon-linehome"> </span></dt>
+			<dd><p>icon-linehome</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineschool"> </span></dt>
+			<dd><p>icon-lineschool</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineblack"> </span></dt>
+			<dd><p>icon-lineblack</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linemap"> </span></dt>
+			<dd><p>icon-linemap</p></dd>
+		</dl>
+
+		<dl>
+			<dt><span class="iconfont icon-linemenu2"> </span></dt>
+			<dd><p>icon-linemenu2</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-lineask"> </span></dt>
+			<dd><p>icon-lineask</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-linedown"> </span></dt>
+			<dd><p>icon-linedown</p></dd>
+		</dl>
+	
+		<dl>
+			<dt><span class="iconfont icon-linephone"> </span></dt>
+			<dd><p>icon-linephone</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-linefour"> </span></dt>
+			<dd><p>icon-linefour</p></dd>
+		</dl>
+		
+	    <dl>
+			<dt><span class="iconfont icon-linetouch"> </span></dt>
+			<dd><p>icon-linetouch</p></dd>
+		</dl>
+	
+		<dl>
+			<dt><span class="iconfont icon-linedown"> </span></dt>
+			<dd><p>icon-linedown</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-lineprev2"> </span></dt>
+			<dd><p>icon-lineprev2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linedata"> </span></dt>
+			<dd><p>icon-linedata</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linenote"> </span></dt>
+			<dd><p>icon-linenote</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linetv"> </span></dt>
+			<dd><p>icon-linetv</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-linerili"> </span></dt>
+			<dd><p>icon-linerili</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-linezan2"> </span></dt>
+			<dd><p>icon-linezan2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linenozan2"> </span></dt>
+			<dd><p>icon-linenozan2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linepen"> </span></dt>
+			<dd><p>icon-linepen</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linecoment"> </span></dt>
+			<dd><p>icon-linecoment</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linecoment2"> </span></dt>
+			<dd><p>icon-linecoment2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linemassage"> </span></dt>
+			<dd><p>icon-linemassage</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linecloud"> </span></dt>
+			<dd><p>icon-linecloud</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linephone2"> </span></dt>
+			<dd><p>icon-linephone2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linegonggao2"> </span></dt>
+			<dd><p>icon-linegonggao2</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-lineweixin"> </span></dt>
+			<dd><p>icon-lineweixin</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineedit2"> </span></dt>
+			<dd><p>icon-lineedit2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineset"> </span></dt>
+			<dd><p>icon-lineset</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linedel"> </span></dt>
+			<dd><p>icon-linedel</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linetext"> </span></dt>
+			<dd><p>icon-linetext</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linebook"> </span></dt>
+			<dd><p>icon-linebook</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineemail"> </span></dt>
+			<dd><p>icon-lineemail</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linerili2"> </span></dt>
+			<dd><p>icon-linerili2</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-linetongzhi"> </span></dt>
+			<dd><p>icon-linetongzhi</p></dd>
+		</dl>
+	<dl>
+			<dt><span class="iconfont icon-linemenu"> </span></dt>
+			<dd><p>icon-linemenu</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineeye"> </span></dt>
+			<dd><p>icon-lineeye</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineuser"> </span></dt>
+			<dd><p>icon-lineuser</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineusers"> </span></dt>
+			<dd><p>icon-lineusers</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineuserinfo"> </span></dt>
+			<dd><p>icon-lineuserinfo</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linezan"> </span></dt>
+			<dd><p>icon-linezan</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linenozan"> </span></dt>
+			<dd><p>icon-linenozan</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linesignout"> </span></dt>
+			<dd><p>icon-linesignout</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linecart"> </span></dt>
+			<dd><p>icon-linecart</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linuser2"> </span></dt>
+			<dd><p>icon-linuser2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linestar"> </span></dt>
+			<dd><p>icon-linestar</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linetel"> </span></dt>
+			<dd><p>icon-linetel</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linenext"> </span></dt>
+			<dd><p>icon-linenext</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineprev"> </span></dt>
+			<dd><p>icon-lineprev</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-lineup"> </span></dt>
+			<dd><p>icon-lineup</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-linegodown"> </span></dt>
+			<dd><p>icon-linegodown</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linegift"> </span></dt>
+			<dd><p>icon-linegift</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-lineohonepay"> </span></dt>
+			<dd><p>icon-lineohonepay</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineclose"> </span></dt>
+			<dd><p>icon-lineclose</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-linehonor"> </span></dt>
+			<dd><p>icon-linehonor</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linepc"> </span></dt>
+			<dd><p>icon-linepc</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineplay"> </span></dt>
+			<dd><p>icon-lineplay</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineshare"> </span></dt>
+			<dd><p>icon-lineshare</p></dd>
+		</dl><dl>
+			<dt><span class="iconfont icon-linesearch"> </span></dt>
+			<dd><p>icon-linesearch</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linetips"> </span></dt>
+			<dd><p>icon-linetips</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineclock"> </span></dt>
+			<dd><p>icon-lineclock</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linegoup"> </span></dt>
+			<dd><p>icon-linegoup</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linegoup2"> </span></dt>
+			<dd><p>icon-linegoup2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linewarning"> </span></dt>
+			<dd><p>icon-linewarning</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linesearch2"> </span></dt>
+			<dd><p>icon-linesearch2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineadd"> </span></dt>
+			<dd><p>icon-lineadd</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-linehelp"> </span></dt>
+			<dd><p>icon-linehelp</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineimg"> </span></dt>
+			<dd><p>icon-lineimg</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineweixin2"> </span></dt>
+			<dd><p>icon-lineweixin2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineshuaxin"> </span></dt>
+			<dd><p>icon-lineshuaxin</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linemenu3"> </span></dt>
+			<dd><p>icon-linemenu3</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linelike"> </span></dt>
+			<dd><p>icon-linelike</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linehome2"> </span></dt>
+			<dd><p>icon-linehome2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-linelock"> </span></dt>
+			<dd><p>icon-linelock</p></dd>
+		</dl><dl>
+			<dt><span class="iconfont icon-lineunlock"> </span></dt>
+			<dd><p>icon-lineunlock</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineedit"> </span></dt>
+			<dd><p>icon-lineedit</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-lineyiy"> </span></dt>
+			<dd><p>icon-lineyiy</p></dd>
+		</dl>
+		
+		
+		
+		<dl>
+			<dt><span class="iconfont icon-map"> </span></dt>
+			<dd><p>icon-map</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-map2"> </span></dt>
+			<dd><p>icon-map2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-map3"> </span></dt>
+			<dd><p>icon-map3</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-map4"> </span></dt>
+			<dd><p>icon-map4</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-user"> </span></dt>
+			<dd><p>icon-user</p></dd>
+		</dl><dl>
+			<dt><span class="iconfont icon-user2"> </span></dt>
+			<dd><p>icon-user2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-studentuser"> </span></dt>
+			<dd><p>icon-studentuser</p></dd>
+		</dl>
+		
+			<dl>
+			<dt><span class="iconfont icon-user3"> </span></dt>
+			<dd><p>icon-user3</p></dd>
+		</dl>
+				<dl>
+			<dt><span class="iconfont icon-student"> </span></dt>
+			<dd><p>icon-student</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-user5"> </span></dt>
+			<dd><p>icon-user5</p></dd>
+		</dl>
+				<dl>
+			<dt><span class="iconfont icon-users2"> </span></dt>
+			<dd><p>icon-users2</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-userrenz"> </span></dt>
+			<dd><p>icon-userrenz</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-teacher"> </span></dt>
+			<dd><p>icon-teacher</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-teacher2"> </span></dt>
+			<dd><p>icon-teacher2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-teach"> </span></dt>
+			<dd><p>icon-teach</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-user3"> </span></dt>
+			<dd><p>icon-user3</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-users"> </span></dt>
+			<dd><p>icon-users</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-tel"> </span></dt>
+			<dd><p>icon-tel</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-tel3"> </span></dt>
+			<dd><p>icon-tel3</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-tel2"> </span></dt>
+			<dd><p>icon-tel2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-telphone"> </span></dt>
+			<dd><p>icon-telphone</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-list"> </span></dt>
+			<dd><p>icon-list</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-four"> </span></dt>
+			<dd><p>icon-four</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-menu"> </span></dt>
+			<dd><p>icon-menu</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-menu2"> </span></dt>
+			<dd><p>icon-menu2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-book"> </span></dt>
+			<dd><p>icon-book</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-book4"> </span></dt>
+			<dd><p>icon-book4</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-book3"> </span></dt>
+			<dd><p>icon-book3</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-book2"> </span></dt>
+			<dd><p>icon-book2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-books"> </span></dt>
+			<dd><p>icon-books</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-book6"> </span></dt>
+			<dd><p>icon-book6</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-del"> </span></dt>
+			<dd><p>icon-del</p></dd>
+		</dl><dl>
+			<dt><span class="iconfont icon-rongyu"> </span></dt>
+			<dd><p>icon-rongyu</p></dd>
+		</dl><dl>
+			<dt><span class="iconfont icon-clouddown"> </span></dt>
+			<dd><p>icon-clouddown</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-cloudup"> </span></dt>
+			<dd><p>icon-cloudup</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-star"> </span></dt>
+			<dd><p>icon-star</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-heart"> </span></dt>
+			<dd><p>icon-heart</p></dd>
+		</dl><dl>
+			<dt><span class="iconfont icon-note"> </span></dt>
+			<dd><p>icon-note</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-camera"> </span></dt>
+			<dd><p>icon-camera</p></dd>
+		</dl>
+	
+		<dl>
+			<dt><span class="iconfont icon-ask"> </span></dt>
+			<dd><p>icon-ask</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-ask3"> </span></dt>
+			<dd><p>icon-ask3</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-ask2"> </span></dt>
+			<dd><p>icon-ask2</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-schoolbus"> </span></dt>
+			<dd><p>icon-schoolbus</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-set"> </span></dt>
+			<dd><p>icon-set</p></dd>
+		</dl>
+	
+		<dl>
+			<dt><span class="iconfont icon-email"> </span></dt>
+			<dd><p>icon-email</p></dd>
+		</dl><dl>
+			<dt><span class="iconfont icon-rili"> </span></dt>
+			<dd><p>icon-rili</p></dd>
+		</dl><dl>
+			<dt><span class="iconfont icon-search"> </span></dt>
+			<dd><p>icon-search</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-w3c"> </span></dt>
+			<dd><p>icon-w3c</p></dd>
+		</dl>
+	
+		<dl>
+		
+			<dt><span class="iconfont icon-play"> </span></dt>
+			<dd><p>icon-play</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-tv"> </span></dt>
+			<dd><p>icon-tv</p></dd>
+		</dl>
+	<dl>
+			<dt><span class="iconfont icon-play2"> </span></dt>
+			<dd><p>icon-play2</p></dd>
+		</dl><dl>
+			<dt><span class="iconfont icon-camera2"> </span></dt>
+			<dd><p>icon-camera2</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-calculator"> </span></dt>
+			<dd><p>icon-calculator</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-qrcode"> </span></dt>
+			<dd><p>icon-qrcode</p></dd>
+		</dl><dl>
+			<dt><span class="iconfont icon-tvnum"> </span></dt>
+			<dd><p>icon-tvnum</p></dd>
+		</dl><dl>
+			<dt><span class="iconfont icon-question"> </span></dt>
+			<dd><p>icon-question</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-box"> </span></dt>
+			<dd><p>icon-box</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-set2"> </span></dt>
+			<dd><p>icon-set2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-database"> </span></dt>
+			<dd><p>icon-database</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-home"> </span></dt>
+			<dd><p>icon-home</p></dd>
+		</dl>
+		
+		
+		<dl>
+			<dt><span class="iconfont icon-docx"> </span></dt>
+			<dd><p>icon-docx</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-img2"> </span></dt>
+			<dd><p>icon-img2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-edit"> </span></dt>
+			<dd><p>icon-edit</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-sucess"> </span></dt>
+			<dd><p>icon-sucess</p></dd>
+		</dl>
+	
+		<dl>
+			<dt><span class="iconfont icon-zan"> </span></dt>
+			<dd><p>icon-zan</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-zhuanfa"> </span></dt>
+			<dd><p>icon-zhuanfa</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-file"> </span></dt>
+			<dd><p>icon-file</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-flag"> </span></dt>
+			<dd><p>icon-flag</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-eye"> </span></dt>
+			<dd><p>icon-eye</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-eye2"> </span></dt>
+			<dd><p>icon-eye2</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-news"> </span></dt>
+			<dd><p>icon-news</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-news2"> </span></dt>
+			<dd><p>icon-news2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-handup"> </span></dt>
+			<dd><p>icon-handup</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-handright"> </span></dt>
+			<dd><p>icon-handright</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-question2"> </span></dt>
+			<dd><p>icon-question2</p></dd>
+		</dl>
+	
+		<dl>
+			<dt><span class="iconfont icon-note2"> </span></dt>
+			<dd><p>icon-note2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-edit2"> </span></dt>
+			<dd><p>icon-edit2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-pen"> </span></dt>
+			<dd><p>icon-pen</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-infoimg"> </span></dt>
+			<dd><p>icon-infoimg</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-xuewei"> </span></dt>
+			<dd><p>icon-xuewei</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-mouse"> </span></dt>
+			<dd><p>icon-mouse</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-tools"> </span></dt>
+			<dd><p>icon-tools</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-tools2"> </span></dt>
+			<dd><p>icon-tools2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-tools3"> </span></dt>
+			<dd><p>icon-tools3</p></dd>
+		</dl>
+
+		<dl>
+			<dt><span class="iconfont icon-play3"> </span></dt>
+			<dd><p>icon-play3</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-handphone"> </span></dt>
+			<dd><p>icon-handphone</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-move"> </span></dt>
+			<dd><p>icon-move</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-24hour"> </span></dt>
+			<dd><p>icon-24hour</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-24hour2"> </span></dt>
+			<dd><p>icon-24hour2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-tag"> </span></dt>
+			<dd><p>icon-tag</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-rss"> </span></dt>
+			<dd><p>icon-rss</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-rss2"> </span></dt>
+			<dd><p>icon-rss2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-godown"> </span></dt>
+			<dd><p>icon-godown</p></dd>
+		</dl>
+	
+		<dl>
+			<dt><span class="iconfont icon-goup"> </span></dt>
+			<dd><p>icon-goup</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-gift"> </span></dt>
+			<dd><p>icon-gift</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-gift2"> </span></dt>
+			<dd><p>icon-gift2</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-set3"> </span></dt>
+			<dd><p>icon-set3</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-bookmark"> </span></dt>
+			<dd><p>icon-bookmark</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-rili2"> </span></dt>
+			<dd><p>icon-rili2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-rili3"> </span></dt>
+			<dd><p>icon-rili3</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-cloud"> </span></dt>
+			<dd><p>icon-cloud</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-clouddown"> </span></dt>
+			<dd><p>icon-clouddown</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-cloudup"> </span></dt>
+			<dd><p>icon-cloudup</p></dd>
+		</dl><dl>
+			<dt><span class="iconfont icon-eye3"> </span></dt>
+			<dd><p>icon-eye3</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-toolbox"> </span></dt>
+			<dd><p>icon-toolbox</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-save"> </span></dt>
+			<dd><p>icon-save</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-shop"> </span></dt>
+			<dd><p>icon-shop</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-shop2"> </span></dt>
+			<dd><p>icon-shop2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-signout"> </span></dt>
+			<dd><p>icon-signout</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-safe"> </span></dt>
+			<dd><p>icon-safe</p></dd>
+		</dl>
+	
+		<dl>
+			<dt><span class="iconfont icon-search2"> </span></dt>
+			<dd><p>icon-search2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-zan2"> </span></dt>
+			<dd><p>icon-zan2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-woshou"> </span></dt>
+			<dd><p>icon-woshou</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-tongji"> </span></dt>
+			<dd><p>icon-tongji</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-gift3"> </span></dt>
+			<dd><p>icon-gift3</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-fire"> </span></dt>
+			<dd><p>icon-fire</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-close"> </span></dt>
+			<dd><p>icon-close</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-jtup"> </span></dt>
+			<dd><p>icon-jtup</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-jtdown"> </span></dt>
+			<dd><p>icon-jtdown</p></dd>
+		</dl><dl>
+			<dt><span class="iconfont icon-jtleft"> </span></dt>
+			<dd><p>icon-jtleft</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-jtright"> </span></dt>
+			<dd><p>icon-jtright</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-rightgo"> </span></dt>
+			<dd><p>icon-rightgo</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-right"> </span></dt>
+			<dd><p>icon-right</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-jiandao"> </span></dt>
+			<dd><p>icon-jiandao</p></dd>
+		</dl>
+	 
+	 
+	  
+		<dl>
+			<dt><span class="iconfont icon-txt"> </span></dt>
+			<dd><p>icon-txt</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-classroom"> </span></dt>
+			<dd><p>icon-classroom</p></dd>
+		</dl>
+
+		<dl>
+			<dt><span class="iconfont icon-doc"> </span></dt>
+			<dd><p>icon-doc</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-docx"> </span></dt>
+			<dd><p>icon-docx</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-wmv"> </span></dt>
+			<dd><p>icon-wmv</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-ppt"> </span></dt>
+			<dd><p>icon-ppt</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-flv"> </span></dt>
+			<dd><p>icon-flv</p></dd>
+		</dl>
+		 <dl>
+			<dt><span class="iconfont icon-pptx"> </span></dt>
+			<dd><p>icon-pptx</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-xls"> </span></dt>
+			<dd><p>icon-xls</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-ppt"> </span></dt>
+			<dd><p>icon-ppt</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-video"> </span></dt>
+			<dd><p>icon-video</p></dd>
+		</dl>
+			<dl>
+			<dt><span class="iconfont icon-video2"> </span></dt>
+			<dd><p>icon-video2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-text2"> </span></dt>
+			<dd><p>icon-text2</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-weixin"> </span></dt>
+			<dd><p>icon-weixin</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-qq"> </span></dt>
+			<dd><p>icon-qq</p></dd>
+		</dl>
+		<dl>
+			<dt><span class="iconfont icon-sina"> </span></dt>
+			<dd><p>icon-sina</p></dd>
+		</dl>
+		
+	
+		<dl>
+			<dt><span class="iconfont icon-add"> </span></dt>
+			<dd><p>icon-add</p></dd>
+		</dl>
+		
+		<dl>
+			<dt><span class="iconfont icon-squer"> </span></dt>
+			<dd><p>icon-squer</p></dd>
+		</dl>
+		
+		
+		
+		
+
+		
+		
+	</div>
+       <div class="clear"></div>
+        <h2 class="nav">代码html调用示例</h2>
+		<div id="glyphs" style="font-family: 'untitledregular';">
+			<div class="section">
+				<div id="glyph_chart">
+
+						 <div><p>&amp;#33;</p>&#33;</div>
+						 <div><p>&amp;#34;</p>&#34;</div>
+						 <div><p>&amp;#35;</p>&#35;</div>
+						 <div><p>&amp;#36;</p>&#36;</div>
+						 <div><p>&amp;#37;</p>&#37;</div>
+						 <div><p>&amp;#38;</p>&#38;</div>
+						 <div><p>&amp;#39;</p>&#39;</div>
+						 <div><p>&amp;#40;</p>&#40;</div>
+						 <div><p>&amp;#41;</p>&#41;</div>
+						 <div><p>&amp;#42;</p>&#42;</div>
+						 <div><p>&amp;#43;</p>&#43;</div>
+						 <div><p>&amp;#44;</p>&#44;</div>
+						 <div><p>&amp;#45;</p>&#45;</div>
+						 <div><p>&amp;#46;</p>&#46;</div>
+						 <div><p>&amp;#47;</p>&#47;</div>
+						 <div><p>&amp;#48;</p>&#48;</div>
+						 <div><p>&amp;#49;</p>&#49;</div>
+						 <div><p>&amp;#50;</p>&#50;</div>
+						 <div><p>&amp;#51;</p>&#51;</div>
+						 <div><p>&amp;#52;</p>&#52;</div>
+						 <div><p>&amp;#53;</p>&#53;</div>
+						 <div><p>&amp;#54;</p>&#54;</div>
+						 <div><p>&amp;#55;</p>&#55;</div>
+						 <div><p>&amp;#56;</p>&#56;</div>
+						 <div><p>&amp;#57;</p>&#57;</div>
+						 <div><p>&amp;#58;</p>&#58;</div>
+						 <div><p>&amp;#59;</p>&#59;</div>
+						 <div><p>&amp;#60;</p>&#60;</div>
+						 <div><p>&amp;#61;</p>&#61;</div>
+						 <div><p>&amp;#62;</p>&#62;</div>
+						 <div><p>&amp;#63;</p>&#63;</div>
+						 <div><p>&amp;#64;</p>&#64;</div>
+						 <div><p>&amp;#65;</p>&#65;</div>
+						 <div><p>&amp;#66;</p>&#66;</div>
+						 <div><p>&amp;#67;</p>&#67;</div>
+						 <div><p>&amp;#68;</p>&#68;</div>
+						 <div><p>&amp;#69;</p>&#69;</div>
+						 <div><p>&amp;#70;</p>&#70;</div>
+						 <div><p>&amp;#71;</p>&#71;</div>
+						 <div><p>&amp;#72;</p>&#72;</div>
+						 <div><p>&amp;#73;</p>&#73;</div>
+						 <div><p>&amp;#74;</p>&#74;</div>
+						 <div><p>&amp;#75;</p>&#75;</div>
+						 <div><p>&amp;#76;</p>&#76;</div>
+						 <div><p>&amp;#77;</p>&#77;</div>
+						 <div><p>&amp;#78;</p>&#78;</div>
+						 <div><p>&amp;#79;</p>&#79;</div>
+						 <div><p>&amp;#80;</p>&#80;</div>
+						 <div><p>&amp;#81;</p>&#81;</div>
+						 <div><p>&amp;#82;</p>&#82;</div>
+						 <div><p>&amp;#83;</p>&#83;</div>
+						 <div><p>&amp;#84;</p>&#84;</div>
+						 <div><p>&amp;#85;</p>&#85;</div>
+						 <div><p>&amp;#86;</p>&#86;</div>
+						 <div><p>&amp;#87;</p>&#87;</div>
+						 <div><p>&amp;#88;</p>&#88;</div>
+						 <div><p>&amp;#89;</p>&#89;</div>
+						 <div><p>&amp;#90;</p>&#90;</div>
+						 <div><p>&amp;#91;</p>&#91;</div>
+						 <div><p>&amp;#92;</p>&#92;</div>
+						 <div><p>&amp;#93;</p>&#93;</div>
+						 <div><p>&amp;#94;</p>&#94;</div>
+						 <div><p>&amp;#95;</p>&#95;</div>
+						 <div><p>&amp;#96;</p>&#96;</div>
+						 <div><p>&amp;#97;</p>&#97;</div>
+						 <div><p>&amp;#98;</p>&#98;</div>
+						 <div><p>&amp;#99;</p>&#99;</div>
+						 <div><p>&amp;#100;</p>&#100;</div>
+						 <div><p>&amp;#101;</p>&#101;</div>
+						 <div><p>&amp;#102;</p>&#102;</div>
+						 <div><p>&amp;#103;</p>&#103;</div>
+						 <div><p>&amp;#104;</p>&#104;</div>
+						 <div><p>&amp;#105;</p>&#105;</div>
+						 <div><p>&amp;#106;</p>&#106;</div>
+						 <div><p>&amp;#107;</p>&#107;</div>
+						 <div><p>&amp;#108;</p>&#108;</div>
+						 <div><p>&amp;#109;</p>&#109;</div>
+						 <div><p>&amp;#110;</p>&#110;</div>
+						 <div><p>&amp;#111;</p>&#111;</div>
+						 <div><p>&amp;#112;</p>&#112;</div>
+						 <div><p>&amp;#113;</p>&#113;</div>
+						 <div><p>&amp;#114;</p>&#114;</div>
+						 <div><p>&amp;#115;</p>&#115;</div>
+						 <div><p>&amp;#116;</p>&#116;</div>
+						 <div><p>&amp;#117;</p>&#117;</div>
+						 <div><p>&amp;#118;</p>&#118;</div>
+						 <div><p>&amp;#119;</p>&#119;</div>
+						 <div><p>&amp;#120;</p>&#120;</div>
+						 <div><p>&amp;#121;</p>&#121;</div>
+						 <div><p>&amp;#122;</p>&#122;</div>
+						 <div><p>&amp;#123;</p>&#123;</div>
+						 <div><p>&amp;#124;</p>&#124;</div>
+						 <div><p>&amp;#125;</p>&#125;</div>
+						 <div><p>&amp;#126;</p>&#126;</div>
+						 <div><p>&amp;#128;</p>&#128;</div>
+						 <div><p>&amp;#130;</p>&#130;</div>
+						 <div><p>&amp;#131;</p>&#131;</div>
+						 <div><p>&amp;#132;</p>&#132;</div>
+						 <div><p>&amp;#133;</p>&#133;</div>
+						 <div><p>&amp;#160;</p>&#160;</div>
+						 <div><p>&amp;#161;</p>&#161;</div>
+						 <div><p>&amp;#162;</p>&#162;</div>
+						 <div><p>&amp;#163;</p>&#163;</div>
+						 <div><p>&amp;#164;</p>&#164;</div>
+						 <div><p>&amp;#165;</p>&#165;</div>
+						 <div><p>&amp;#166;</p>&#166;</div>
+						 <div><p>&amp;#167;</p>&#167;</div>
+						 <div><p>&amp;#168;</p>&#168;</div>
+						 <div><p>&amp;#169;</p>&#169;</div>
+						 <div><p>&amp;#170;</p>&#170;</div>
+						 <div><p>&amp;#171;</p>&#171;</div>
+						 <div><p>&amp;#172;</p>&#172;</div>
+						 <div><p>&amp;#174;</p>&#174;</div>
+						 <div><p>&amp;#175;</p>&#175;</div>
+						 <div><p>&amp;#176;</p>&#176;</div>
+						 <div><p>&amp;#177;</p>&#177;</div>
+						 <div><p>&amp;#178;</p>&#178;</div>
+						 <div><p>&amp;#180;</p>&#180;</div>
+						 <div><p>&amp;#182;</p>&#182;</div>
+						 <div><p>&amp;#183;</p>&#183;</div>
+						 <div><p>&amp;#184;</p>&#184;</div>
+						 <div><p>&amp;#185;</p>&#185;</div>
+						 <div><p>&amp;#186;</p>&#186;</div>
+						 <div><p>&amp;#187;</p>&#187;</div>
+						 <div><p>&amp;#188;</p>&#188;</div>
+						 <div><p>&amp;#189;</p>&#189;</div>
+						 <div><p>&amp;#190;</p>&#190;</div>
+						 <div><p>&amp;#191;</p>&#191;</div>
+						 <div><p>&amp;#192;</p>&#192;</div>
+						 <div><p>&amp;#193;</p>&#193;</div>
+						 <div><p>&amp;#194;</p>&#194;</div>
+						 <div><p>&amp;#195;</p>&#195;</div>
+						 <div><p>&amp;#196;</p>&#196;</div>
+						 <div><p>&amp;#197;</p>&#197;</div>
+						 <div><p>&amp;#198;</p>&#198;</div>
+						 <div><p>&amp;#199;</p>&#199;</div>
+						 <div><p>&amp;#200;</p>&#200;</div>
+						 <div><p>&amp;#201;</p>&#201;</div>
+						 <div><p>&amp;#202;</p>&#202;</div>
+						 <div><p>&amp;#203;</p>&#203;</div>
+						 <div><p>&amp;#204;</p>&#204;</div>
+						 <div><p>&amp;#205;</p>&#205;</div>
+						 <div><p>&amp;#206;</p>&#206;</div>
+						 <div><p>&amp;#207;</p>&#207;</div>
+						 <div><p>&amp;#208;</p>&#208;</div>
+						 <div><p>&amp;#209;</p>&#209;</div>
+						 <div><p>&amp;#210;</p>&#210;</div>
+						 <div><p>&amp;#211;</p>&#211;</div>
+						 <div><p>&amp;#212;</p>&#212;</div>
+						 <div><p>&amp;#213;</p>&#213;</div>
+						 <div><p>&amp;#214;</p>&#214;</div>
+						 <div><p>&amp;#215;</p>&#215;</div>
+						 <div><p>&amp;#216;</p>&#216;</div>
+						 <div><p>&amp;#217;</p>&#217;</div>
+						 <div><p>&amp;#218;</p>&#218;</div>
+						 <div><p>&amp;#219;</p>&#219;</div>
+						 <div><p>&amp;#220;</p>&#220;</div>
+						 <div><p>&amp;#221;</p>&#221;</div>
+						 <div><p>&amp;#222;</p>&#222;</div>
+						 <div><p>&amp;#223;</p>&#223;</div>
+						 <div><p>&amp;#224;</p>&#224;</div>
+						 <div><p>&amp;#225;</p>&#225;</div>
+						 <div><p>&amp;#226;</p>&#226;</div>
+						 <div><p>&amp;#227;</p>&#227;</div>
+						 <div><p>&amp;#228;</p>&#228;</div>
+						 <div><p>&amp;#229;</p>&#229;</div>
+						 <div><p>&amp;#230;</p>&#230;</div>
+						 <div><p>&amp;#231;</p>&#231;</div>
+						 <div><p>&amp;#232;</p>&#232;</div>
+						 <div><p>&amp;#233;</p>&#233;</div>
+						 <div><p>&amp;#234;</p>&#234;</div>
+						 <div><p>&amp;#235;</p>&#235;</div>
+						 <div><p>&amp;#236;</p>&#236;</div>
+						 <div><p>&amp;#237;</p>&#237;</div>
+						 <div><p>&amp;#238;</p>&#238;</div>
+						 <div><p>&amp;#239;</p>&#239;</div>
+						 <div><p>&amp;#240;</p>&#240;</div>
+						 <div><p>&amp;#241;</p>&#241;</div>
+						 <div><p>&amp;#242;</p>&#242;</div>
+						 <div><p>&amp;#243;</p>&#243;</div>
+						 <div><p>&amp;#244;</p>&#244;</div>
+						 <div><p>&amp;#245;</p>&#245;</div>
+						 <div><p>&amp;#246;</p>&#246;</div>
+						 <div><p>&amp;#247;</p>&#247;</div>
+						 <div><p>&amp;#248;</p>&#248;</div>
+						 <div><p>&amp;#249;</p>&#249;</div>
+						 <div><p>&amp;#250;</p>&#250;</div>
+						 <div><p>&amp;#251;</p>&#251;</div>
+						 <div><p>&amp;#252;</p>&#252;</div>
+						 <div><p>&amp;#253;</p>&#253;</div>
+						 <div><p>&amp;#254;</p>&#254;</div>
+						 <div><p>&amp;#255;</p>&#255;</div>
+						 <div><p>&amp;#305;</p>&#305;</div>
+						 <div><p>&amp;#321;</p>&#321;</div>
+						 <div><p>&amp;#322;</p>&#322;</div>
+						 <div><p>&amp;#338;</p>&#338;</div>
+						 <div><p>&amp;#339;</p>&#339;</div>
+						 <div><p>&amp;#352;</p>&#352;</div>
+						 <div><p>&amp;#353;</p>&#353;</div>
+						 <div><p>&amp;#376;</p>&#376;</div>
+						 <div><p>&amp;#381;</p>&#381;</div>
+						 <div><p>&amp;#382;</p>&#382;</div>
+						 <div><p>&amp;#402;</p>&#402;</div>
+						 <div><p>&amp;#710;</p>&#710;</div>
+						 <div><p>&amp;#711;</p>&#711;</div>
+						 <div><p>&amp;#728;</p>&#728;</div>
+						 <div><p>&amp;#729;</p>&#729;</div>
+						 <div><p>&amp;#730;</p>&#730;</div>
+						 <div><p>&amp;#731;</p>&#731;</div>
+						 <div><p>&amp;#732;</p>&#732;</div>
+						 <div><p>&amp;#733;</p>&#733;</div>
+						 <div><p>&amp;#956;</p>&#956;</div>
+						 <div><p>&amp;#8211;</p>&#8211;</div>
+						 <div><p>&amp;#8212;</p>&#8212;</div>
+						 <div><p>&amp;#8216;</p>&#8216;</div>
+						 <div><p>&amp;#8217;</p>&#8217;</div>
+						 <div><p>&amp;#8218;</p>&#8218;</div>
+						 <div><p>&amp;#8220;</p>&#8220;</div>
+						 <div><p>&amp;#8221;</p>&#8221;</div>
+						 <div><p>&amp;#8222;</p>&#8222;</div>
+						 <div><p>&amp;#8226;</p>&#8226;</div>
+						 <div><p>&amp;#8230;</p>&#8230;</div>
+						 <div><p>&amp;#8240;</p>&#8240;</div>
+						 <div><p>&amp;#8249;</p>&#8249;</div>
+						 <div><p>&amp;#8250;</p>&#8250;</div>
+						 <div><p>&amp;#8260;</p>&#8260;</div>
+						 <div><p>&amp;#8364;</p>&#8364;</div>
+						 <div><p>&amp;#8482;</p>&#8482;</div>
+						 <div><p>&amp;#8722;</p>&#8722;</div>
+						 <div><p>&amp;#9724;</p>&#9724;</div>
+						 <div><p>&amp;#64257;</p>&#64257;</div>
+						 <div><p>&amp;#64258;</p>&#64258;</div>
+																																																																																																																																																																																																						</div>	
+			</div>
+		</div>
+		<div id="specs">
+			
+		</div>
+	    <div class="clear"></div>
+		<div id="installing" style="padding:80px; background:#fff; margin-top:60px">
+			<div class="section">
+				<div class="grid7 firstcol">
+					<h1>校联网字体图标安装方法</h1>
+					<p>字体图标被大多数的主流浏不同的方式器所支持。目前有四种不同的字体格式，来适应所有的浏览器。包括TTF，WOFF，EOT和SVG。</p>
+					
+					<h2>1. 上传图标字体</h2>
+					<p>首先要将字体图标上传到网址，目录应该与css文件相同</p>
+					<h2>2. 包括字体图标演示表</h2>
+					<p>用 @font-face声明来让各种浏览器选择相应的字体。代码如下</p>
+
+						<code>
+						@font-face{ 
+							font-family: 'MyWebFont';
+							src: url('WebFont.eot');
+							src: url('WebFont.eot?#iefix') format('embedded-opentype'),
+								 url('WebFont.woff') format('woff'),
+								 url('WebFont.ttf') format('truetype'),
+								 url('WebFont.svg#webfont') format('svg');
+						}
+						</code>
+
+	<p>要将已经写好的字体图标样式引入到页面，代码如下：</p>
+	<code>&lt;link rel=&quot;stylesheet&quot; href=&quot;stylesheet.css&quot; type=&quot;text/css&quot; charset=&quot;utf-8&quot; /&gt;</code>
+
+					<h2>3. M修改样式表</h2>
+					<p>针对想用需要用到字体的标签进行字体声明：</p>
+<code>p { font-family: 'WebFont', Arial, sans-serif; }</code>
+
+				</div>
+				
+				
+			</div>
+			
+		</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+##########################################
+###gongyishangguanliyuan 
+supplyManageRole=110ada2e80994b1bbf7ff500576293ff
+###weibaoshangguanliyuan
+serviceManageRole=a729dbcf3ddf428085c30c87d051a561
+####neibu yonghu 
+innerUserRole=1af935b3d6524118a6d6a9710f59fefe
+####gongyishang gongchengshi 
+supplyEngineerRole=42a6d276046d42239f9fa7af5b294907
+####xitong guanli yuan
+supplierEngineerRole=95246eeed0874d2997521db41c46c83e
+################################################################
+###jiafang peizhi
+
+FirstParty=\u4E91\u5357\u4FE1\u7528\u793E
+
+#\u642D\u5EFA\u7684\u6D4B\u8BD5\u73AF\u5883\u4F7F\u7528
+openId=oUmK409pK5CzVJrjDJhb1oqFUqic
+#\u642D\u5EFA\u7684\u6D4B\u8BD5\u73AF\u5883\u4F7F\u7528
+userId=ddd44316076d47f7951efe7a4746905e
+#移动校园平台用户默认id
+id=3c6ab5a0509d4972aaf31e22b674ba0f
+
+
+
+
+

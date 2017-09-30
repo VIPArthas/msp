@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.xlwapp.WxRechargeMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.entity.WxRecharge" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="recharge_id" property="rechargeId" jdbcType="VARCHAR" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
+    <result column="unified_order" property="unifiedOrder" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="recharge_type" property="rechargeType" jdbcType="INTEGER" />
+    <result column="callback_time" property="callbackTime" jdbcType="TIMESTAMP" />
+    <result column="callback_res" property="callbackRes" jdbcType="VARCHAR" />
+    <result column="callback_remark" property="callbackRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, recharge_id, open_id, unified_order, order_time, recharge_type, callback_time, 
+    callback_res, callback_remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_recharge
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from wx_recharge
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.WxRecharge" >
+    insert into wx_recharge (id, recharge_id, open_id, 
+      unified_order, order_time, recharge_type, 
+      callback_time, callback_res, callback_remark
+      )
+    values (#{id,jdbcType=VARCHAR}, #{rechargeId,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR}, 
+      #{unifiedOrder,jdbcType=VARCHAR}, #{orderTime,jdbcType=TIMESTAMP}, #{rechargeType,jdbcType=INTEGER}, 
+      #{callbackTime,jdbcType=TIMESTAMP}, #{callbackRes,jdbcType=VARCHAR}, #{callbackRemark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.WxRecharge" >
+    insert into wx_recharge
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="rechargeId != null" >
+        recharge_id,
+      </if>
+      <if test="openId != null" >
+        open_id,
+      </if>
+      <if test="unifiedOrder != null" >
+        unified_order,
+      </if>
+      <if test="orderTime != null" >
+        order_time,
+      </if>
+      <if test="rechargeType != null" >
+        recharge_type,
+      </if>
+      <if test="callbackTime != null" >
+        callback_time,
+      </if>
+      <if test="callbackRes != null" >
+        callback_res,
+      </if>
+      <if test="callbackRemark != null" >
+        callback_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargeId != null" >
+        #{rechargeId,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="unifiedOrder != null" >
+        #{unifiedOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTime != null" >
+        #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rechargeType != null" >
+        #{rechargeType,jdbcType=INTEGER},
+      </if>
+      <if test="callbackTime != null" >
+        #{callbackTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="callbackRes != null" >
+        #{callbackRes,jdbcType=VARCHAR},
+      </if>
+      <if test="callbackRemark != null" >
+        #{callbackRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.WxRecharge" >
+    update wx_recharge
+    <set >
+      <if test="rechargeId != null" >
+        recharge_id = #{rechargeId,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        open_id = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="unifiedOrder != null" >
+        unified_order = #{unifiedOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTime != null" >
+        order_time = #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rechargeType != null" >
+        recharge_type = #{rechargeType,jdbcType=INTEGER},
+      </if>
+      <if test="callbackTime != null" >
+        callback_time = #{callbackTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="callbackRes != null" >
+        callback_res = #{callbackRes,jdbcType=VARCHAR},
+      </if>
+      <if test="callbackRemark != null" >
+        callback_remark = #{callbackRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByUserRechargeIdSelective" parameterType="com.wh.entity.WxRecharge" >
+    update wx_recharge
+    <set >
+
+      <if test="openId != null" >
+        open_id = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="unifiedOrder != null" >
+        unified_order = #{unifiedOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTime != null" >
+        order_time = #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rechargeType != null" >
+        recharge_type = #{rechargeType,jdbcType=INTEGER},
+      </if>
+      <if test="callbackTime != null" >
+        callback_time = #{callbackTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="callbackRes != null" >
+        callback_res = #{callbackRes,jdbcType=VARCHAR},
+      </if>
+      <if test="callbackRemark != null" >
+        callback_remark = #{callbackRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where
+    recharge_id = #{rechargeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.WxRecharge" >
+    update wx_recharge
+    set recharge_id = #{rechargeId,jdbcType=VARCHAR},
+      open_id = #{openId,jdbcType=VARCHAR},
+      unified_order = #{unifiedOrder,jdbcType=VARCHAR},
+      order_time = #{orderTime,jdbcType=TIMESTAMP},
+      recharge_type = #{rechargeType,jdbcType=INTEGER},
+      callback_time = #{callbackTime,jdbcType=TIMESTAMP},
+      callback_res = #{callbackRes,jdbcType=VARCHAR},
+      callback_remark = #{callbackRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

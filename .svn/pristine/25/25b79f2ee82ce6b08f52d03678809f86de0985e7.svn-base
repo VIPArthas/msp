@@ -1,0 +1,26 @@
+package com.wh.service.xyf.impl;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import com.wh.dao.xyf.XyfParamMapper;
+import com.wh.service.base.impl.BaseServiceImpl;
+import com.wh.service.xyf.XyfParamService;
+import com.wh.xyfentity.XyfParam;
+
+
+@Service
+public class XyfParamServiceImpl extends BaseServiceImpl<XyfParam, Integer> implements XyfParamService {
+	@Resource
+	XyfParamMapper dao;
+
+	@Resource
+	public void setBaseDAO(XyfParamMapper xyfParamMapper) {
+		this.dao = xyfParamMapper;
+		this.baseDAO = xyfParamMapper;
+	}
+
+
+	
+	
+}

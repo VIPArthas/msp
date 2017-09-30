@@ -1,0 +1,16 @@
+/**
+ * Created by User on 2017/5/4.
+ */
+function showLoadingimg() {
+	var bod = document.querySelector('.youyuan_num');
+	bod.innerHTML = '';
+	$('body').css('background-color','#fff');
+    $(".youyuan_num").append('<img class="loading" src="../../img/motion1.gif" style="width: 80%;margin:20% 0 0 10%;">');
+}
+function hideLoadingimg() {
+	$('body').css('background-color','#f2f2f2');
+    $('div').remove('.loading' )
+
+}
+
+

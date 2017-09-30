@@ -1,0 +1,307 @@
+<%@page import="com.wh.constants.Constants"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/pageTag.tld" prefix="page" %>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="校联网,微门户" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <title>校联网微门户-后台管理</title>
+    <link href="<%=request.getContextPath() %>/resource/wmh/web/commons/css/font/iconfont.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/resource/wmh/web/commons/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+    <script type="text/javascript">var urlPix ="<%=request.getContextPath() %>"; </script>
+    <script src="http://cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="<%=request.getContextPath() %>/resource/wmh/web/commons/js/public.js" ></script>
+</head>
+<body id="user_body">
+     <div class="row plr15">
+		<div class="col-md-3 col-sm-12">
+	    	<div class="c-group">
+	        <input type="checkbox" id="qx"/><label for="qx"></label></div> <div style="display: inline-block;top: -6px;position: relative">全选</div>
+  			<div style="display:none;" id="tk">
+                <div class="c-group">
+                <input type="checkbox" name="allUser" id="allUser"/><label for="allUser"></label></div> <div style="display: inline-block;top: -8px;position: relative">选择全部结果  共${userList[2] }人</div>
+            </div>
+  		</div>
+	  <div class="col-md-4 col-sm-12"><form >
+	        <div class="input-group">
+	        <input type="hidden" name="vagueSearch" id="vagueSearch" value="${user.vagueSearch }">
+            <input type="hidden" name="tagSearch" id="tagSearch" value="${user.tagSearch }">
+	        <input type="text" class="form-control" placeholder="支持多标签搜索，结果为并集" id="searchContent" value="${user.searchContent }">
+			<span class="input-group-btn">
+	        	<a class="btn btn_blue mr10" href="javascript:void(0);" onclick="userSearch('1')">搜索</a> <a class="btn btn_blue" href="javascript:void(0);" onclick="userSearch('2')">搜索标签</a>
+			</span>
+	      </div>
+	  </form></div>
+  <div class="col-md-5 col-sm-12">
+      <div class="fr">
+          <a class="btn btn_jin" href="javascript:void(0);" data-toggle="modal" data-target="#myModal"><i class="fa fa-tianjia"></i>批量导入</a>
+          <a class="btn btn_green" href="<%=request.getContextPath() %>/wmh/userManage/web/goAddUserPage.htm"><i class="fa fa-tianjia"></i>添加用户</a>
+          <div id="delLabel"><a class="btn btn_red"><i class="fa fa-shanchu"></i> 删除标签</a>
+              <form class="form-horizontal"><div class="form-group">
+                  <div class="col-md-9"><input type="text" id="tagName2" class="form-control"  placeholder="请输入标签名"></div><div class="col-md-3"><a href="javascript:void(0);" class="btn btn_blue " onclick="deleteTag()" >确定</a></div>
+              </div></form>
+          </div>
+          <div id="addLabel"><a class="btn btn_red_q"><i class="fa fa-tianjia"></i>添加标签</a>
+              <form class="form-horizontal">
+              	<div class="form-group">
+                      <div class="col-md-9"><input type="text" id="tagName1" class="form-control"  placeholder="请输入标签名"></div><div class="col-md-3"><a href="javascript:void(0);" class="btn btn_blue " onclick="addTag()">确定</a></div>
+              	</div>
+              </form>
+          </div>
+          
+          
+        </div>
+    </div>
+</div>
+<div class="col-md-12 mt20">
+         <div class="table-responsive">
+             <table class="table table_black">
+                 <thead>
+                 <tr>
+                     <th></th>
+                     <th>序号</th>
+                     <th>姓名</th>
+                     <th>手机号</th>
+                     <th>邮箱</th>
+                     <th>QQ号</th>
+                     <th>微信</th>
+                     <th>标签</th>
+                     <th>操作</th>
+                 </tr>
+                 </thead>
+                 <tbody>
+                 	<c:choose>
+     	<c:when test="${not empty userList[0] }">
+     		<c:forEach items="${userList[0]}" var="user" varStatus="status">
+     			<tr>
+            <td><div class="c-group"><input type="checkbox" name="user_check" value="${user.id }" id="id${status.index+1 }"><label for="id${status.index+1 }"></label></div></td>
+            <td>${status.index+1 }</td>
+            <td><a href="<%=request.getContextPath() %>/wmh/userManage/web/goEditUserPage.htm?userId=${user.id}">${user.real_name }</a></td>
+            <td>${user.phone }</td>
+            <td>${user.mail }</td>
+            <td>${user.qq }</td>
+            <td>${user.wx_status ==1?'已关注':'未关注' }</td>
+            <td>
+            	<c:choose>
+            		<c:when test="${not empty user.tagList }">
+            			<c:forEach items="${user.tagList }" var="tag">
+            				<span class="lable">${tag.tag_name }</span>
+            			</c:forEach>
+            		</c:when>
+            		<c:otherwise>
+            		</c:otherwise>
+            	</c:choose>
+            </td>
+            <td><a href="javascript:void(0);" onclick="bianji('${user.id}')"><i class="fa fa-bianji1"></i></a> <a href="javascript:void(0);" onclick="shanchu('${user.id}')"><i class="fa fa-shanchu"></i></a></td>
+        </tr>
+     		</c:forEach>
+     	</c:when>
+     	<c:otherwise>
+     	</c:otherwise>
+     </c:choose>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="20">
+            <%-- <div class="float-right mt10" style="line-height: 23px;width: auto"><span>共</span><span class="ym text-blue">${userList[2] }</span>条记录，${userList[1]}/页 <a class="btn btn_sm btn-default">1</a><a class="btn btn_sm btn_blue">2</a><a class="btn btn_sm btn-default">3</a><a class="btn btn_sm btn-default">4</a><a class="btn  btn_sm btn-default">5</a> 到第<input type="text"  value="5" style="width:25px;text-align: center"/>页 <a class="btn btn_sm btn_blue plr15">前往</a></div> --%>
+         <page:page currentpage="${userList[1]}" rscount="${userList[2]}" className="adminPage" pagesize="<%=Constants.wmhPageSize%>" action="wmh/userManage/web/goUserManageList.htm" />
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+ </div>
+<div class="clearfix"> </div>
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+	<form id="userDaoRu" method="POST" enctype="multipart/form-data">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">批量导入</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                    <a class="btn btn_jin" href="<%=request.getContextPath() + Constants.wmhUserExcelTemplet%>" >模板下载</a>
+                    <a class="btn btn_green"  href="javascript:void(0)" >浏览<input type="file" name="path" id="path" class="upload"/></a>
+                    <a class="btn btn_red" href="JavaScript:void(0)" onclick="submitForm()">开始导入</a>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <!-- <a class="btn btn-primary"  href="failMessage.html">查看结果</a> -->
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </form>    
+</div><!-- /.modal -->
+<script type="text/javascript" src="<%=request.getContextPath() %>/resource/wmh/web/user/index.js"></script>
+<script type="text/javascript">
+	//批量导入用户
+	function submitForm(){
+		showLoading();
+		var fromdata=new FormData($("#userDaoRu")[0]);
+		$.ajax({
+			url: "<%=request.getContextPath()%>/wmh/userManage/web/importUser.htm",
+			type:"POST",
+	        contentType:false,
+	        processData:false,
+	        data:fromdata,
+			success:function (response){
+				hideLoading();
+				if(response.indexOf("<html>") > 0||response.indexOf("</div>") > 0){
+					$('#user_body').html("");
+					$('#user_body').html(response);			
+				}else{
+					var data = JSON.parse(response);
+					if(data.code == 0){
+						alert(data.msg);
+					}else{
+						alert(data.msg);
+					}
+					
+				}
+			}
+		});
+	}
+
+	function userSearch(num){
+		var searchContent = $("#searchContent").val();
+		window.location.href="<%=request.getContextPath() %>/wmh/userManage/web/goUserManageList.htm?num="+num+"&searchContent="+searchContent;
+	}
+	
+	function bianji(userId){
+		window.location.href="<%=request.getContextPath() %>/wmh/userManage/web/goEditUserPage.htm?userId="+userId;
+	}
+	
+	function shanchu(userId){
+		var con = confirm("确定删除该用户？");
+		if(con){
+			$.post("<%=request.getContextPath() %>/wmh/userManage/web/deleteUserByUserId.htm",
+					{id:userId},
+					function(response){
+						var data = JSON.parse(response);
+						if(data.code == 0){
+							window.location.reload(true);
+						}
+				
+			});
+		}
+	}
+	
+	function addTag(){
+		showLoading();
+		var vagueSearch =$("#vagueSearch").val();
+		var tagSearch = $("#tagSearch").val();
+		var checkedAllList =  $("#allUser").prop("checked");
+		var tagName = $.trim($("#tagName1").val());
+		if(tagName != null && tagName != 'null' && tagName != undefined &&  tagName != 'undefined' && tagName != ''){
+			if(checkedAllList == true){
+				//给当前搜索所有用户添加该标签
+				$.post("<%=request.getContextPath()%>/wmh/userManage/web/addTag.htm",
+						{tagName:tagName,vagueSearch:vagueSearch,tagSearch:tagSearch},
+						function (response){
+							hideLoading();
+							var data = JSON.parse(response);
+							if(data.code == 0){
+								alert("标签“"+tagName+"”添加成功,共计人数："+data.addSuccessNumber+"人");
+								window.location.reload(true);
+							}
+				});
+			}else{
+				//给当前选中数据添加标签
+				var userIdStr = "";
+				$("input[name='user_check']:checked").each(function() {
+					userIdStr += $(this).val() + ",";
+				});
+				if(userIdStr == null || userIdStr == 'null' || userIdStr == undefined || userIdStr == 'undefined' || userIdStr == ''){
+					alert("请至少选择一条数据");
+					hideLoading();
+					return;
+				}
+				if(userIdStr != null && userIdStr != 'null' && userIdStr != undefined && userIdStr != 'undefined' && userIdStr != ''){
+					$.post("<%=request.getContextPath()%>/wmh/userManage/web/addTag.htm",
+							{userIdStr:userIdStr,tagName:tagName,vagueSearch:vagueSearch,tagSearch:tagSearch},
+							function (response){
+								hideLoading();
+								var data = JSON.parse(response);
+								if(data.code == 0){
+									alert("标签“"+tagName+"”添加成功,共计人数："+data.addSuccessNumber+"人");
+									window.location.reload(true);
+								}else{
+									alert(data.msg);
+								}
+					});
+				}
+			}
+		}else{
+			hideLoading();
+			alert("请输入标签名称！");
+		}
+	}
+	
+	function deleteTag(){
+		showLoading();
+		var vagueSearch =$("#vagueSearch").val();
+		var tagSearch = $("#tagSearch").val();
+		var checkedAllList = $("#allUser").prop("checked");
+		var tagName = $.trim($("#tagName2").val());
+		if(tagName != null && tagName != 'null' && tagName != undefined &&  tagName != 'undefined' && tagName != ''){
+			if(checkedAllList == true){
+				//给当前搜索所有用户添加该标签
+				$.post("<%=request.getContextPath()%>/wmh/userManage/web/deleteTag.htm",
+						{tagName:tagName,vagueSearch:vagueSearch,tagSearch:tagSearch},
+						function (response){
+							hideLoading();
+							var data = JSON.parse(response);
+							if(data.code == 0){
+								alert("标签“"+tagName+"”删除成功,共计人数："+data.deleteSuccessNumber+"人");
+								window.location.reload(true);
+							}
+				});
+			}else{
+				//给当前选中数据添加标签
+				var userIdStr = "";
+				$("input[name='user_check']:checked").each(function() {
+					userIdStr += $(this).val() + ",";
+				});
+				if(userIdStr == null || userIdStr == 'null' || userIdStr == undefined || userIdStr == 'undefined' || userIdStr == ''){
+					alert("请至少选择一条数据");
+					hideLoading();
+					return;
+				}
+				if(userIdStr != null && userIdStr != 'null' && userIdStr != undefined && userIdStr != 'undefined' && userIdStr != ''){
+					$.post("<%=request.getContextPath()%>/wmh/userManage/web/deleteTag.htm",
+							{userIdStr:userIdStr,tagName:tagName},
+							function (response){
+								hideLoading();
+								var data = JSON.parse(response);
+								if(data.code == 0){
+									alert("标签“"+tagName+"”删除成功,共计人数："+data.deleteSuccessNumber+"人");
+									window.location.reload(true);
+								}else{
+									alert(data.msg);
+								}
+					});
+				}
+			}
+		}else{
+			hideLoading();
+			alert("请输入标签名称！");
+		}
+	}
+</script>
+
+<script type="text/javascript">
+    $("#delLabel>a,#addLabel>a").on("click",function(){
+        $(this).next("form").toggle().closest("div").siblings().find("form").hide();
+    });
+</script>
+</body>
+</html>

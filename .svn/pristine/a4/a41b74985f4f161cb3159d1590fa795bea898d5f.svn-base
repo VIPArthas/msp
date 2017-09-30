@@ -1,0 +1,24 @@
+/**
+ * 
+ */
+ $(function () {
+        $("#qx").on("click",function(){
+
+            if($(this).prop("checked")){
+                $(".table_black input[type=checkbox]").prop("checked",true);
+                $("#tk").show();
+            }else{
+                $(".table_black input[type=checkbox]").prop("checked",false);
+                $("#tk").hide();
+            }
+        });
+ 
+     $("#allUser").on("click",function(){
+    	 if($(this).prop("checked")){
+    		 $("#tk input[type=checkbox]").prop("checked",true);
+    	 }else{
+    		 $("#tk input[type=checkbox]").prop("checked",false);
+    	 }
+     });
+});
+ 

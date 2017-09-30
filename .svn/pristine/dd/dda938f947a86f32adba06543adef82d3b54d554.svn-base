@@ -1,0 +1,272 @@
+package com.wh.util.msp;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import com.wh.mspentity.User;
+import com.wh.util.StringUtil;
+
+public class JdbcTest {
+
+	/*
+	 * 增加
+	 */
+	public void create() {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			// 获取连接
+			connection = JdbcUtils.getConnection();
+			// 准备sql语句
+			String sql = "INSERT INTO user(user_name,user_password,user_birth) VALUES(?,?,?)";
+			// 获取PrepareStatement对象
+			preparedStatement = connection.prepareStatement(sql);
+			// 填充占位符
+			preparedStatement.setString(1, "mary");
+			preparedStatement.setString(2, "zhang123");
+
+			String str1 = "1985-08-01";
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = null;
+			try {
+				date = sdf.parse(str1);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println(date);
+			System.out.println(date.getTime());
+			System.out.println(new java.sql.Date(date.getTime()));
+			preparedStatement.setDate(3, new java.sql.Date(date.getTime()));
+			// 执行sql
+			int num = preparedStatement.executeUpdate();// 返回影响到的行数
+
+			System.out.println("一共影响到" + num + "行");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JdbcUtils.releaseDB(connection, preparedStatement, null);
+		}
+	}
+
+	/*
+	 * 读取查询
+	 */
+	public void retrieve() {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = JdbcUtils.getConnection();
+			String sql = "SELECT user_name,user_password,user_birth FROM user";
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+
+			// 遍历结果集
+			while (resultSet.next()) {
+				String username = resultSet.getString(1);
+				String password = resultSet.getString(2);
+				Date userbirth = resultSet.getDate(3);
+
+				System.out.println(username + ":" + password + ":" + userbirth);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			JdbcUtils.releaseDB(connection, preparedStatement, resultSet);
+		}
+
+	}
+
+	public List<User> getUserList() {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<User> userList = null;
+		try {
+			connection = JdbcUtils.getConnection();
+			String sql = "SELECT user_id,user_name,user_password,user_birth FROM user";
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			userList = JdbcUtils.rsToClass(resultSet, User.class);
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			JdbcUtils.releaseDB(connection, preparedStatement, resultSet);
+		}
+
+		return userList;
+
+	}
+
+	public List<Map<String, Object>> getUserList1() {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<Map<String, Object>> userList = null;
+		try {
+			connection = JdbcUtils.getConnection();
+			String sql = "SELECT user_id,user_name,user_password,user_birth FROM user";
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			userList = JdbcUtils.rsToMap(resultSet);
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			JdbcUtils.releaseDB(connection, preparedStatement, resultSet);
+		}
+
+		return userList;
+
+	}
+
+	/**
+	 * 学生缴费信息
+	 * 
+	 * @return
+	 */
+	public List<Map<String, Object>> xsjf(String xh) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<Map<String, Object>> map = null;
+		try {
+			connection = JdbcUtils.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append(
+					"select t.xh,sum(t.yjje) as yjje,sum(t.yjje)-sum(t.qfje) as sjje,sum(t.qfje) as qfje from USR_DATAI.T_CW_XSJFXX t ");
+			List<Object> params = new ArrayList<Object>();
+			if (StringUtil.isNotEmpty(xh)) {
+				sql.append("where t.xh = ? group by t.xh");
+				params.add(xh);
+			}
+			preparedStatement = connection.prepareStatement(sql.toString());
+			setParameter(params, preparedStatement);
+			resultSet = preparedStatement.executeQuery();
+			map = JdbcUtils.rsToMap(resultSet);
+		} catch (Exception e) {
+		} finally {
+			JdbcUtils.releaseDB(connection, preparedStatement, resultSet);
+		}
+
+		return map;
+
+	}
+
+	/*
+	 * 修改更新
+	 */
+	public void update() {
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = JdbcUtils.getConnection();
+			String sql = "UPDATE USER SET user_password = ? WHERE user_name = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, "passwordupdate");
+			preparedStatement.setString(2, "mary");
+			int num = preparedStatement.executeUpdate();
+
+			System.out.println("一共影响到" + num + "行");
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			JdbcUtils.releaseDB(connection, preparedStatement, null);
+		}
+	}
+
+	/*
+	 * 删除
+	 */
+	public void delete() {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = JdbcUtils.getConnection();
+			String sql = "DELETE FROM user WHERE user_id = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, 3);
+			int num = preparedStatement.executeUpdate();
+
+			System.out.println("一共影响到" + num + "行");
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			JdbcUtils.releaseDB(connection, preparedStatement, null);
+		}
+
+	}
+
+	public void setParameter(List<Object> params, PreparedStatement preparedStatement) throws SQLException {
+		for (int i = 0; i < params.size(); i++) {
+			Object p = params.get(i);
+			if (p instanceof Integer) {
+				preparedStatement.setInt(i + 1, (Integer) p);
+			} else if (p instanceof String) {
+				preparedStatement.setString(i + 1, (String) p);
+			}
+		}
+	}
+
+	/*
+	 * public void queryPaging(Paging<Dealer> paging,String userName,String
+	 * telephone,String beginTime,String endTime){ try { connection =
+	 * DbFactory.getConnection(); List<String> params = new ArrayList<String>();
+	 * //查询总记录数 StringBuffer countSql = new StringBuffer(
+	 * "select ifnull(count(*),0) from weixin_dealer where 1=1 "); //查询记录
+	 * StringBuffer querySql =new StringBuffer(
+	 * "select id,user_name,telephone,add_time from weixin_dealer where 1=1 ");
+	 * 
+	 * if(StringUtils.isNotBlank(userName)){ countSql.append(
+	 * " and user_name like ? "); querySql.append(" and user_name like ? ");
+	 * params.add("%"+userName.trim()+"%"); }
+	 * if(StringUtils.isNotBlank(telephone)){ countSql.append(
+	 * " and telephone=? "); querySql.append(" and telephone=? ");
+	 * params.add(telephone.trim()); } if(StringUtils.isNotBlank(beginTime)){
+	 * countSql.append(" and add_time >= STR_TO_DATE(?,'%Y-%m-%d') ");
+	 * querySql.append(" and add_time >= STR_TO_DATE(?,'%Y-%m-%d') ");
+	 * params.add(beginTime); } if(StringUtils.isNotBlank(endTime)){
+	 * countSql.append(" and add_time <= STR_TO_DATE(?,'%Y-%m-%d') ");
+	 * querySql.append(" and add_time <= STR_TO_DATE(?,'%Y-%m-%d') ");
+	 * params.add(endTime); } logger.info("分页查询,总记录 sql,countSql="
+	 * +countSql.toString()); preparedStatement =
+	 * connection.prepareStatement(countSql.toString()); for(int
+	 * i=0;i<params.size();i++){ preparedStatement.setString(i+1,
+	 * params.get(i)); }
+	 * 
+	 * resultSet = preparedStatement.executeQuery(); int count = 0;
+	 * while(resultSet.next()){ count = resultSet.getInt(1); }
+	 * paging.setTotalCount(count);
+	 * DbFactory.close(resultSet,preparedStatement);
+	 * 
+	 * querySql.append(" order by add_time desc limit ?,? "); logger.info(
+	 * "分页查询,查询 sql,querySql="+querySql.toString());
+	 * 
+	 * preparedStatement = connection.prepareStatement(querySql.toString()); int
+	 * j=1; for(String param : params){ preparedStatement.setString(j,param);
+	 * j++; } preparedStatement.setInt(j,paging.getFirst());
+	 * preparedStatement.setInt(j+1, paging.getPageSize());
+	 * 
+	 * resultSet = preparedStatement.executeQuery(); List<Dealer> list = new
+	 * ArrayList<Dealer>(); Dealer dealer = null; while(resultSet.next()){
+	 * dealer = new Dealer(); dealer.setId(resultSet.getInt("id"));
+	 * dealer.setUserName(resultSet.getString("user_name"));
+	 * dealer.setTelephone(resultSet.getString("telephone"));
+	 * dealer.setAddTime(resultSet.getTimestamp("add_time"));
+	 * 
+	 * list.add(dealer); } paging.setResultList(list); } catch (Exception e) {
+	 * logger.error("分页查询出错.....",e); }finally{
+	 * DbFactory.close(resultSet,preparedStatement,connection); } }
+	 */
+
+}

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;overflow-y: hidden;overflow-x: hidden">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">   
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>聊ing~</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../../css/font/iconfont.css">
+    <script type="text/javascript" src="../../js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="../../js/rem.js"></script>
+	    <link rel="stylesheet" href="../../css/css.css?v=3">
+	    <link href="../../css/webiaoqing.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="../../js/path.js"></script>
+    
+</head>
+<body style="height:100%;overflow-y: hidden;overflow-x: hidden">
+<section class="talking-content">
+    <div class="talking-time">
+        <div>
+        <span id='timeminuit'></span>
+        </div>
+    </div>
+</section>
+<section class="talking-shuru">
+<div class="talking-bottom">
+    <div>
+   <span class="icon iconfont icon-smile"></span>
+    <!-- <span class="icon iconfont icon-tupian"></span> -->
+    </div>
+    <span class="sendtalking">发送</span>
+    </div>
+    <article id="form_article" contenteditable="true" onkeydown="myInput.listen(this, event);"></article>
+    
+</section>
+<div class="page_emotion box_swipe" id="page_emotion" style="visibility: hidden;">
+    <dl id="list_emotion" class="list_emotion pt_10"></dl>
+    <dt><ol id="nav_emotion" class="nav_emotion"></ol></dt>
+</div>
+</body>
+</html>
+<script>
+    $(function(){
+    	articlempty();
+    	 var tasomeone = localStorage.getItem('talksomeone');
+    	    $.ajax({
+    	        type: "GET",
+    	        url: SERVER_ROOT_PATH + "/xyf/xyfChat/wx/getLastChatInfo.htm",
+    	        data: {fromUserId:tasomeone},
+    	        dataType: "json",
+    	        success: function (result) {
+    	        	console.log(result);
+    	        	if(result.obj){        	        		
+    	        		var myDate = new Date();
+    	                var year = myDate.getYear()
+    	                var year = year < 2000 ? year + 1900 : year
+    	                var yy = year.toString().substr(2, 2);
+    	                var mon = myDate.getMonth()+1;
+    	                if(mon < 10){
+    	                	mon = '0' + mon;
+    	                }      
+    	                    if(result.obj[result.obj.length-1].dayTime == yy + '-' + mon + '-' + myDate.getDate()){
+    	                        result.obj[result.obj.length-1].dayTime = '今天';
+    	                    }
+    	                    //document.querySelector('#timedata').innerHTML = result.obj[result.obj.length-1].dayTime;
+    	                   
+    	                        document.querySelector('#timeminuit').innerHTML = result.obj[result.obj.length-1].hourTime;        		       		
+    	        		 var talkcon = document.querySelector('.talking-content');
+    	                 for (var i = 0; i < result.obj.length; i++) {
+    	                     var talkdiv = document.createElement('div');
+    	                     if(result.obj[i].from_user_id == tasomeone){
+    	                         talkdiv.className = 'talking-ta';
+    	                     }else {
+    	                         talkdiv.className = 'talking-mine';
+    	                     }
+    	                     talkdiv.innerHTML = '<section>' + result.obj[i].msg + '</section>';
+
+    	                     talkcon.appendChild(talkdiv);
+    	                 }
+    	                 document.querySelector('.talking-content').scrollTop = document.querySelector('.talking-content').scrollHeight;
+
+    	        	}else{
+    	        		$('.talking-time>div').remove();
+    	        	}
+    	           
+    	        }
+
+    	    });
+    	    
+    	setInterval(function () {
+    		
+    	        $.ajax({
+    	            type: "GET",
+    	            url: SERVER_ROOT_PATH + "/xyf/xyfChat/wx/getOtherChatInfo.htm",
+    	            data: {fromUserId:tasomeone},
+    	            dataType: "json",
+    	            success: function (result) {
+    	            	 console.log('success');
+    	                var talkcon = document.querySelector('.talking-content');
+    	                    var talkdiv = document.createElement('div');
+    	                        talkdiv.className = 'talking-ta';
+    	                        talkdiv.innerHTML = '<section>' + result.obj[0].msg + '</section>';
+    	                    talkcon.appendChild(talkdiv);
+    	                    document.querySelector('.talking-content').scrollTop = document.querySelector('.talking-content').scrollHeight;
+
+    	            }
+    	        });
+    	        console.log('end');
+    	    },1000);
+    	function pushHistory() {  
+            var state = {  
+                title: "title",  
+                url: "#"  
+            };  
+            window.history.pushState(state, "title", "#");  
+        } 
+                pushHistory();  
+                var bool=false;  
+                setTimeout(function(){  
+                      bool=true;  
+                },500);  
+                window.addEventListener("popstate", function(e) {  
+                  if(bool)  
+                    {  
+                	
+                	  window.location.href = '../index2.html';
+                    }  
+                    pushHistory();  
+                      
+            }, false);            
+    })
+</script>
+<script src="../../js/webiaoqin.js"></script>
+<script type="text/javascript" src="../../js/index.js"></script>

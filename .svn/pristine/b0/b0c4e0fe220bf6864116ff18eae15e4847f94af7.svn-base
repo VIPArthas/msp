@@ -1,0 +1,115 @@
+@charset "utf-8";
+/* CSS Document */
+*{margin:0;padding:0;border:0;list-style:none;font-style:normal;font-weight:normal}
+a{text-decoration:none;color:#333;}
+body{font-family:Microsoft YaHei,Verdana,Arial,SimSun;color:#666;font-size:14px; background-color:#f1f3f7; }
+.block,#block{display:block;}
+.none,#none{display:none;}
+.fr{float:right!important;}
+.fl{float:left!important;}
+.rel{position:relative;}
+.txt_white{color:#666!important;}
+input[type='button'],input[type='submit'],button{cursor:pointer;}
+input,select,option,textarea{font-family:Arial,SimSun;color:#666;}
+::-webkit-input-placeholder{color:#cbd3d8}
+:-moz-placeholder{color:#cbd3d8}
+::-moz-placeholder{color:#cbd3d8}
+:-ms-input-placeholder{color:#cbd3d8}
+.clearfix:before, .clearfix:after{content:"";display:block;clear:both;height: 0; visibility: hidden; }
+.clearfix{zoom: 1;}
+a:hover{ text-decoration: none}
+.header,.footer{width:100%;position:absolute;z-index:5;}
+.header{height:110px;line-height:80px;top:0; background:#F1F3F7;}
+.header .h_a{height:64px;}
+.user_info{color:#999;padding:30px 15px 0 0;line-height:20px;}
+.user_info a{color:#00a65a;}
+.user_info i{display:block;width:17px;height:17px;background:url(../images/sys_icon.png) no-repeat 0 71px;}
+.menu{height: 36px;background: #00a65a;padding-left:20px;}
+.menu li {float:left;height: 36px;line-height: 36px;overflow:hidden; }
+.menu li ul{display:none;}
+.menu li a{	text-decoration: none; display:block; padding:0 20px;word-break:nomal;word-wrap:break-word;color:#fff;}
+.menu li a i{width:18px;height:20px; background:url(../images/icon.png) no-repeat;display:inline-block;vertical-align:middle;margin-right:4px;}
+.menu li a  i.m_ico1{ background-position:0 1px;}
+.menu li a  i.m_ico2{ background-position:0 -205px;}
+.menu li a  i.m_ico3{ background-position:0 -235px;}
+.menu li a  i.m_ico4{ background-position:0 -263px;}
+.menu li a  i.m_ico5{ background-position:0 -293px;}
+.menu li a  i.m_ico6{ background-position:0 -176px;}
+.menu li a  i.m_ico7{ background-position:0 -360px;}
+.menu li a:hover,.menu li.active a { background:#008548;color:#ffffff;  }
+.logo{height:53px;font-size:30px;color:#fff;margin:8px 0 0 36px;_display:inline;}
+.footer{height:50px;background:#5e5e5e;z-index:200;bottom:0;}
+.footer p{text-align:center;line-height:50px;color:#fbfbfb}
+.content{width:100%;top:120px;position:absolute;z-index:10;bottom:0px;}
+.left_menu{width:210px; height:100%;position:absolute;top:0;left:0;overflow:auto;background:#fff; inherit;width: 200px;height: 100%; border-right:1px solid #dadada; border-top:1px solid #dadada;border-bottom:1px solid #dadada;}
+.left_menu ul{padding-top:0px;}
+.left_menu ul li{ line-height:46px;height:46px; text-indent:20px; position:relative;}
+.left_menu ul li a{color:#666;display:block;}
+.left_menu ul li a:hover,.left_menu ul li.active a{background-color: #00a65a;color:#ffffff;}
+.left_menu  i{width:20px;height:20px;position:absolute;left:24px;top:9px; background:url(../images/icon.png) no-repeat;}
+.left_menu .xtgl i.m_ico1_1{ background-position:0 -30px;}
+.left_menu .xtgl i.m_ico1_2{ background-position:0 -58px;}
+.left_menu .xtgl i.m_ico1_3{ background-position:0 -88px;}
+.left_menu .xtgl i.m_ico1_4{ background-position:0 -116px;}
+.left_menu .xtgl i.m_ico1_5{ background-position:0 -147px;}
+.left_menu .xtgl i.m_ico1_6{ background-position:0 -328px;}
+.switch{width:11px;height:100%;background: url(../images/switchbtn.png) center center no-repeat;position:absolute;top:0;left:200px;cursor:pointer;}
+.right_main{margin-left:221px;height:100%;}
+.fullsc .switch{left:0px;background: url(../images/switchbtn2.png) center center no-repeat;}
+.fullsc .right_main{margin-left:11px;}
+#m_frame{display:block;height:100%;background-color:#f1f3f7;border:0px;}
+/*pages*/
+.sys_page{ height:34px; margin-top:10px;}
+/*------Page Breaks-----*/
+.bk_page{margin:30px 30px 0;text-align:right;border-top:1px dashed #ececec;padding:20px 0 5px;}
+.bk_page_a{margin:0px 0px 0;text-align:right;border-top:1px solid #ececec; background:#fff; padding:10px;}
+.bk_page_a a,.bk_page_a span{display:inline-block;border:1px solid #cbcbc9;height:24px;line-height:24px;padding:0 5px;margin-left:10px;}
+.bk_page_a a.pre:after,.bk_page_a span.pre:after{content:"<";display:inline-block;height:19px;font-family:Arial, Helvetica, sans-serif;}
+.bk_page_a a.next:after,.bk_page_a span.next:after{content:">";display:inline-block;height:19px;margin-left:3px;font-family:Arial, Helvetica, sans-serif;}
+.bk_page_a a:hover,.bk_page_a span:hover{color:#555555; text-decoration:underline; }
+.bk_page_a label{font-size:15px;color:#8b8b8b;}
+.bk_page_a label i{color:#5f6b91;font-weight:bold;}
+.bk_page a{display:inline-block;border:1px solid #cbcbc9;height:19px;line-height:19px;padding:0 5px;margin-left:10px;}
+.bk_page a.pre:after{content:"<";display:inline-block;height:19px;font-family:Arial, Helvetica, sans-serif;}
+.bk_page a.next:after{content:">";display:inline-block;height:19px;margin-left:3px;font-family:Arial, Helvetica, sans-serif;}
+.bk_page a:hover{color:#555555; text-decoration:underline; }
+.bk_page label{font-size:15px;color:#8b8b8b;}
+.bk_page label i{color:#5f6b91;font-weight:bold;}
+
+.tongji{ padding: 10px;overflow: hidden;}
+.tongji_tips{ padding:20px; overflow: hidden; background: #fff; border: 1px solid #ddd; margin-bottom: 10px; }
+.tongji_map{ width: 100%; margin-bottom: 10px}
+.tongji_mapbox{ float:left; width: 48.7%; margin:10px 0%; margin-right: 1%;  padding:20px 0px; overflow: hidden; background: #fff; border: 1px solid #ddd; margin-bottom: 10px;}
+.tongji_tips em{ font-weight: 600; color: #e98047;}
+
+/*会话框*/
+.direct-chat .box-body{border-bottom-right-radius:0;border-bottom-left-radius:0;position:relative;overflow-x:hidden;padding:0}
+.direct-chat.chat-pane-open .direct-chat-contacts{-webkit-transform:translate(0,0);-ms-transform:translate(0,0);-o-transform:translate(0,0);transform:translate(0,0)}
+.direct-chat-messages{-webkit-transform:translate(0,0);-ms-transform:translate(0,0);-o-transform:translate(0,0);transform:translate(0,0);padding:20px; overflow:auto}
+.direct-chat-msg,.direct-chat-text{display:block}
+.direct-chat-msg{margin-bottom:20px}
+.direct-chat-msg:after,.direct-chat-msg:before{content:" ";display:table}
+.direct-chat-msg:after{clear:both}
+.direct-chat-contacts,.direct-chat-messages{-webkit-transition:-webkit-transform .5s ease-in-out;-moz-transition:-moz-transform .5s ease-in-out;-o-transition:-o-transform .5s ease-in-out;transition:transform .5s ease-in-out}
+.direct-chat-text{border-radius:5px;position:relative;padding:5px 10px;background:#d2d6de;border:1px solid #d2d6de;margin:5px 0 0 50px;color:#444}
+.direct-chat-text:after,.direct-chat-text:before{position:absolute;right:100%;top:15px;border:solid transparent;border-right-color:#d2d6de;content:' ';height:0;width:0;pointer-events:none}
+.direct-chat-text:after{border-width:5px;margin-top:-5px}
+.direct-chat-text:before{border-width:6px;margin-top:-6px}
+.right .direct-chat-text{margin-right:50px;margin-left:0}
+.right .direct-chat-text:after,.right .direct-chat-text:before{right:auto;left:100%;border-right-color:transparent;border-left-color:#d2d6de}
+.direct-chat-img{border-radius:50%;float:left;width:40px;height:40px}
+.right .direct-chat-img{float:right}
+.direct-chat-info{display:block;margin-bottom:2px;font-size:12px}
+.direct-chat-name{font-weight:100}
+.direct-chat-timestamp{color:#999; font-size:12px;}
+.direct-chat-contacts-open .direct-chat-contacts{-webkit-transform:translate(0,0);-ms-transform:translate(0,0);-o-transform:translate(0,0);transform:translate(0,0)}
+.direct-chat-contacts{-webkit-transform:translate(101%,0);-ms-transform:translate(101%,0);-o-transform:translate(101%,0);transform:translate(101%,0);position:absolute;top:0;bottom:0;height:250px;width:100%;background:#222d32;color:#fff;overflow:auto}
+.bgred{ background:#ddd; color:#444}
+.bggreen{ background:#d4f0ed; color:#009863}
+.direct-chat-text.bggreen:after, .direct-chat-text.bggreen:before{border-right-color:#ddd;}
+.direct-chat-text.bgred:after{border-left-color:#d4f0ed;}
+
+.tous_huifu{ background:#fff; padding:10px; overflow:hidden; position:absolute; bottom:0; left:0px; right:0px}
+.tous_huifuk{ float:left; width:80%;   line-height:30px; border:1px solid #ddd}
+.tous_huifubtn{ float:left; width:19%; background:#00A65A; line-height:32px; font-size:14px; color:#fff; text-align:center}
+.tous_detail{ padding:20px; overflow: hidden; background: #fff; border: 1px solid #ddd; margin-bottom: 10px; width: 50%; margin:20px auto; position: relative }

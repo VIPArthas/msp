@@ -1,0 +1,67 @@
+package com.wh.util.msp;
+
+/**
+ * 移动校园平台常量类
+ * 
+ * @author Administrator
+ *
+ */
+public class Constants {
+	/**
+	 * 常量说明： 此处定义的常量需要持久化，可以保存在数据库中，在需要的地方读取。 在多企业号中，最好以每个应用来定义。
+	 */
+	public static final int AGENTID = 1;
+
+	// 通讯录 platformId =1 address list;
+	public static final int ALPLATFORMID = 1;
+
+	// 移动校园平台 2
+	public static final int MSPPLATFORMID = 2;
+	// 移动校园平台应用id
+	public static final int MSPAGENTID = 1000002;
+
+	// 企业号id
+	public static final String CORPID = "wxcb34702222b6d5c5";
+
+	// 通讯录address list secret
+	public static final String Secret = "SWyHSosgEhPnbiMh7zgnHAktL-Hmoy5dXjZySrQcVP8";
+	// 移动服务平台secret
+	public static final String MSPSECRET = "TD0LbzRYhxbZTvwHLLApC2CNYFJgi1zmDYGIz__QdVc";
+
+	// 跳转首页
+	public static final String REDIRECT_URL = "http://wmh.uni-uni.cn/wmh/wmhUser/wx/goIndex.htm?sign=1";
+
+	// 获取code Url    静默授权 最基本信息
+	public static final String OAUTH2_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=CORPID&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
+
+	
+	// 获取code Url    静默授权 snsapi_userinfo
+	public static final String OAUTH2_URL2 = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=CORPID&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+
+	// 获取code Url    手动授权 snsapi_privateinfo
+	public static final String OAUTH2_URL3 = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=CORPID&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_privateinfo&state=STATE#wechat_redirect";
+
+	//获取部门列表
+	public static final String DEPARTMENT_LIST_URL ="https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=ACCESS_TOKEN";
+	
+	//获取某个部门的信息
+	public static final String DEPARTMENT_URL ="https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=ACCESS_TOKEN&id=ID";
+	
+	
+	// 调用金智接口
+	public static final String JINZHI_URL = "";
+
+	//获取部门成员
+	public static final String GET_DEPMEMBER_LIST_URL = "https://qyapi.weixin.qq.com/cgi-bin/user/list?access_token=ACCESS_TOKEN&department_id=DEPARTMENT_ID&fetch_child=FETCH_CHILD&status=STATUS";
+		
+	//旅职新闻网站抓取页面	
+	public static final String LZNEWS_URL = "http://www.zztrc.edu.cn/col/col1397/index.html";	
+	
+	
+	//旅职网站
+	public static final String LZ_URL = "http://www.zztrc.edu.cn";	
+	
+	//旅职网站
+	public static final String Calendar_Link_Id = "lvzhi2017";	
+
+}

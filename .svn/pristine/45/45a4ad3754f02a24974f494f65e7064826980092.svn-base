@@ -1,0 +1,106 @@
+package com.wh.dao.xyf;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import com.wh.base.BaseMapper;
+import com.wh.exception.DAOException;
+import com.wh.xyfentity.XyfUser;
+
+@Repository
+public interface XyfUserMapper extends BaseMapper<XyfUser, Integer> {
+	int deleteByPrimaryKey(Integer id);
+
+	int insert(XyfUser record);
+
+	int insertSelective(XyfUser record);
+
+	XyfUser selectByPrimaryKey(Integer id);
+
+	int updateByPrimaryKeySelective(XyfUser record);
+
+	int updateByPrimaryKey(XyfUser record);
+
+	/**
+	 * 根据用户id获取用户主页信息
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	Map<String, Object> getUserByUserId(@Param(value = "userId") String userId);
+
+	/**
+	 * 根据用户userId修改用户信息
+	 * 
+	 * @param xyfUser
+	 * @return
+	 */
+	int updateByUserId(XyfUser xyfUser);
+
+	/**
+	 * 获取用户关注列表
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	List<XyfUser> getMyGzList(@Param(value = "userId") String userId);
+
+	/**
+	 * 根据用户openId获取userId
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	String getUserIdByOpenId(@Param(value = "openId") String openId);
+
+	XyfUser getUserByOpenId(@Param(value = "openId") String openId);
+
+	/**
+	 * 关注我的list
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	List<XyfUser> getGzMeList(@Param(value = "userId") String userId);
+
+	/**
+	 * 根据有缘人的音乐id获取其user,包括userId,经纬度等信息
+	 * 
+	 * @param musicId
+	 * @return
+	 */
+	XyfUser getUserByMusicId(@Param(value = "musicId") String musicId);
+
+	void deleteByOpenId(@Param(value = "openId") String openId);
+
+	List<XyfUser> getAllUser();
+
+	void deleteNullUser()throws DAOException;
+
+	/**
+	 * 根据手机号，密码查询用户
+	 * 
+	 * @param phone
+	 * @param password
+	 * @return
+	 */
+	XyfUser getByPhoneAndPassword(@Param(value = "phone") String phone, @Param(value = "password") String password)throws DAOException;
+	
+	/**
+	 * 根据手机号查找用户
+	 * @param phone
+	 * @return
+	 */
+	XyfUser getUserByPhone(@Param(value = "phone")String phone)throws DAOException;
+	
+	/**
+	 * 根据userId找用户
+	 * @param userId
+	 * @return
+	 */
+	XyfUser findUserByUserId(@Param(value = "userId")String userId)throws DAOException;
+
+}

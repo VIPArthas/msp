@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.msp.MspUserMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.mspentity.MspUser" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="memeber_id" property="memeberId" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="position" property="position" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="avatar" property="avatar" jdbcType="VARCHAR" />
+    <result column="wx_num" property="wxNum" jdbcType="VARCHAR" />
+    <result column="father_name" property="fatherName" jdbcType="VARCHAR" />
+    <result column="father_phone" property="fatherPhone" jdbcType="VARCHAR" />
+    <result column="mother_phone" property="motherPhone" jdbcType="VARCHAR" />
+    <result column="mother_name" property="motherName" jdbcType="VARCHAR" />
+    <result column="extend1" property="extend1" jdbcType="VARCHAR" />
+    <result column="extend2" property="extend2" jdbcType="VARCHAR" />
+    <result column="extend3" property="extend3" jdbcType="VARCHAR" />
+    <result column="extend4" property="extend4" jdbcType="VARCHAR" />
+    <result column="extend5" property="extend5" jdbcType="VARCHAR" />
+    <result column="extend6" property="extend6" jdbcType="VARCHAR" />
+    <result column="qq_num" property="qqNum" jdbcType="VARCHAR" />
+    <result column="id_num" property="idNum" jdbcType="VARCHAR" />
+    <result column="student_id" property="studentId" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="teacher_id" property="teacherId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, name, memeber_id, password, mobile, create_time, position, department_id, 
+    department_name, gender, email, avatar, wx_num, father_name, father_phone, mother_phone, 
+    mother_name, extend1, extend2, extend3, extend4, extend5, extend6, qq_num, id_num, 
+    student_id, type, teacher_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from msp_user
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from msp_user
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.mspentity.MspUser" >
+    insert into msp_user (id, user_id, name, 
+      memeber_id, password, mobile, 
+      create_time, position, department_id, 
+      department_name, gender, email, 
+      avatar, wx_num, father_name, 
+      father_phone, mother_phone, mother_name, 
+      extend1, extend2, extend3, 
+      extend4, extend5, extend6, 
+      qq_num, id_num, student_id, 
+      type, teacher_id)
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{memeberId,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{position,jdbcType=VARCHAR}, #{departmentId,jdbcType=VARCHAR}, 
+      #{departmentName,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{avatar,jdbcType=VARCHAR}, #{wxNum,jdbcType=VARCHAR}, #{fatherName,jdbcType=VARCHAR}, 
+      #{fatherPhone,jdbcType=VARCHAR}, #{motherPhone,jdbcType=VARCHAR}, #{motherName,jdbcType=VARCHAR}, 
+      #{extend1,jdbcType=VARCHAR}, #{extend2,jdbcType=VARCHAR}, #{extend3,jdbcType=VARCHAR}, 
+      #{extend4,jdbcType=VARCHAR}, #{extend5,jdbcType=VARCHAR}, #{extend6,jdbcType=VARCHAR}, 
+      #{qqNum,jdbcType=VARCHAR}, #{idNum,jdbcType=VARCHAR}, #{studentId,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{teacherId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.mspentity.MspUser" >
+    insert into msp_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="memeberId != null" >
+        memeber_id,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="position != null" >
+        position,
+      </if>
+      <if test="departmentId != null" >
+        department_id,
+      </if>
+      <if test="departmentName != null" >
+        department_name,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="avatar != null" >
+        avatar,
+      </if>
+      <if test="wxNum != null" >
+        wx_num,
+      </if>
+      <if test="fatherName != null" >
+        father_name,
+      </if>
+      <if test="fatherPhone != null" >
+        father_phone,
+      </if>
+      <if test="motherPhone != null" >
+        mother_phone,
+      </if>
+      <if test="motherName != null" >
+        mother_name,
+      </if>
+      <if test="extend1 != null" >
+        extend1,
+      </if>
+      <if test="extend2 != null" >
+        extend2,
+      </if>
+      <if test="extend3 != null" >
+        extend3,
+      </if>
+      <if test="extend4 != null" >
+        extend4,
+      </if>
+      <if test="extend5 != null" >
+        extend5,
+      </if>
+      <if test="extend6 != null" >
+        extend6,
+      </if>
+      <if test="qqNum != null" >
+        qq_num,
+      </if>
+      <if test="idNum != null" >
+        id_num,
+      </if>
+      <if test="studentId != null" >
+        student_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="teacherId != null" >
+        teacher_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="memeberId != null" >
+        #{memeberId,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        #{departmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null" >
+        #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null" >
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="wxNum != null" >
+        #{wxNum,jdbcType=VARCHAR},
+      </if>
+      <if test="fatherName != null" >
+        #{fatherName,jdbcType=VARCHAR},
+      </if>
+      <if test="fatherPhone != null" >
+        #{fatherPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="motherPhone != null" >
+        #{motherPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="motherName != null" >
+        #{motherName,jdbcType=VARCHAR},
+      </if>
+      <if test="extend1 != null" >
+        #{extend1,jdbcType=VARCHAR},
+      </if>
+      <if test="extend2 != null" >
+        #{extend2,jdbcType=VARCHAR},
+      </if>
+      <if test="extend3 != null" >
+        #{extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="extend4 != null" >
+        #{extend4,jdbcType=VARCHAR},
+      </if>
+      <if test="extend5 != null" >
+        #{extend5,jdbcType=VARCHAR},
+      </if>
+      <if test="extend6 != null" >
+        #{extend6,jdbcType=VARCHAR},
+      </if>
+      <if test="qqNum != null" >
+        #{qqNum,jdbcType=VARCHAR},
+      </if>
+      <if test="idNum != null" >
+        #{idNum,jdbcType=VARCHAR},
+      </if>
+      <if test="studentId != null" >
+        #{studentId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null" >
+        #{teacherId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.mspentity.MspUser" >
+    update msp_user
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="memeberId != null" >
+        memeber_id = #{memeberId,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="position != null" >
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null" >
+        department_name = #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null" >
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="wxNum != null" >
+        wx_num = #{wxNum,jdbcType=VARCHAR},
+      </if>
+      <if test="fatherName != null" >
+        father_name = #{fatherName,jdbcType=VARCHAR},
+      </if>
+      <if test="fatherPhone != null" >
+        father_phone = #{fatherPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="motherPhone != null" >
+        mother_phone = #{motherPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="motherName != null" >
+        mother_name = #{motherName,jdbcType=VARCHAR},
+      </if>
+      <if test="extend1 != null" >
+        extend1 = #{extend1,jdbcType=VARCHAR},
+      </if>
+      <if test="extend2 != null" >
+        extend2 = #{extend2,jdbcType=VARCHAR},
+      </if>
+      <if test="extend3 != null" >
+        extend3 = #{extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="extend4 != null" >
+        extend4 = #{extend4,jdbcType=VARCHAR},
+      </if>
+      <if test="extend5 != null" >
+        extend5 = #{extend5,jdbcType=VARCHAR},
+      </if>
+      <if test="extend6 != null" >
+        extend6 = #{extend6,jdbcType=VARCHAR},
+      </if>
+      <if test="qqNum != null" >
+        qq_num = #{qqNum,jdbcType=VARCHAR},
+      </if>
+      <if test="idNum != null" >
+        id_num = #{idNum,jdbcType=VARCHAR},
+      </if>
+      <if test="studentId != null" >
+        student_id = #{studentId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null" >
+        teacher_id = #{teacherId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.mspentity.MspUser" >
+    update msp_user
+    set user_id = #{userId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      memeber_id = #{memeberId,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      position = #{position,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=VARCHAR},
+      department_name = #{departmentName,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      wx_num = #{wxNum,jdbcType=VARCHAR},
+      father_name = #{fatherName,jdbcType=VARCHAR},
+      father_phone = #{fatherPhone,jdbcType=VARCHAR},
+      mother_phone = #{motherPhone,jdbcType=VARCHAR},
+      mother_name = #{motherName,jdbcType=VARCHAR},
+      extend1 = #{extend1,jdbcType=VARCHAR},
+      extend2 = #{extend2,jdbcType=VARCHAR},
+      extend3 = #{extend3,jdbcType=VARCHAR},
+      extend4 = #{extend4,jdbcType=VARCHAR},
+      extend5 = #{extend5,jdbcType=VARCHAR},
+      extend6 = #{extend6,jdbcType=VARCHAR},
+      qq_num = #{qqNum,jdbcType=VARCHAR},
+      id_num = #{idNum,jdbcType=VARCHAR},
+      student_id = #{studentId,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      teacher_id = #{teacherId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  
+  
+<sql id="sql_where">
+	<where>
+	  <if test="id != null">
+				and id = #{id,jdbcType=VARCHAR}
+	  </if>	
+	  <if test="userId != null" >
+        and user_id = #{userId,jdbcType=VARCHAR}
+      </if>
+      <if test="name != null" >
+        and name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="memeberId != null" >
+        and memeber_id = #{memeberId,jdbcType=VARCHAR}
+      </if>
+      <if test="password != null" >
+        and password = #{password,jdbcType=VARCHAR}
+      </if>
+      <if test="mobile != null" >
+        and mobile = #{mobile,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="position != null" >
+        and position = #{position,jdbcType=VARCHAR}
+      </if>
+      <if test="departmentId != null" >
+        
+        and department_id like CONCAT (#{departmentId,jdbcType=VARCHAR}, '%')
+        or department_id like CONCAT ('1,',#{departmentId,jdbcType=VARCHAR}, '%')
+      </if>
+      <if test="departmentName != null" >
+        and department_name = #{departmentName,jdbcType=VARCHAR}
+      </if>
+      <if test="gender != null" >
+        and gender = #{gender,jdbcType=VARCHAR}
+      </if>
+      <if test="email != null" >
+        and email = #{email,jdbcType=VARCHAR}
+      </if>
+      <if test="avatar != null" >
+        and avatar = #{avatar,jdbcType=VARCHAR}
+      </if>
+      <if test="wxNum != null" >
+        and wx_num = #{wxNum,jdbcType=VARCHAR}
+      </if>
+      <if test="fatherName != null" >
+        and father_name = #{fatherName,jdbcType=VARCHAR}
+      </if>
+      <if test="fatherPhone != null" >
+        and father_phone = #{fatherPhone,jdbcType=VARCHAR}
+      </if>
+      <if test="motherPhone != null" >
+        and mother_phone = #{motherPhone,jdbcType=VARCHAR}
+      </if>
+      <if test="motherName != null" >
+        and mother_name = #{motherName,jdbcType=VARCHAR}
+      </if>
+      <if test="extend1 != null" >
+        and extend1 = #{extend1,jdbcType=VARCHAR}
+      </if>
+      <if test="extend2 != null" >
+        and extend2 = #{extend2,jdbcType=VARCHAR}
+      </if>
+      <if test="extend3 != null" >
+        and extend3 = #{extend3,jdbcType=VARCHAR}
+      </if>
+      <if test="extend4 != null" >
+        and extend4 = #{extend4,jdbcType=VARCHAR}
+      </if>
+      <if test="extend5 != null" >
+        and extend5 = #{extend5,jdbcType=VARCHAR}
+      </if>
+      <if test="extend6 != null" >
+        and extend6 = #{extend6,jdbcType=VARCHAR}
+      </if>
+      <if test="qqNum != null" >
+        and qq_num = #{qqNum,jdbcType=VARCHAR}
+      </if>
+      <if test="idNum != null" >
+        and id_num = #{idNum,jdbcType=VARCHAR}
+      </if>
+      <if test="studentId != null" >
+        and student_id = #{studentId,jdbcType=VARCHAR}
+      </if>
+      <if test="type != null" >
+        and type = #{type,jdbcType=INTEGER}
+      </if>
+      <if test="teacherId != null" >
+        and teacher_id = #{teacherId,jdbcType=VARCHAR}
+      </if>
+      
+      <if test="search != null" >
+        name like  CONCAT('%',#{search,jdbcType=VARCHAR},'%') or mobile like CONCAT('%',#{search,jdbcType=VARCHAR},'%')
+      </if>
+
+	</where>
+</sql>
+
+	<!-- 根据条件获取企业号用户List -->
+	<select id="findList" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from msp_user
+		<include refid="sql_where" />
+	</select>
+
+
+	<select id="countList" resultType="int">
+		SELECT count(1) FROM msp_user
+		<include refid="sql_where" />
+	</select>
+  
+  <update id="updateUserIdNull" parameterType="java.lang.String" >
+    update msp_user
+    set user_id = null
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

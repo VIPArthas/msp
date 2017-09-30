@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>有缘人</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../../css/font/iconfont.css">
+    <script type="text/javascript" src="../../js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="../../js/rem.js"></script>
+	    <link rel="stylesheet" href="../../css/css.css">
+    <script type="text/javascript" src="../../js/path.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=7a6QKaIilZftIMmKGAFLG7QT1GLfIncg"></script>
+    <script type="text/javascript">
+
+    </script>
+    <style>
+        .kou_ling{width: 0.8rem;height: 0.4rem;background-color: white;}
+    </style>
+</head>
+<body style="background-color: #f2f2f2;overflow-y: scroll;margin-bottom:50px;">
+<header>
+    <div>缘分天注定</div>
+    <div class="kou_ling"></div>
+    <div class="yuanfen-paixu"><span class="zidingy"><i class="icon iconfont icon-zidingyishuju"></i>自定义</span><span class="paixu-selected">综合排序</span><span class="icon iconfont icon-xiangxia"></span></div>
+</header>
+<div class="paixu-select">
+    <div data-type='1' class="paixu-selectdiv">综合排序</div>
+    <div data-type='fate'>匹配度</div>
+    <div data-type='distance'>距离</div>
+</div>
+<div class="youyuan_num">
+</div>
+
+<div class="zhe_zhao zdy-dis">
+<section class="sectio_n">
+    <div class="zdy_sel">性别</div>
+    <div class="zdy_sex">
+        <div class='sel_sex' data-sex='1'>
+            <span class="sex_boy"></span>
+            <p>帅哥</p>
+        </div>
+        <div data-sex='0'>
+            <span class="sex_girl"></span>
+            <p>美女</p>
+        </div>
+        <div data-sex='2'>
+            <span class="sex_all"></span>
+            <p>皆可</p>
+        </div>
+    </div>
+    <div class="zdy_sel">年龄</div>
+    <section class="sec_tion">
+        <div data-age='18' class="sel_age"><span>18</span><span class="fff_yuan"></span><div></div></div>
+        <div data-age='19'><span>19</span><span class="fff_yuan"></span><div></div></div>
+        <div data-age='20'><span>20</span><span class="fff_yuan"></span><div></div></div>
+        <div data-age='22'><span>22</span><span class="fff_yuan"></span><div></div></div>
+        <div data-age='24'><span>24</span><span class="fff_yuan"></span><div></div></div>
+        <div data-age='26'><span>26</span><span class="fff_yuan"></span><div></div></div>
+        <div data-age='28'><span>28</span><span class="fff_yuan"></span><div></div></div>
+        <div data-age='30'><span>30</span><span class="fff_yuan"></span><div></div></div>
+        <div data-age='32'><span>32</span><span class="fff_yuan"></span><div></div></div>
+        <div data-age='33'><span>33</span><span class="fff_yuan"></span><div></div></div>
+        <div data-age='34'><span>34</span><span class="fff_yuan"></span><div></div></div>
+        <div data-age='35' class="sel_age"><span>35</span><span class="fff_yuan"></span><div></div></div>
+    </section>
+    <div class="zdy_submit">
+        <div class="zdysub">确定</div>
+        <div class="zdyquxiao">取消</div>
+    </div>
+</section>
+    <div class="zhezhaoc"></div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../../js/load2.js"></script>
+<script type="text/javascript" src="../../js/index.js"></script>
+<script>
+
+$(function(){
+$('.youyuan', parent.document).addClass('select-actived').siblings('a').removeClass('select-actived');
+	if(!sessionStorage.getItem('addlng')){
+		getAddr(message);
+	}else{
+		var alng = sessionStorage.getItem('addlng');
+		var alat = sessionStorage.getItem('addlat');
+		console.log(alng);
+		showLoadingimg();
+		console.log('直接获取信息咯');
+		message(alng,alat);
+	}
+	
+	$('.zidingy').on('click',function () {
+		event.stopPropagation();
+        $('.zhe_zhao').toggleClass('zdy-dis');
+        if(!jiantou == 1){
+    		shangxia();
+	        $('.paixu-select').removeClass('selectdiv-show')
+    	}
+    });
+    $('.zdyquxiao').on('click',function () {
+        $('.zhe_zhao').addClass('zdy-dis')
+    });
+    $('.zhezhaoc').on('click',function () {
+        $('.zhe_zhao').addClass('zdy-dis')
+    });
+    $('.zdysub').on('click',function () {
+        $('.zhe_zhao').addClass('zdy-dis');
+        var goals = $('.sel_sex').attr('data-sex'); 
+        var smallAge = document.querySelectorAll('.sel_age')[0].getAttribute('data-age');
+        var bigAge = document.querySelectorAll('.sel_age')[1].getAttribute('data-age');
+        messageone(goals,smallAge,bigAge)
+    });
+
+$('.zdy_sex>div').click(function () {
+$('.sex-selected').remove();
+$(this).append("<i class='icon iconfont icon-duihao sex-selected'></i>");
+$(this).addClass('sel_sex').siblings().removeClass('sel_sex');
+});
+    $('.sec_tion>div').on('click',function () {
+        var sel =  document.querySelectorAll('.sel_age');
+        var age = $(this).attr('data-age');
+        var one = sel[0].getAttribute('data-age');
+        var two = sel[1].getAttribute('data-age');
+        var ao = Math.abs(age - one);
+        var at = Math.abs(age - two);
+        var inn = $(this).index();
+        if(ao<at){
+            sel[0].setAttribute('class','');
+            for(var i = 0;i<inn;i++){
+                var col = document.querySelectorAll('.sec_tion>div')[i].lastChild;
+                col.className = 'on_age';
+            }
+        }else {
+            sel[1].setAttribute('class','');
+            for(var j = document.querySelectorAll('.sec_tion>div').length-1;j>inn;j--){
+                var coll = document.querySelectorAll('.sec_tion>div')[j].lastChild;
+                coll.className = 'on_age';
+            }
+        }
+        var m = $('.sel_age').index();
+        if(m>inn){
+            for(var x = inn;x<=m;x++){
+                document.querySelectorAll('.sec_tion>div')[x].lastChild.className = '';
+            }
+        }
+        if(m<inn){
+            for(var y = inn;y>=m;y--){
+               document.querySelectorAll('.sec_tion>div')[y].lastChild.className = '';
+            }
+        }
+        $(this).addClass('sel_age');
+    })
+
+	
+});
+</script>

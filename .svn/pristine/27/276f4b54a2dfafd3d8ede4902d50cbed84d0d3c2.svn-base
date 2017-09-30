@@ -1,0 +1,20 @@
+package com.wh.service.xyf;
+
+import com.wh.service.base.BaseService;
+
+import com.wh.xyfentity.XyfRelate;
+
+
+public interface XyfRelateService extends BaseService<XyfRelate, Integer>{
+	
+	/**
+	 * 拉黑他人
+	 * @param userId
+	 * @param toUserId
+	 * @return
+	 */
+	boolean blackOtherPerson(String userId, String toUserId);
+	
+	
+
+}

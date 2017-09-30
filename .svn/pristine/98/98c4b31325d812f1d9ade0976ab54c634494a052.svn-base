@@ -1,0 +1,14 @@
+$(document).ready(function(){
+	$.ajax({
+		type:"get",
+		dataType:"json",
+		cache:false,
+		url:urlPix+"/msp/mspUser/web/DepList.htm",
+		async:false,
+	    success:function(data){
+	    	 for(var i=0;i<data.obj.length;i++){
+	    		 $("<li data-id="+data.obj[i].id+"><span><i class='fa'>&#xe63b;</i>"+data.obj[i].name+"</span></li>").appendTo($(".result-list").eq(0))
+	    	 }
+	    }
+	})
+})

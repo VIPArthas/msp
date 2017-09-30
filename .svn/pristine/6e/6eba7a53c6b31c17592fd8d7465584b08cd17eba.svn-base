@@ -1,0 +1,52 @@
+package com.wh.controller.msp;
+
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.wh.base.AjaxJson;
+import com.wh.controller.common.BaseController;
+import com.wh.service.msp.MspClassService;
+import com.wh.service.msp.MspTeacherClassService;
+import com.wh.service.msp.MspUserService;
+
+@Controller
+@RequestMapping("/msp/mspTeacherClass")
+public class MspTeacherClassController extends BaseController{
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+	@Resource
+	private MspUserService mspUserService;
+
+	@Resource
+	private MspClassService mspClassService;
+
+	@Resource
+	private MspTeacherClassService mspTeacherClassService;
+
+	/**
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param memeberId
+	 *            教职工号
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/teacherClassList.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson teacherClassList(HttpServletRequest req, HttpServletResponse resp,
+			@RequestParam(required = true) String memberId) {
+		AjaxJson json = new AjaxJson();
+		List<Map<String, Object>> map = mspTeacherClassService.tecClassListByMembId(memberId);
+		json.setObj(map);
+
+		return json;
+	}
+}

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.wmh.WmhFaultLogMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.entity.WmhFaultLog" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="fault_id" property="faultId" jdbcType="VARCHAR" />
+    <result column="fault_msg" property="faultMsg" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fault_id, fault_msg, create_user, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from wmh_fault_log
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from wmh_fault_log
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.WmhFaultLog" >
+    insert into wmh_fault_log (id, fault_id, fault_msg, 
+      create_user, create_time)
+    values (#{id,jdbcType=VARCHAR}, #{faultId,jdbcType=VARCHAR}, #{faultMsg,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.WmhFaultLog" >
+    insert into wmh_fault_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="faultId != null" >
+        fault_id,
+      </if>
+      <if test="faultMsg != null" >
+        fault_msg,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="faultId != null" >
+        #{faultId,jdbcType=VARCHAR},
+      </if>
+      <if test="faultMsg != null" >
+        #{faultMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.WmhFaultLog" >
+    update wmh_fault_log
+    <set >
+      <if test="faultId != null" >
+        fault_id = #{faultId,jdbcType=VARCHAR},
+      </if>
+      <if test="faultMsg != null" >
+        fault_msg = #{faultMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.WmhFaultLog" >
+    update wmh_fault_log
+    set fault_id = #{faultId,jdbcType=VARCHAR},
+      fault_msg = #{faultMsg,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

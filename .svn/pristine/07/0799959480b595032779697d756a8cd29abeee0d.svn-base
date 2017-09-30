@@ -1,0 +1,78 @@
+package com.wh.controller.xyf;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.wh.base.AjaxJson;
+import com.wh.controller.common.BaseController;
+import com.wh.service.xyf.XyfRelateService;
+import com.wh.service.xyf.XyfUserService;
+import com.wh.util.StringUtil;
+import com.wh.xyfentity.XyfRelate;
+
+/**
+ * 用户关系表
+ * @author Administrator
+ *
+ */
+
+@Controller
+@RequestMapping("/xyf/xyfRelate")
+public class XyfRelateController extends BaseController{
+	
+	@Resource
+	private XyfUserService xyfUserService;
+	
+	@Resource
+	private XyfRelateService xyfRelateService;
+	
+	
+	
+	/**
+	 * 拉黑他人
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/getLastChatInfo.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson defriend(HttpServletRequest req, HttpServletResponse resp) {
+		AjaxJson json = new AjaxJson();
+		boolean flag=false;
+		
+		// 他人id
+		String toUserId = req.getParameter("toUserId");
+		//toUserId = "9333083dd5e84ef89dfb2254a7a41234";
+		// 我的id
+		String userId = (String) req.getSession().getAttribute("userId");
+		//userId = "9333083dd5e84ef89dfb2254a7a469fe";
+		if (StringUtil.isNotEmpty(userId) && StringUtil.isNotEmpty(toUserId)) {
+			XyfRelate xyfRelate=new XyfRelate();
+			xyfRelate.setFromUserId(userId);
+			xyfRelate.setToUserId(toUserId);
+			xyfRelate.setRelate(1);
+			xyfRelate.setCreateTime(new Date());
+			//flag=xyfRelateService.blackOtherPerson(userId,toUserId);
+			flag=xyfRelateService.save( xyfRelate);
+			json.setSuccess(flag);
+		}
+		
+		return json;
+	}
+	
+	
+	
+	
+	
+	
+}

@@ -1,0 +1,33 @@
+package com.wh.service.xyf;
+
+import com.wh.service.base.BaseService;
+import com.wh.xyfentity.XyfGz;
+
+
+public interface XyfGzService extends BaseService<XyfGz, Integer>{
+	
+	/**
+	 * 根据用户id及被关注者id删除关注信息
+	 * @param userId
+	 * @param gzUserId
+	 * @return
+	 */
+	int deleteByUserIdAndGzUserId(String userId, String gzUserId);
+	
+	/**
+	 * 关注用户
+	 * @param userId
+	 * @param gzUserId
+	 * @return
+	 */
+	int GzUser(String userId, String gzUserId);
+	
+	/**
+	 * 获取我是否关注她状态
+	 * @param userId
+	 * @param otherId
+	 * @return
+	 */
+	Boolean getGzStatus(String userId, String otherId);
+
+}

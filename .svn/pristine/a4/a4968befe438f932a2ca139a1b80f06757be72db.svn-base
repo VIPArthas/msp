@@ -1,0 +1,20 @@
+package com.wh.dao.msp;
+
+import org.springframework.stereotype.Repository;
+
+import com.wh.base.BaseMapper;
+import com.wh.mspentity.MspUser;
+@Repository
+public interface MspUserMapper extends BaseMapper<MspUser, String>{
+    int deleteByPrimaryKey(String id);
+
+    int insert(MspUser record);
+
+    int insertSelective(MspUser record);
+
+    MspUser selectByPrimaryKey(String id);
+
+    int updateByPrimaryKeySelective(MspUser record);
+
+    int updateByPrimaryKey(MspUser record);
+}

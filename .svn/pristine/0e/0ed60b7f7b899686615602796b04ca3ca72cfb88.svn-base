@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>IconFont</title>
+    <link rel="stylesheet" href="demo.css">
+    <link rel="stylesheet" href="iconfont.css">
+</head>
+<body>
+    <div class="main markdown">
+        <h1>IconFont 图标</h1>
+        <ul class="icon_lists clear">
+            
+                <li>
+                <i class="icon fa fa-bianji"></i>
+                    <div class="name">编辑</div>
+                    <div class="fontclass">.fa-bianji</div>
+                </li>
+            
+                <li>
+                <i class="icon fa fa-tianjia"></i>
+                    <div class="name">添加</div>
+                    <div class="fontclass">.fa-tianjia</div>
+                </li>
+            
+                <li>
+                <i class="icon fa fa-bianji1"></i>
+                    <div class="name">编辑</div>
+                    <div class="fontclass">.fa-bianji1</div>
+                </li>
+            
+                <li>
+                <i class="icon fa fa-zhuxiao"></i>
+                    <div class="name">注销</div>
+                    <div class="fontclass">.fa-zhuxiao</div>
+                </li>
+            
+                <li>
+                <i class="icon fa fa-shanchu"></i>
+                    <div class="name">删除</div>
+                    <div class="fontclass">.fa-shanchu</div>
+                </li>
+            
+                <li>
+                <i class="icon fa fa-xiaoxituisong"></i>
+                    <div class="name">消息推送</div>
+                    <div class="fontclass">.fa-xiaoxituisong</div>
+                </li>
+            
+                <li>
+                <i class="icon fa fa-yonghuguanli"></i>
+                    <div class="name">用户管理</div>
+                    <div class="fontclass">.fa-yonghuguanli</div>
+                </li>
+            
+                <li>
+                <i class="icon fa fa-duihao"></i>
+                    <div class="name">对号</div>
+                    <div class="fontclass">.fa-duihao</div>
+                </li>
+            
+                <li>
+                <i class="icon fa fa-fasongxiaoxi"></i>
+                    <div class="name">发送消息</div>
+                    <div class="fontclass">.fa-fasongxiaoxi</div>
+                </li>
+            
+                <li>
+                <i class="icon fa fa-money"></i>
+                    <div class="name">money</div>
+                    <div class="fontclass">.fa-money</div>
+                </li>
+            
+                <li>
+                <i class="icon fa fa-xinwen"></i>
+                    <div class="name">新闻</div>
+                    <div class="fontclass">.fa-xinwen</div>
+                </li>
+            
+                <li>
+                <i class="icon fa fa-chakanxiaoxi"></i>
+                    <div class="name">查看消息</div>
+                    <div class="fontclass">.fa-chakanxiaoxi</div>
+                </li>
+            
+        </ul>
+
+        <h2 id="font-class-">font-class引用</h2>
+        <hr>
+
+        <p>font-class是unicode使用方式的一种变种，主要是解决unicode书写不直观，语意不明确的问题。</p>
+        <p>与unicode使用方式相比，具有如下特点：</p>
+        <ul>
+        <li>兼容性良好，支持ie8+，及所有现代浏览器。</li>
+        <li>相比于unicode语意明确，书写更直观。可以很容易分辨这个icon是什么。</li>
+        <li>因为使用class来定义图标，所以当要替换图标时，只需要修改class里面的unicode引用。</li>
+        <li>不过因为本质上还是使用的字体，所以多色图标还是不支持的。</li>
+        </ul>
+        <p>使用步骤如下：</p>
+        <h3 id="-fontclass-">第一步：引入项目下面生成的fontclass代码：</h3>
+
+
+        <pre><code class="lang-js hljs javascript"><span class="hljs-comment">&lt;link rel="stylesheet" type="text/css" href="./iconfont.css"&gt;</span></code></pre>
+        <h3 id="-">第二步：挑选相应图标并获取类名，应用于页面：</h3>
+        <pre><code class="lang-css hljs">&lt;<span class="hljs-selector-tag">i</span> <span class="hljs-selector-tag">class</span>="<span class="hljs-selector-tag">fa</span> <span class="hljs-selector-tag">fa-xxx</span>"&gt;&lt;/<span class="hljs-selector-tag">i</span>&gt;</code></pre>
+        <blockquote>
+        <p>"fa"是你项目下的font-family。可以通过编辑项目查看，默认是"iconfont"。</p>
+        </blockquote>
+    </div>
+</body>
+</html>

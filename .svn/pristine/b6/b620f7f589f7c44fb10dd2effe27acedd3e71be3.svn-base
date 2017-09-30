@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../commons/css/performance.css">
+    <link rel="stylesheet" href="../commons/css/font1/font_n05k11gnykz9f6r/iconfont.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+
+    <title>成绩查询</title>
+</head>
+<body>
+      <div class="wrap">
+          <!--头部-->
+          <div class="head">选择你要查询的成绩</div>
+          <!--英语四级-->
+          <div class="content">
+              <a href="english4.html">
+                  <div>
+                      <img src="../commons/img/成绩查询.png" alt="">
+                      <span>英语四级考试</span>
+                      <p class="icon iconfont icon-zhankai"></p>
+                  </div>
+              </a>
+
+          </div>
+          <!--英语六级-->
+          <div class="content">
+              <a href="null.html">
+                  <div>
+                      <img src="../commons/img/成绩查询2.png" alt="">
+                      <span>英语六级考试</span>
+                      <p class="icon iconfont icon-zhankai"></p>
+                  </div>
+              </a>
+
+          </div>
+          <!--学业查询-->
+          <div class="content">
+              <a href="attainment.html">
+                  <div>
+                      <img src="../commons/img/成绩查询3.png" alt="">
+                      <span>学业成绩</span>
+                      <p class="icon iconfont icon-zhankai"></p>
+                  </div>
+              </a>
+
+          </div>
+      </div>
+</body>
+</html>
+<script src="../commons/js/rem.js" type="text/javascript" charset="utf-8"></script>

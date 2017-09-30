@@ -1,0 +1,261 @@
+<html lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+<link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="/resource/wmh/wx/commons/css/font2/iconfont/iconfont.css" rel="stylesheet" />
+<link href="/resource/wmh/web/commons/css/bootstrap-year-calendar.min.css" rel="stylesheet" />
+<link href="/resource/wmh/web/commons/css/sendsuishoup.css" rel="stylesheet" />
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/resource/wmh/web/commons/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="/resource/wmh/web/commons/js/bootstrap-year-calendar.min.js"></script>
+<script type="text/javascript" src="/resource/wmh/web/commons/js/bootstrap-popover.js"></script>
+<script type="text/javascript" src="/resource/wmh/web/commons/js/select.js"></script>
+<title>校历</title>
+<script>
+	$(document).ready(function() {
+		function CurentTime() {
+			var now = new Date();
+			var year = now.getFullYear(); //年
+			var month = now.getMonth() + 1; //月
+			var day = now.getDate(); //日   
+			var clock = year + "-";
+			clock += month + "-";
+			if (day < 10)
+				clock += "0";
+			clock += day + "";
+			return clock;
+		}
+		$(".form-control").val(CurentTime());
+	})
+</script>
+
+</head>
+<body>
+
+	<div class="tabs">
+		<div class="row">
+			<div class="col-md-2 col-sm-3 co-xs-6">校历</div>
+			<div class="col-md-10 col-sm-9 co-xs-6"></div>
+		</div>
+	</div>
+	<div class="xiaoli">
+      		<div class="add-event">
+		
+		<div id="calendar"></div>
+		<div class="modal modal-fade" id="event-modal">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title">
+	                 校历
+	        </h4>
+	      </div>
+	      <div class="modal-body">
+	        <input type="hidden" name="event-index" value="">
+	        <form class="form-horizontal">
+	          <div class="form-group">
+	            <label for="min-date" class="col-sm-2 control-label">事件</label>
+	            <div class="col-sm-7">
+	              <input name="event-name" type="text" class="form-control">
+	            </div>
+	          </div>
+	          <div class="form-group">
+	            <label for="min-date" class="col-sm-2 control-label">备注</label>
+	            <div class="col-sm-7">
+	              <input name="event-location" type="text" class="form-control">
+	            </div>
+	          </div>
+	          <div class="form-group">
+	            <label for="min-date" class="col-sm-2 control-label">持续时间</label>
+	            <div class="col-sm-7">
+	              <div class="input-group input-daterange" data-provide="datepicker">
+	                <input name="event-start-date" type="text" class="form-control">
+	                <span class="input-group-addon">至</span>
+	                <input name="event-end-date" type="text" class="form-control">
+	              </div>
+	            </div>
+	          </div>
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+	        <button type="button" class="btn btn-primary" id="save-event">保存</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function editEvent(event) {
+		    $('#event-modal input[name="event-index"]').val(event ? event.id : '');
+		    $('#event-modal input[name="event-name"]').val(event ? event.name : '');
+		    $('#event-modal input[name="event-location"]').val(event ? event.location : '');
+		    $('#event-modal input[name="event-start-date"]').datepicker('update', event ? event.startDate : '');
+		    $('#event-modal input[name="event-end-date"]').datepicker('update', event ? event.endDate : '');
+		    $('#event-modal').modal();
+		}
+		function deleteEvent(event) {
+		    var dataSource = $('#calendar').data('calendar').getDataSource();
+		    var deleteId;
+		    for(var i in dataSource) {
+		        if(dataSource[i].id == event.id) {
+		        	$.ajax({
+			    		type:"get",
+			    		url:"/msp/mspPhoto/web/deleteXL.htm",
+			    		dataType:"json",
+			    		data:{id:dataSource[i].id},
+			    		success:function(data){
+			    			dataSource.splice(i, 1);
+			    			$('#calendar').data('calendar').setDataSource(dataSource);
+			    		}
+			    	})
+		            break;
+		        }
+		    }
+		    
+		}
+
+		function saveEvent() {
+			$('#calendar').data('calendar').setStyle('background');
+		    var event = {
+		        id: $('#event-modal input[name="event-index"]').val(),
+		        name: $('#event-modal input[name="event-name"]').val(),
+		        location: $('#event-modal input[name="event-location"]').val(),
+		        startDate: $('#event-modal input[name="event-start-date"]').datepicker('getDate'),
+		        endDate: $('#event-modal input[name="event-end-date"]').datepicker('getDate')
+		    }
+		    var dataSource = $('#calendar').data('calendar').getDataSource();
+		    if(event.id) {
+		        for(var i in dataSource) {
+		            if(dataSource[i].id == event.id) {
+		                dataSource[i].name = event.name;
+		                dataSource[i].location = event.location;
+		                dataSource[i].startDate = event.startDate;
+		                dataSource[i].endDate = event.endDate;
+		            }
+		        }
+		    }
+		    else
+		    {
+		        var newId = 0;
+		        for(var i in dataSource) {
+		            if(dataSource[i].id > newId) {
+		                newId = dataSource[i].id;
+		            }
+		        }
+		        newId++;
+		        event.id = newId;
+		        dataSource.push(event);
+		    }
+		    //console.log(dataSource)
+		   $('#calendar').data('calendar').setDataSource(dataSource);
+		    var datas=dataSource;
+		    $.ajax({
+	    		type:"post",
+	    		url:"/msp/mspPhoto/web/savexiaoli.htm",
+	    		dataType:"json",
+	    		data:{ds:datas},
+	    		success:function(data){
+	    		 
+	    		}
+	    	})
+		    $('#event-modal').modal('hide');
+		}
+		$(function() {
+
+			$.ajax({
+	    		type:"post",
+	    		url:"/msp/mspPhoto/web/xlList.htm",
+	    		dataType:"json",
+	    		success:function(data){
+	    			$('#calendar').data('calendar').setStyle('background');
+	    			var dataSource = $('#calendar').data('calendar').getDataSource();
+	    			var DataItem={
+	    	    			   id:"",
+	    	    			   name:"",
+	    	    			   location:"",
+	    	    			   startDate:"",
+	    	    			   endDate:"",
+	    	    			   color:""
+	    	    		   };
+	    			var tid;
+	    			for(var i=0;i<data.ds.length;i++){
+	    				data.ds[i].startDate=new Date(data.ds[i].startDate);
+	    				data.ds[i].endDate  =new Date(data.ds[i].endDate);
+	    				DataItem.id=data.ds[i].id;
+	    				tid=data.ds[i].id;
+	    				DataItem.name=data.ds[i].name;
+	    				DataItem.location=data.ds[i].location;
+	    				DataItem.startDate=data.ds[i].startDate;
+	    				DataItem.endDate=data.ds[i].endDate;
+	    				DataItem.color=data.ds[i].color;
+	    				dataSource.push(DataItem);
+	    				DataItem={};
+	    			}
+	    			$('#event-modal input[name="event-index"]').val(tid);
+	    			console.log(dataSource)
+	    			$('#calendar').data('calendar').setDataSource(dataSource);
+	    		}
+	    	})
+			
+		    $('#calendar').calendar({ 
+		        enableContextMenu: true,
+		        enableRangeSelection: true,
+		        contextMenuItems:[
+		            {
+		                text: '更新',
+		                click: editEvent
+		            },
+		            {
+		                text: '删除',
+		                click: deleteEvent
+		            }
+		        ],
+		        selectRange: function(e) {
+		            editEvent({ startDate: e.startDate, endDate: e.endDate });
+		        },
+		        mouseOnDay: function(e) {
+		            if(e.events.length > 0) {
+		                var content = '';
+		                
+		                for(var i in e.events) {
+		                    content += '<div class="event-tooltip-content">'
+		                                    + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
+		                                    + '<div class="event-location">' + e.events[i].location + '</div>'
+		                                + '</div>';
+		                }
+		            
+		                $(e.element).popover({ 
+		                    trigger: 'manual',
+		                    container: 'body',
+		                    html:true,
+		                    content: content
+		                });
+		                
+		                $(e.element).popover('show');
+		            }
+		        },
+		        mouseOutDay: function(e) {
+		            if(e.events.length > 0) {
+		                $(e.element).popover('hide');
+		            }
+		        },
+		        dayContextMenu: function(e) {
+		            $(e.element).popover('hide');
+		        },
+		        dataSource: [
+		            
+		        ]
+		    });
+		    $('#save-event').click(function() {
+		    	saveEvent();
+		    });
+		});
+	</script>
+</body>
+</html>

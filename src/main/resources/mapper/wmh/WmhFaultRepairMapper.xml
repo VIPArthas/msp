@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.wmh.WmhFaultRepairMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.entity.WmhFaultRepair" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="place" property="place" jdbcType="VARCHAR" />
+    <result column="fault_info" property="faultInfo" jdbcType="VARCHAR" />
+    <result column="fault_reason" property="faultReason" jdbcType="VARCHAR" />
+    <result column="op_user_id" property="opUserId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="fault_stauts" property="faultStauts" jdbcType="INTEGER" />
+    <result column="area_id" property="areaId" jdbcType="INTEGER" />
+    <result column="area_detail" property="areaDetail" jdbcType="VARCHAR" />
+    <result column="goods_id" property="goodsId" jdbcType="INTEGER" />
+    <result column="goods_detail" property="goodsDetail" jdbcType="VARCHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="resperson_id" property="respersonId" jdbcType="VARCHAR" />
+    <result column="appraise_status" property="appraiseStatus" jdbcType="INTEGER" />
+    <result column="appraise_msg" property="appraiseMsg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, place, fault_info, fault_reason, op_user_id, create_time, status, fault_stauts, 
+    area_id, area_detail, goods_id, goods_detail, order_number, resperson_id, appraise_status, 
+    appraise_msg
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from wmh_fault_repair
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from wmh_fault_repair
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.WmhFaultRepair" >
+    insert into wmh_fault_repair (id, place, fault_info, 
+      fault_reason, op_user_id, create_time, 
+      status, fault_stauts, area_id, 
+      area_detail, goods_id, goods_detail, 
+      order_number, resperson_id, appraise_status, 
+      appraise_msg)
+    values (#{id,jdbcType=VARCHAR}, #{place,jdbcType=VARCHAR}, #{faultInfo,jdbcType=VARCHAR}, 
+      #{faultReason,jdbcType=VARCHAR}, #{opUserId,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{faultStauts,jdbcType=INTEGER}, #{areaId,jdbcType=INTEGER}, 
+      #{areaDetail,jdbcType=VARCHAR}, #{goodsId,jdbcType=INTEGER}, #{goodsDetail,jdbcType=VARCHAR}, 
+      #{orderNumber,jdbcType=VARCHAR}, #{respersonId,jdbcType=VARCHAR}, #{appraiseStatus,jdbcType=INTEGER}, 
+      #{appraiseMsg,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.WmhFaultRepair" >
+    insert into wmh_fault_repair
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="place != null" >
+        place,
+      </if>
+      <if test="faultInfo != null" >
+        fault_info,
+      </if>
+      <if test="faultReason != null" >
+        fault_reason,
+      </if>
+      <if test="opUserId != null" >
+        op_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="faultStauts != null" >
+        fault_stauts,
+      </if>
+      <if test="areaId != null" >
+        area_id,
+      </if>
+      <if test="areaDetail != null" >
+        area_detail,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="goodsDetail != null" >
+        goods_detail,
+      </if>
+      <if test="orderNumber != null" >
+        order_number,
+      </if>
+      <if test="respersonId != null" >
+        resperson_id,
+      </if>
+      <if test="appraiseStatus != null" >
+        appraise_status,
+      </if>
+      <if test="appraiseMsg != null" >
+        appraise_msg,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="place != null" >
+        #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="faultInfo != null" >
+        #{faultInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="faultReason != null" >
+        #{faultReason,jdbcType=VARCHAR},
+      </if>
+      <if test="opUserId != null" >
+        #{opUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="faultStauts != null" >
+        #{faultStauts,jdbcType=INTEGER},
+      </if>
+      <if test="areaId != null" >
+        #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="areaDetail != null" >
+        #{areaDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsDetail != null" >
+        #{goodsDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="respersonId != null" >
+        #{respersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="appraiseStatus != null" >
+        #{appraiseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="appraiseMsg != null" >
+        #{appraiseMsg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.WmhFaultRepair" >
+    update wmh_fault_repair
+    <set >
+      <if test="place != null" >
+        place = #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="faultInfo != null" >
+        fault_info = #{faultInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="faultReason != null" >
+        fault_reason = #{faultReason,jdbcType=VARCHAR},
+      </if>
+      <if test="opUserId != null" >
+        op_user_id = #{opUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="faultStauts != null" >
+        fault_stauts = #{faultStauts,jdbcType=INTEGER},
+      </if>
+      <if test="areaId != null" >
+        area_id = #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="areaDetail != null" >
+        area_detail = #{areaDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsDetail != null" >
+        goods_detail = #{goodsDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="respersonId != null" >
+        resperson_id = #{respersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="appraiseStatus != null" >
+        appraise_status = #{appraiseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="appraiseMsg != null" >
+        appraise_msg = #{appraiseMsg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.WmhFaultRepair" >
+    update wmh_fault_repair
+    set place = #{place,jdbcType=VARCHAR},
+      fault_info = #{faultInfo,jdbcType=VARCHAR},
+      fault_reason = #{faultReason,jdbcType=VARCHAR},
+      op_user_id = #{opUserId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      fault_stauts = #{faultStauts,jdbcType=INTEGER},
+      area_id = #{areaId,jdbcType=INTEGER},
+      area_detail = #{areaDetail,jdbcType=VARCHAR},
+      goods_id = #{goodsId,jdbcType=INTEGER},
+      goods_detail = #{goodsDetail,jdbcType=VARCHAR},
+      order_number = #{orderNumber,jdbcType=VARCHAR},
+      resperson_id = #{respersonId,jdbcType=VARCHAR},
+      appraise_status = #{appraiseStatus,jdbcType=INTEGER},
+      appraise_msg = #{appraiseMsg,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  	<!-- 后台用户管理list -->
+	<select id="findList" resultType="java.util.Map" parameterType="java.lang.String">
+SELECT 
+  wfr.fault_info,
+  wfr.fault_reason,
+  wfr.place,
+  wfr.op_user_id,
+  wfr.create_time,
+  wfr.STATUS,
+  wfr.id,
+  wu.real_name 
+FROM
+  `wmh_fault_repair` wfr 
+  LEFT JOIN `wmh_user` wu 
+    ON op_user_id = wu.id 
+ORDER BY create_time DESC 
+	</select>
+
+
+	<!-- 后台用户个数 -->
+	<select id="countList" resultType="int">
+		SELECT COUNT(1) FROM wmh_fault_repair
+	</select>
+	
+	<!-- 故障报修图片路径获取 -->
+	<select id="getPicPathByLinkId" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT file_path FROM `wh_attachements` WHERE link_id= #{malId, jdbcType=VARCHAR}
+	</select>
+  
+</mapper>

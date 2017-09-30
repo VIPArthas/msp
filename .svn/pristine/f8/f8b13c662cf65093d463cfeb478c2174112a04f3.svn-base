@@ -1,0 +1,304 @@
+package com.wh.xyfentity;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.wh.util.BaseModel;
+
+public class XyfUser extends BaseModel{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Integer id;
+
+    private String userId;
+
+    private String nickName;
+
+    private String openId;
+
+    private String address;
+
+    private Date birthday;
+
+    private String province;
+
+    private String city;
+
+    private String headimage;
+
+    private Integer gender;
+
+    private Integer goals;
+
+    private String wangyiId;	//网易id
+
+    private String wangyiAccount;	//网易账号
+
+    private String wangyiPassword;
+
+    private Integer wangyiStatus;	//网易绑定状态   默认未绑定0     绑定为1
+
+    private String xiamiId;		//虾米id
+
+    private String xiamiAccount;
+
+    private String xiamiPassword;
+
+    private Integer xiamiStatus;
+
+    private Double addrLng;
+
+    private Double addrLat;
+    
+    private String phone;
+    
+    private String password;
+    
+    private Date createTime;
+    
+    private Integer userStatus;  //是否启用，默认启用中
+    
+    
+    private String code;
+    
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Integer getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(Integer userStatus) {
+		this.userStatus = userStatus;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId == null ? null : userId.trim();
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName == null ? null : nickName.trim();
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId == null ? null : openId.trim();
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address == null ? null : address.trim();
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province == null ? null : province.trim();
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city == null ? null : city.trim();
+    }
+
+    public String getHeadimage() {
+        return headimage;
+    }
+
+    public void setHeadimage(String headimage) {
+        this.headimage = headimage == null ? null : headimage.trim();
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public Integer getGoals() {
+        return goals;
+    }
+
+    public void setGoals(Integer goals) {
+        this.goals = goals;
+    }
+
+    public String getWangyiId() {
+        return wangyiId;
+    }
+
+    public void setWangyiId(String wangyiId) {
+        this.wangyiId = wangyiId == null ? null : wangyiId.trim();
+    }
+
+    public String getWangyiAccount() {
+        return wangyiAccount;
+    }
+
+    public void setWangyiAccount(String wangyiAccount) {
+        this.wangyiAccount = wangyiAccount == null ? null : wangyiAccount.trim();
+    }
+
+    public String getWangyiPassword() {
+        return wangyiPassword;
+    }
+
+    public void setWangyiPassword(String wangyiPassword) {
+        this.wangyiPassword = wangyiPassword == null ? null : wangyiPassword.trim();
+    }
+
+    public Integer getWangyiStatus() {
+        return wangyiStatus;
+    }
+
+    public void setWangyiStatus(Integer wangyiStatus) {
+        this.wangyiStatus = wangyiStatus;
+    }
+
+    public String getXiamiId() {
+        return xiamiId;
+    }
+
+    public void setXiamiId(String xiamiId) {
+        this.xiamiId = xiamiId == null ? null : xiamiId.trim();
+    }
+
+    public String getXiamiAccount() {
+        return xiamiAccount;
+    }
+
+    public void setXiamiAccount(String xiamiAccount) {
+        this.xiamiAccount = xiamiAccount == null ? null : xiamiAccount.trim();
+    }
+
+    public String getXiamiPassword() {
+        return xiamiPassword;
+    }
+
+    public void setXiamiPassword(String xiamiPassword) {
+        this.xiamiPassword = xiamiPassword == null ? null : xiamiPassword.trim();
+    }
+
+    public Integer getXiamiStatus() {
+        return xiamiStatus;
+    }
+
+    public void setXiamiStatus(Integer xiamiStatus) {
+        this.xiamiStatus = xiamiStatus;
+    }
+
+    public Double getAddrLng() {
+        return addrLng;
+    }
+
+    public void setAddrLng(Double addrLng) {
+        this.addrLng = addrLng;
+    }
+
+    public Double getAddrLat() {
+        return addrLat;
+    }
+
+    public void setAddrLat(Double addrLat) {
+        this.addrLat = addrLat;
+    }
+    
+    /** 不入库 */
+   	private int age;	//年龄
+    
+	public int getAge() {
+		if (null == birthday) {
+			return 0;
+		}
+		int age = 0;
+		Date now = new Date();
+		SimpleDateFormat format_y = new SimpleDateFormat("yyyy");
+		SimpleDateFormat format_M = new SimpleDateFormat("MM");
+		String birth_year = format_y.format(birthday);
+		String this_year = format_y.format(now);
+		String birth_month = format_M.format(birthday);
+		String this_month = format_M.format(now);
+		age = Integer.parseInt(this_year) - Integer.parseInt(birth_year);
+		// 如果未到出生月份，则age - 1
+		if (this_month.compareTo(birth_month) < 0) {
+			age -= 1;
+		}
+		if (age < 0) {
+			age = 0;
+		}
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+}

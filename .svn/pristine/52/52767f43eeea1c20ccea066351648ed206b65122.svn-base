@@ -1,0 +1,72 @@
+package com.wh.dao.xyf;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import com.wh.base.BaseMapper;
+
+import com.wh.xyfentity.XyfLovedSong;
+
+@Repository
+public interface XyfLovedSongMapper extends BaseMapper<XyfLovedSong, Integer> {
+	int deleteByPrimaryKey(Integer id);
+
+	int insert(XyfLovedSong record);
+
+	int insertSelective(XyfLovedSong record);
+
+	XyfLovedSong selectByPrimaryKey(Integer id);
+
+	int updateByPrimaryKeySelective(XyfLovedSong record);
+
+	int updateByPrimaryKey(XyfLovedSong record);
+
+	/**
+	 * 获取我和她共同喜欢的歌曲详情
+	 * 
+	 * @param myId
+	 *            我的网易id或虾米id
+	 * @param otherId
+	 *            她的网易id 或虾米id
+	 * @return
+	 */
+	List<XyfLovedSong> getLoveSongs(@Param(value = "myId") String myId, @Param(value = "otherId") String otherId);
+	/**
+	 * 获取我   喜欢歌曲的有缘人
+	 * @param myId
+	 * @return
+	 */
+	List<Map<String, Object>> getMyLovedFateUsers(@Param(value = "myId")String myId);
+	
+	/**
+	 * 获取我喜欢的歌曲总数
+	 * @param myId
+	 * @return
+	 */
+	int getMyLovedSongsCount(@Param(value = "myId")String myId);
+	
+	/**
+	 * 获取两人之间喜欢的歌曲的各个数量
+	 * @param myId
+	 * @param otherId
+	 * @return
+	 */
+	Map<String, Object> getLovedFateUser(@Param(value = "myId") String myId, @Param(value = "otherId") String otherId);
+	
+	/**
+	 * 获取两人喜欢歌曲总数
+	 * @param myId
+	 * @param musicId
+	 * @return
+	 */
+	int getSongTotalNum(@Param(value = "myId")String myId,@Param(value = "otherId")String otherId);
+	
+	/**
+	 * 根据user_id删除歌曲
+	 * @param id
+	 */
+	void deleteByMusicId(@Param(value = "userId")String id);
+}

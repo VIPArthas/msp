@@ -1,0 +1,21 @@
+package com.wh.dao.msp;
+
+import org.springframework.stereotype.Repository;
+
+import com.wh.base.BaseMapper;
+import com.wh.mspentity.MspDepartment;
+
+@Repository
+public interface MspDepartmentMapper  extends BaseMapper<MspDepartment, Integer>{
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(MspDepartment record);
+
+    int insertSelective(MspDepartment record);
+
+    MspDepartment selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(MspDepartment record);
+
+    int updateByPrimaryKey(MspDepartment record);
+}

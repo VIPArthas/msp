@@ -1,0 +1,75 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/resource/wmh/wx/commons/css/font2/iconfont/iconfont.css" rel="stylesheet" />
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/resource/wmh/web/commons/js/uploadimg.js"></script>
+    <link href="<%=request.getContextPath() %>/resource/wmh/web/commons/css/sendsuishoup.css" rel="stylesheet" />
+    <title>校历</title>
+
+</head>
+<body>
+
+<div class="tabs">
+    <div class="row">
+        <div class="col-md-2 col-sm-3 co-xs-6">校历</div>
+        <div class="col-md-10 col-sm-9 co-xs-6"></div>
+    </div>
+</div>
+<div class="upload-button">
+<form class="form-inline" id="gzbx_form"  >
+        <div class="box mt10">
+            <input type="hidden" id="userid" name="userId"> 
+            <div class="imglist3">
+                <div class="aimg"><input type="file" class="addimg" onchange="changeHandler(this)" accept="image/png,image/jpg,image/jpeg,image/gif" /> <span><i class="icon iconfont icon-shangchuantupian"></i></span></div>
+            </div>
+            <canvas id="mycanvas"></canvas>
+        </div>
+        <div class="mlr20" id="hf">
+            <a id="submit" class="btn_bg btn_green" >上传校历</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+$('#userid').val(localStorage.getItem('userid'));
+$("#submit").on("click",function(){
+	   if($(".addimg").val()!=""){
+     	var formdata=new FormData($("#gzbx_form")[0]);
+    	for(var i=0;i<$(".imglist3 img").length;i++){
+        	/* fromdata.append("imgs", convertdataURIToBlob_j($(".imglist3 img").get(i).src)); */
+        	formdata.append("imgs", convertdataURIToBlob_j($(".imglist3 img").get(i).src),"img"+i+'.'+format.split('/')[1]);
+        }
+        	$.ajax({
+    		url:'<%=request.getContextPath()%>/msp/mspPhoto/wx/saveCalendar.htm',
+    		type:'POST',
+    		dataType:'json',
+    		processData:false,
+    		contentType:false,
+    		data:formdata,
+    		success:function(result){
+    			if(result.success){
+    				alert("上传成功!");
+    				$("#submit").text("重新上传")
+    		  	}
+    		},
+    		error:function(){
+    			alert('error');
+    			console.info('error');
+    		} 
+    	});
+	   }else{
+		   alert("请选择需要上传的文件!")
+	   }
+    });
+	
+	function changeHandler(obj){
+        addImg(obj,9);
+    };
+</script>

@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.xlwapp.UserStudentMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.entity.UserStudent" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="school_code" property="schoolCode" jdbcType="INTEGER" />
+    <result column="school_name" property="schoolName" jdbcType="VARCHAR" />
+    <result column="student_id" property="studentId" jdbcType="VARCHAR" />
+    <result column="dormitory_no" property="dormitoryNo" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="major_name" property="majorName" jdbcType="VARCHAR" />
+    <result column="edusys_name" property="edusysName" jdbcType="VARCHAR" />
+    <result column="edusys_pwd" property="edusysPwd" jdbcType="VARCHAR" />
+    <result column="belong_grade" property="belongGrade" jdbcType="VARCHAR" />
+    <result column="native_place" property="nativePlace" jdbcType="VARCHAR" />
+    <result column="source_region" property="sourceRegion" jdbcType="VARCHAR" />
+    <result column="class_number" property="classNumber" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="student_html" property="studentHtml" jdbcType="VARCHAR" />
+    <result column="study_html" property="studyHtml" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, school_code,school_name, student_id, dormitory_no, start_time, major_name, edusys_name, 
+    edusys_pwd, belong_grade, native_place, source_region, class_number, create_time, status,student_html,study_html
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_student
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from user_student
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_student
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteByUserId" parameterType="java.lang.String" >
+    delete from user_student
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+
+
+
+  <insert id="insert" parameterType="com.wh.entity.UserStudent" >
+    insert into user_student (id, user_id, school_name, 
+      student_id, dormitory_no, start_time, 
+      major_name, edusys_name, edusys_pwd, 
+      extend1, extend2, extend3, 
+      extend4, create_time, status
+      )
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{schoolName,jdbcType=VARCHAR}, 
+      #{studentId,jdbcType=VARCHAR}, #{dormitoryNo,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{majorName,jdbcType=VARCHAR}, #{edusysName,jdbcType=VARCHAR}, #{edusysPwd,jdbcType=VARCHAR}, 
+      #{extend1,jdbcType=VARCHAR}, #{extend2,jdbcType=VARCHAR}, #{extend3,jdbcType=VARCHAR}, 
+      #{extend4,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.UserStudent" >
+    insert into user_student
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="schoolCode != null" >
+        school_code,
+      </if>
+      <if test="schoolName != null" >
+        school_name,
+      </if>
+      <if test="studentId != null" >
+        student_id,
+      </if>
+      <if test="dormitoryNo != null" >
+        dormitory_no,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="majorName != null" >
+        major_name,
+      </if>
+      <if test="edusysName != null" >
+        edusys_name,
+      </if>
+      <if test="edusysPwd != null" >
+        edusys_pwd,
+      </if>
+      <if test="belongGrade != null" >
+        belong_grade,
+      </if>
+      <if test="nativePlace != null" >
+        native_place,
+      </if>
+      <if test="sourceRegion != null" >
+        source_region,
+      </if>
+      <if test="classNumber != null" >
+        class_number,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="studentHtml != null" >
+        student_html,
+      </if>
+      <if test="studyHtml != null" >
+        study_html,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolCode != null" >
+        #{schoolCode,jdbcType=INTEGER},
+      </if>
+      <if test="schoolName != null" >
+        #{schoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentId != null" >
+        #{studentId,jdbcType=VARCHAR},
+      </if>
+      <if test="dormitoryNo != null" >
+        #{dormitoryNo,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="majorName != null" >
+        #{majorName,jdbcType=VARCHAR},
+      </if>
+      <if test="edusysName != null" >
+        #{edusysName,jdbcType=VARCHAR},
+      </if>
+      <if test="edusysPwd != null" >
+        #{edusysPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="belongGrade != null" >
+        #{belongGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePlace != null" >
+        #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceRegion != null" >
+        #{sourceRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="classNumber != null" >
+        #{classNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="studentHtml != null" >
+        #{studentHtml,jdbcType=VARCHAR},
+      </if>
+      <if test="studyHtml != null" >
+        #{studyHtml,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.UserStudent" >
+    update user_student
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolCode != null" >
+        school_code = #{schoolCode,jdbcType=INTEGER},
+      </if>
+      <if test="schoolName != null" >
+        school_name = #{schoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentId != null" >
+        student_id = #{studentId,jdbcType=VARCHAR},
+      </if>
+      <if test="dormitoryNo != null" >
+        dormitory_no = #{dormitoryNo,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="majorName != null" >
+        major_name = #{majorName,jdbcType=VARCHAR},
+      </if>
+      <if test="edusysName != null" >
+        edusys_name = #{edusysName,jdbcType=VARCHAR},
+      </if>
+      <if test="edusysPwd != null" >
+        edusys_pwd = #{edusysPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="belongGrade != null" >
+        belong_grade = #{belongGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePlace != null" >
+        native_place = #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceRegion != null" >
+        source_region = #{sourceRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="classNumber != null" >
+        class_number = #{classNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="studentHtml != null" >
+        student_html = #{studentHtml,jdbcType=VARCHAR},
+      </if>
+      <if test="studyHtml != null" >
+        study_html = #{studyHtml,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateByUserId" parameterType="com.wh.entity.UserStudent" >
+    update user_student
+    <set >
+      <if test="schoolCode != null" >
+        school_code = #{schoolCode,jdbcType=INTEGER},
+      </if>
+      <if test="schoolName != null" >
+        school_name = #{schoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentId != null" >
+        student_id = #{studentId,jdbcType=VARCHAR},
+      </if>
+      <if test="dormitoryNo != null" >
+        dormitory_no = #{dormitoryNo,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="majorName != null" >
+        major_name = #{majorName,jdbcType=VARCHAR},
+      </if>
+      <if test="edusysName != null" >
+        edusys_name = #{edusysName,jdbcType=VARCHAR},
+      </if>
+      <if test="edusysPwd != null" >
+        edusys_pwd = #{edusysPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="belongGrade != null" >
+        belong_grade = #{belongGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePlace != null" >
+        native_place = #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceRegion != null" >
+        source_region = #{sourceRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="classNumber != null" >
+        class_number = #{classNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="studentHtml != null" >
+        student_html = #{studentHtml,jdbcType=VARCHAR},
+      </if>
+      <if test="studyHtml != null" >
+        study_html = #{studyHtml,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+
+
+
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.UserStudent" >
+    update user_student
+    set user_id = #{userId,jdbcType=VARCHAR},
+      school_name = #{schoolName,jdbcType=VARCHAR},
+      student_id = #{studentId,jdbcType=VARCHAR},
+      dormitory_no = #{dormitoryNo,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      major_name = #{majorName,jdbcType=VARCHAR},
+      edusys_name = #{edusysName,jdbcType=VARCHAR},
+      edusys_pwd = #{edusysPwd,jdbcType=VARCHAR},
+      extend1 = #{extend1,jdbcType=VARCHAR},
+      extend2 = #{extend2,jdbcType=VARCHAR},
+      extend3 = #{extend3,jdbcType=VARCHAR},
+      extend4 = #{extend4,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectBySchoolName" parameterType="java.lang.String"  resultType="com.wh.entity.UserStudent">
+   SELECT *
+    from school
+    where  school_name = #{schoolName,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByLikeName" parameterType="java.lang.String" resultType="java.util.Map">
+    SELECT school_name FROM  school
+    WHERE school_name  LIKE CONCAT('%',#{selectByLikeName,jdbcType=VARCHAR},'%')
+  </select>
+</mapper>

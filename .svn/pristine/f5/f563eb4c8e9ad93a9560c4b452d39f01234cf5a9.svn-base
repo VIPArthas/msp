@@ -1,0 +1,21 @@
+package com.wh.dao.msp;
+
+import org.springframework.stereotype.Repository;
+
+import com.wh.base.BaseMapper;
+import com.wh.mspentity.MspReply;
+
+@Repository
+public interface MspReplyMapper extends BaseMapper<MspReply, Integer>{
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(MspReply record);
+
+    int insertSelective(MspReply record);
+
+    MspReply selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(MspReply record);
+
+    int updateByPrimaryKey(MspReply record);
+}

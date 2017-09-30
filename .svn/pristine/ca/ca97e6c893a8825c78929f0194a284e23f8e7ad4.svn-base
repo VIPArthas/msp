@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>个人中心</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../../css/font/iconfont.css">
+    <script type="text/javascript" src="../../js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="../../js/rem.js"></script>
+	    <link rel="stylesheet" href="../../css/css.css">
+    <script type="text/javascript" src="../../js/path.js"></script>
+    
+</head>
+<body>
+<section class="mycenter">
+    <div class="centerBJ"></div>
+    <div class="mymessage">
+        <div class="myphoto">
+            <img src="" alt=""><div><i class="icon iconfont icon-ai61"></i></div>
+        </div>
+        <p></p>
+        <div class="myxiangxi"><span class="mysexage"><i class="icon iconfont"></i><span></span></span><span class="mywhere"></span></div>
+    </div>
+    <div class="guan-fen">
+        <div class="myguan"><span id="woguanzhu"></span><span>我关注的</span></div>
+        <div class="myshuxian"></div>
+        <div class="myfen"><span id="guanzhuwo"></span><span>关注我的</span></div>
+    </div>
+</section>
+<div class="margin"></div>
+<section class="mymusic">
+    <div class="musictitile"><i class="icon iconfont icon-music"></i><span>音乐圈子</span><span class="icon iconfont icon-xiayiye"></span></div>
+    <div class="musicquan">
+        <div><img id="wyimg" src="" alt=""><div><span>网易云音乐</span><span id="wangyibd"></span></div></div>
+        <div><img id="xmimg" src="" alt=""><div><span>虾米音乐</span><span id="xiamibd"></span></div></div>
+    </div>
+</section>
+</body>
+</html>
+<script type="text/javascript" src="../../js/index.js"></script>
+<script>
+$(function(){
+	$('.mymessage', parent.document).addClass('select-actived').siblings('a').removeClass('select-actived');
+
+    $.ajax({
+        type: "GET",
+        url: SERVER_ROOT_PATH + "/xyf/xyfUser/wx/myHomePage.htm",
+        dataType: "json",
+        success: function (result) {
+        	localStorage.setItem('result',JSON.stringify(result));
+        	console.log(localStorage.getItem('result'));
+            var headphoto = document.querySelector('.myphoto img');
+            headphoto.src = result.obj.headimage;
+            var nickname = document.querySelector('p');
+            nickname.innerHTML = result.obj.nick_name;
+            var sexage = document.querySelector('.mysexage');
+            var sexagei = document.querySelector('.mysexage .iconfont');
+            if(result.obj.gender == 1){
+                sexage.className = 'mysexage boysexage';
+                sexagei.className = 'icon iconfont icon-nan';
+            }else {
+                sexage.className = 'mysexage girlsexage';
+                sexagei.className = 'icon iconfont icon iconfont icon-iconfontshouyezhuyetubiao07';
+            }
+            var age = document.querySelector('.mysexage span');
+            age.innerHTML = result.obj.age;
+            document.querySelector('.mywhere').innerHTML = result.obj.address;
+            document.querySelector('#woguanzhu').innerHTML = result.obj.gznum;
+            document.querySelector('#guanzhuwo').innerHTML = result.obj.ungznum;
+            if(result.obj.wangyi_status == 1){
+                document.querySelector('#wyimg').src = '../../img/wangyi1.png';
+                document.querySelector('#wangyibd').innerHTML = '已绑定';
+            }else {
+                document.querySelector('#wyimg').src = '../../img/wangyi0.png';
+                document.querySelector('#wangyibd').innerHTML = '未绑定';
+            }
+            if(result.obj.xiami_status == 1){
+                document.querySelector('#xmimg').src = '../../img/xiami1.png';
+                document.querySelector('#xiamibd').innerHTML = '已绑定';
+            }else {
+                document.querySelector('#xmimg').src = '../../img/xiami0.png';
+                document.querySelector('#xiamibd').innerHTML = '未绑定';
+            }
+        }
+
+    });
+});
+
+</script>

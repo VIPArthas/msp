@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>班级通讯录</title>
+		<link rel="stylesheet" type="text/css" href="../../css/com.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/font/iconfont.css" />
+		<script src="../../js/jquery-3.1.1.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/layer_mobile/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/style.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<!--搜索-->
+		<div class="box sou_box_bj">
+			<div class="box-main sou_box">
+				<input class="sou_box_input" type="text" name="" id="suo-content" value="" placeholder="搜索班级" />
+				<span class="quxiao">取消</span>
+				<span class="sou_ico icon iconfont icon-sousuo"></span>
+			</div>
+		</div>
+		<!--分类-->
+		<div class="box" style="position: fixed;">
+			<div id="leftList" class="list_box_t">
+				<ul class="Slide">
+					<!--下方li标签class名 选中状态加on-->
+					<li class="tittle_list on">
+						<span class="tittle_list_color"></span>
+						<a href=""><p class="tittle_list_text"><span>计算机班</span></p></a>
+					</li>
+					<li class="tittle_list">
+						<span class="tittle_list_color"></span>
+						<p class="tittle_list_text"><span>计算机班</span></p>
+					</li>
+					<li class="tittle_list">
+						<span class="tittle_list_color"></span>
+						<p class="tittle_list_text"><span>计算机班</span></p>
+					</li>
+					<li class="tittle_list">
+						<span class="tittle_list_color"></span>
+						<p class="tittle_list_text"><span>计算机班</span></p>
+					</li>
+					<li class="tittle_list">
+						<span class="tittle_list_color"></span>
+						<p class="tittle_list_text"><span>计算机班</span></p>
+					</li>
+					<li class="tittle_list">
+						<span class="tittle_list_color"></span>
+						<p class="tittle_list_text"><span>计算机班</span></p>
+					</li>
+					<li class="tittle_list">
+						<span class="tittle_list_color"></span>
+						<p class="tittle_list_text"><span>计算机班</span></p>
+					</li>
+					<li class="tittle_list">
+						<span class="tittle_list_color"></span>
+						<p class="tittle_list_text"><span>计算机班</span></p>
+					</li>
+					<li class="tittle_list">
+						<span class="tittle_list_color"></span>
+						<p class="tittle_list_text"><span>计算机班</span></p>
+					</li>
+					<li class="tittle_list">
+						<span class="tittle_list_color"></span>
+						<p class="tittle_list_text"><span>计算机班计算机班计算机班</span></p>
+					</li>
+					<li class="tittle_list">
+						<span class="tittle_list_color"></span>
+						<p class="tittle_list_text"><span>计算机班</span></p>
+					</li>
+					<li class="tittle_list">
+						<span class="tittle_list_color"></span>
+						<p class="tittle_list_text"><span>计算机班</span></p>
+					</li>
+				</ul>
+			</div>
+			<!--内容-->
+			<div id="rightlist" class="list_box_m">
+				<ul class="Slide">
+					<li class="tittle_main">
+						<!--下方span标签有两种颜色用class名称：color_1,color_2来控制-->
+						<span class="tittle_main_ico_t icon iconfont icon-iconwohover color_1"></span>
+						<span class="tittle_main_name">你好</span>
+						<a class="tittle_main_ico_f icon iconfont icon-boda"></a>
+					</li>
+					<li class="tittle_main">
+						<span class="tittle_main_ico_t icon iconfont icon-iconwohover color_2"></span>
+						<span class="tittle_main_name">你好</span>
+						<a class="tittle_main_ico_f icon iconfont icon-boda"></a>
+					</li>
+					<li class="tittle_main">
+						<span class="tittle_main_ico_t icon iconfont icon-iconwohover color_1"></span>
+						<span class="tittle_main_name">你好</span>
+						<a class="tittle_main_ico_f icon iconfont icon-boda"></a>
+					</li>
+					<li class="tittle_main">
+						<span class="tittle_main_ico_t icon iconfont icon-iconwohover color_2"></span>
+						<span class="tittle_main_name">你好</span>
+						<a class="tittle_main_ico_f icon iconfont icon-boda"></a>
+					</li>
+					<li class="tittle_main">
+						<span class="tittle_main_ico_t icon iconfont icon-iconwohover color_1"></span>
+						<span class="tittle_main_name">你好</span>
+						<a class="tittle_main_ico_f icon iconfont icon-boda"></a>
+					</li>
+					<li class="tittle_main">
+						<span class="tittle_main_ico_t icon iconfont icon-iconwohover color_2"></span>
+						<span class="tittle_main_name">你好</span>
+						<a class="tittle_main_ico_f icon iconfont icon-boda"></a>
+					</li>
+					<li class="tittle_main">
+						<span class="tittle_main_ico_t icon iconfont icon-iconwohover color_1"></span>
+						<span class="tittle_main_name">你好</span>
+						<a class="tittle_main_ico_f icon iconfont icon-boda"></a>
+					</li>
+					<li class="tittle_main">
+						<span class="tittle_main_ico_t icon iconfont icon-iconwohover color_2"></span>
+						<span class="tittle_main_name">你好</span>
+						<a class="tittle_main_ico_f icon iconfont icon-boda"></a>
+					</li>
+					<li class="tittle_main">
+						<span class="tittle_main_ico_t icon iconfont icon-iconwohover color_1"></span>
+						<span class="tittle_main_name">你好</span>
+						<a class="tittle_main_ico_f icon iconfont icon-boda"></a>
+					</li>
+					<li class="tittle_main">
+						<span class="tittle_main_ico_t icon iconfont icon-iconwohover color_2"></span>
+						<span class="tittle_main_name">你好</span>
+						<a class="tittle_main_ico_f icon iconfont icon-boda"></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+
+</html>
+<script src="../../js/move.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	//上下滑动控件
+	$("#leftList,#rightlist").move({
+		width: 0,
+		height: $(window).height()-200,
+		x: false,
+		y: true
+	});
+	$(function () {
+		$('.Slide li').on('click', function () {
+			$(this).addClass('on').siblings().removeClass('on');
+		})
+		$('#suo-content').bind('input onpropertychange', function () {
+			if ($(this).val()) {
+				$('.quxiao').css('display', 'inline-block');
+			} else {
+				$('.quxiao').css('display', 'none');
+			}
+		});
+		$('.quxiao').click(function () {
+			$('#suo-content').val('');
+			$(this).css('display', 'none');
+		});
+		$('.tittle_main span').on('click', function () {
+			window.location.href = 'someone-message.html';
+		})
+	});
+</script>

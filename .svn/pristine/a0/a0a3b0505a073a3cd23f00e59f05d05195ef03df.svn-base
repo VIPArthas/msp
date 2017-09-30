@@ -1,0 +1,91 @@
+package com.wh.xyfentity;
+
+import com.wh.util.BaseModel;
+
+public class XyfListenedSong extends BaseModel{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Integer id;
+
+    private String userId;
+
+    private String songId;
+
+    private String songName;
+
+    private String singer;
+
+    private String singerId;
+    
+    private String picurl;	//歌曲图片地址全路径,可直接访问
+
+    private Integer source;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId == null ? null : userId.trim();
+    }
+
+    public String getSongId() {
+        return songId;
+    }
+
+    public void setSongId(String songId) {
+        this.songId = songId == null ? null : songId.trim();
+    }
+
+    public String getSongName() {
+        return songName;
+    }
+
+    public void setSongName(String songName) {
+        this.songName = songName == null ? null : songName.trim();
+    }
+
+    public String getSinger() {
+        return singer;
+    }
+
+    public void setSinger(String singer) {
+        this.singer = singer == null ? null : singer.trim();
+    }
+
+    public String getSingerId() {
+        return singerId;
+    }
+
+    public void setSingerId(String singerId) {
+        this.singerId = singerId == null ? null : singerId.trim();
+    }
+    
+    
+    public String getPicurl() {
+		return picurl;
+	}
+
+	public void setPicurl(String picurl) {
+		this.picurl = picurl;
+	}
+
+	public Integer getSource() {
+        return source;
+    }
+
+    public void setSource(Integer source) {
+        this.source = source;
+    }
+}

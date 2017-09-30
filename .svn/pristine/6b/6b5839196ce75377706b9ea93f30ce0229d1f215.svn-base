@@ -1,0 +1,321 @@
+package com.wh.controller.msp;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.wh.base.AjaxJson;
+import com.wh.base.PageBounds;
+import com.wh.controller.common.BaseController;
+import com.wh.entity.WmhTagUse;
+import com.wh.entity.WmhUserTag;
+import com.wh.mspentity.MspDepartment;
+import com.wh.mspentity.MspMessage;
+import com.wh.mspentity.MspPlatform;
+import com.wh.mspentity.MspUser;
+import com.wh.service.msp.MspDepartmentService;
+import com.wh.service.msp.MspMessageService;
+import com.wh.service.msp.MspPlatformService;
+import com.wh.service.msp.MspUserService;
+import com.wh.service.wmh.WmhTagUseService;
+import com.wh.service.wmh.WmhUserTagService;
+import com.wh.util.StringUtil;
+import com.wh.util.msp.Constants;
+import com.wh.util.msp.EnumMethod;
+import com.wh.util.msp.HttpRequestUtil;
+import net.sf.json.JSONObject;
+
+/**
+ * 消息推送
+ * 
+ * @author Administrator
+ *
+ */
+@Controller
+@RequestMapping("/msp/mspMessage")
+public class MspMessageController extends BaseController {
+
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+
+	@Resource
+	private MspPlatformService mspPlatformService;
+	@Resource
+	private MspMessageService mspMessageService;
+
+	@Resource
+	private MspDepartmentService mspDepartmentService;
+
+	@Resource
+	private MspUserService mspUserService;
+
+	@Resource
+	private WmhUserTagService wmhUserTagService;
+
+	@Resource
+	private WmhTagUseService wmhTagUseService;
+	// 发送接口
+
+	/**
+	 * text消息 在有"的前面转义
+	 * 
+	 * @param touser
+	 *            UserID列表（消息接收者，多个接收者用‘|’分隔）。特殊情况：指定为@all，则向关注该企业应用的全部成员发送————
+	 *            "touser": "UserID1|UserID2|UserID3"
+	 * @param toparty
+	 *            PartyID列表，部门ID列表,多个接受者用‘|’分隔。当touser为@all时忽略本参数————"toparty":
+	 *            " PartyID1 | PartyID2 "
+	 * @param totag
+	 *            TagID列表，多个接受者用‘|’分隔。当touser为@all时忽略本参数————"totag":
+	 *            " TagID1 | TagID2 "
+	 * @param msgtype
+	 *            消息类型，此时固定为：text
+	 * @param agentid
+	 *            企业应用的id，整型。可在应用的设置页面查看
+	 * @param content
+	 *            消息内容
+	 * @param safe
+	 *            表示是否是保密消息，0表示否，1表示是，默认0
+	 */
+	public static String STextMsg(String touser, String toparty, String totag, String agentid, String content) {
+
+		String PostData = "{\"agentid\":%s,\"touser\": \"%s\",\"toparty\": \"%s\",\"totag\": \"%s\","
+				+ "\"msgtype\":\"%s\",\"text\": {\"content\": \"%s\"},\"safe\":0}";
+
+		// %s 文本替代
+		String outputStr = String.format(PostData, agentid, touser, toparty, totag, "text", content);
+
+		return outputStr;
+	}
+
+	/**
+	 * 根据搜索条件模糊查询符合条件的部门,人员 精确查询标签
+	 * 
+	 * @param search
+	 * @return
+	 */
+	@RequestMapping(value = "/web/searchList.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson searchList(HttpServletRequest req, HttpServletResponse resp,
+			@RequestParam(required = true) String search) {
+		AjaxJson json = new AjaxJson();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("search", search);
+		List<MspDepartment> depList = mspDepartmentService.findList(map, new PageBounds());
+
+		List<MspUser> userList = mspUserService.findList(map, new PageBounds());
+
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		if (depList != null & depList.size() > 0) {
+
+			map1.put("depList", depList);
+		}
+		if (userList != null & userList.size() > 0) {
+
+			map1.put("userList", userList);
+		}
+		WmhTagUse wmhTagUse = null;
+		try {
+			wmhTagUse = wmhTagUseService.selectTagByTagName(search);
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		if (wmhTagUse != null) {
+			map1.put("tag", wmhTagUse);
+		}
+
+		json.setAttributes(map1);
+		return json;
+	}
+
+	/**
+	 * 消息推送
+	 * 
+	 * @param touser
+	 *            用户userId
+	 * @param toparty
+	 * @param totag
+	 *            标签
+	 * @param content
+	 *            发送内容
+	 * @return
+	 */
+	@RequestMapping(value = "/web/sendMessage.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson sendMessage(HttpServletRequest req, HttpServletResponse resp, String touser, String toparty,
+			String totag, String content, String wxSend, String smsSend, String mailSend) {
+		AjaxJson json = new AjaxJson();
+		boolean flag = false;
+		MspPlatform mspPlatform = mspPlatformService.load(Constants.MSPPLATFORMID);
+		String agentid = String.valueOf(Constants.MSPAGENTID);
+		String accessToken = mspPlatform.getAccessToken();
+		// Post的数据
+		String PostData = STextMsg(touser, toparty, totag, agentid, content);
+		log.info("MSP 发送消息POST数据---->PostData:" + PostData);
+		JSONObject jsonObject = null;
+		String requestUrl = Constants.SEND_MESSAGE_URL;
+		requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken);
+		jsonObject = HttpRequestUtil.httpRequest(requestUrl, EnumMethod.POST.name(), PostData);
+		int errcode = jsonObject.getInt("errcode");
+		if (errcode == 0) {
+			flag = true;
+			// 将发送的信息保存在本地
+			MspMessage mspMessage = new MspMessage();
+			mspMessage.setToUser(touser);
+			mspMessage.setToParty(toparty);
+			mspMessage.setToTag(totag);
+			mspMessage.setAgentId(agentid);
+			mspMessage.setContent(content);
+			mspMessage.setCreateTime(new Date());
+			mspMessageService.save(mspMessage);
+		} else {
+			json.setMsg(jsonObject.getString("errmsg"));
+			// 发送信息失败
+			log.error("发送信息失败  errcode:{} errmsg:{}", errcode, jsonObject.getString("errmsg"));
+		}
+		return json;
+	}
+
+	/**
+	 * 推送消息历史展示
+	 * 
+	 * @param start
+	 * @param length
+	 * @return
+	 */
+	@RequestMapping(value = "/web/messageList.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson messageList(HttpServletRequest req, HttpServletResponse resp, Integer start, Integer length) {
+		AjaxJson json = new AjaxJson();
+		PageBounds pages = new PageBounds(start, length);
+		List<MspMessage> messageList = mspMessageService.findList(null, pages);
+		int count=mspMessageService.countList(null);
+		List<MspDepartment> mdList = mspDepartmentService.findList(null, new PageBounds());
+
+		if (messageList != null && messageList.size() > 0) {
+			for (MspMessage mspMessage : messageList) {
+				String touser = mspMessage.getToUser();
+				if (StringUtil.isNotEmpty(touser)) {
+					if ("@all".equals(touser)) {
+						mspMessage.setToUserName("全部");
+					} else {
+						String[] tuArray = touser.split("\\|");
+						if (tuArray != null & tuArray.length > 0) {
+							String munameStr = "";
+							for (int i = 0; i < tuArray.length; i++) {
+								Map<String, Object> map = new HashMap<String, Object>();
+								map.put("userId", tuArray[i]);
+								List<MspUser> mspUserList = mspUserService.findList(map, new PageBounds());
+								if (mspUserList != null & mspUserList.size() > 0) {
+									for (MspUser mspUser : mspUserList) {
+										munameStr = munameStr + mspUser.getName() + ",";
+									}
+								}
+							}
+							if (munameStr.length() > 1)
+								munameStr = munameStr.substring(0, munameStr.length() - 1);
+
+							mspMessage.setToUserName(munameStr);
+						}
+					}
+				}else{
+					mspMessage.setToUserName("");
+				}
+
+				//List<MspDepartment> mdList = mspDepartmentService.findList(null, new PageBounds());
+				
+				
+				
+				
+				
+				String topart = mspMessage.getToParty();
+				if (StringUtil.isNotEmpty(topart)) {
+					if ("@all".equals(topart)) {
+						mspMessage.setToPartyName("全部");
+					} else {
+						String[] tuArray = topart.split("\\|");
+						String munameStr = "";
+						if (tuArray != null & tuArray.length > 0) {
+							
+							for (int i = 0; i < tuArray.length; i++) {
+								Map<String, Object> map = new HashMap<String, Object>();
+								map.put("id", tuArray[i]);
+								if (mdList != null & mdList.size() > 0) {
+									for (MspDepartment md : mdList) {
+										if (tuArray[i].equals(md.getId())) {
+											munameStr = munameStr + md.getName() + ",";
+											break;
+										}
+									}
+								}
+							}
+							if (munameStr.length() > 1)
+								munameStr = munameStr.substring(0, munameStr.length() - 1);
+
+							mspMessage.setToPartyName(munameStr);
+						}
+					}
+				}else{
+					mspMessage.setToPartyName("");
+				}
+
+			}
+
+			json.setObj(messageList);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("count", count);
+			json.setAttributes(map);
+		}
+		return json;
+	}
+
+	/**
+	 * 我的消息展示
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param wxid
+	 *            我的主键id 存在session内,全程保持
+	 * @param start
+	 * @param length
+	 * @return
+	 */
+	@RequestMapping(value = "/wx/myMesList.htm", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public AjaxJson myMesList(HttpServletRequest req, HttpServletResponse resp, String wxid, Integer start,
+			Integer length) {
+
+		/*
+		 * wxid = "lixiaofeiaili"; start = 1; length = 10;
+		 */
+		
+		AjaxJson json = new AjaxJson();
+		PageBounds pages = new PageBounds(start, length);
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if (StringUtil.isEmpty(wxid)) {
+			wxid=(String) req.getSession().getAttribute("wxid");
+		}
+		map.put("wxid", wxid);
+		List<MspMessage> messageList = mspMessageService.findList(map, pages);
+		if (messageList != null && messageList.size() > 0) {
+			json.setObj(messageList);
+		}
+
+		return json;
+	}
+
+}

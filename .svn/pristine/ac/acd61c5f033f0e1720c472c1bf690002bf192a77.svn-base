@@ -1,0 +1,597 @@
+/**
+ * Created by User on 2017/5/31.
+ */
+
+/** 有缘人脚本 **/
+	function getAddr(callback) {
+		console.log('进入方法咯');
+		var run = 1;
+		var runn = 1;
+		showLoadingimg();
+	    var geolocation = new BMap.Geolocation();
+	    var addlng = '';
+	    var addlat = '';
+	    
+	    geolocation.getCurrentPosition(function (r) {
+	        if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+	            //alert(r.point.lng + " ， " + r.point.lat);           
+	        	 addlng = r.point.lng;
+	             addlat = r.point.lat;
+	             sessionStorage.setItem('addlng',addlng);
+	             sessionStorage.setItem('addlat',addlat);
+	        }
+	        if(run){
+	        	console.log('定位咯');
+	        	runn = 0;
+	        	callback(addlng,addlat);
+	        } 
+	    });
+	    
+	    setTimeout(function () {
+	    	if(runn){
+	    		console.log('强制加载咯');
+	    		run = 0;
+	        	callback(addlng,addlat);
+	    	}
+	    },4000);
+	}
+	function message(addlg,addlt){
+		$.ajax({
+		    type: "GET",
+		    url: SERVER_ROOT_PATH + "/xyf/xyfUser/wx/getMyFateUsers.htm",
+		    data:{addrLng:addlg,addrLat:addlt},
+		    dataType: "json",
+		    success: function (result) {
+		    console.log(result);
+		    hideLoadingimg();
+		    var bod = document.querySelector('.youyuan_num');
+		    if(result.success){
+		    	
+			        if(result.obj){
+			        	bod.innerHTML = '';
+			        	$('body').css('background-color','#f2f2f2');
+			            for (var i = 0; i < result.obj.length; i++) {
+			                var list = document.createElement('section');
+			                list.className = 'youyuan-person';
+			                
+//			                if(result.obj[i].loveSongsCount){
+//			                	result.obj[i].loveSongsCount = result.obj[i].loveSongsCount;
+//			                }else{
+//			                	result.obj[i].loveSongsCount = 0;
+//			                }
+//			                if(result.obj[i].lateListenedSongsCount){
+//			                	result.obj[i].lateListenedSongsCount = result.obj[i].lateListenedSongsCount;
+//			                }else{
+//			                	result.obj[i].lateListenedSongsCount = 0;
+//			                }
+			                result.obj[i].fateRate = Number(result.obj[i].fateRate).toFixed(2);
+			          
+			                if(result.obj[i].distance === 0.0){
+			                	result.obj[i].distance = 0.01;
+			                }
+			                
+			                if(result.obj[i].distance){
+			                	result.obj[i].distance = Number(result.obj[i].distance).toFixed(2);
+			                }else{
+			                	result.obj[i].distance = 100;
+			                }
+			                		 list.innerHTML = ' <div class="value-Num"><img class="headphoto" src=' + result.obj[i].otherUser.headimage + ' alt="" data-userid=' + result.obj[i].otherUser.userId + ' onclick="photo_img($(this))"><div><img src="../../img/love01.png" alt=""><span>' + result.obj[i].fateRate + '%</span></div></div>'
+			                           + '<div class="value-content">'
+			                           + '<div>'
+			                           + '<div class="value-person">'
+			                           + '<div>' + result.obj[i].otherUser.nickName + '</div>'
+			                           + '<div><i class="icon iconfont icon-ditu1"></i><span>' + result.obj[i].distance + 'KM</span></div>'
+			                           + '</div>'
+			                           + '<div class="value-sw">'
+			                           + ((result.obj[i].otherUser.gender == 1)?'<span class="value-sB"><i class="icon iconfont icon-nan"></i><span>' + result.obj[i].otherUser.age + '</span></span>':'<span class="value-sG"><i class="icon iconfont icon-iconfontshouyezhuyetubiao07"></i><span>' + result.obj[i].otherUser.age + '</span></span>')
+			                           + '<span class="value-swhere">' + result.obj[i].otherUser.address + '</span>'
+			                           + '</div>'
+			                           + '</div>'
+			                           + '<div class="value-songs">'
+			                           + '<div>你们有<span>' + result.obj[i].loveNum + '</span>' + result.obj[i].loveMsg + '</div>'
+			                           + '<div>你们有<span>' + result.obj[i].listenNum + '</span>' + result.obj[i].listenMsg + '</div>'
+			                           + '<div class="value-what">'
+			                           + ((result.obj[i].gzStatus == 1)?'<div onclick="attentioned($(this))" data-userid=' + result.obj[i].otherUser.userId + '><i class="icon iconfont icon-duihao"></i><span>已关注</span></div>':'<div onclick="addattention($(this))" data-userid=' + result.obj[i].otherUser.userId + '><i class="icon iconfont icon-jiahao"></i><span>关注</span></div>')
+				                         + '<div class="si_xin" data-userid=' + result.obj[i].otherUser.userId + ' onclick="si_xin($(this))"><i class="icon iconfont icon-xiaoxi"></i><span>私信</span></div>'
+			                           + '</div>'
+			                           + '</div>'
+			                           + '</div>';		                				                		
+			                bod.appendChild(list);
+			            }
+			           
+			           $('.paixu-select div').attr('onclick','paixu($(this))');
+
+			        }else{
+			        	$('body').css('background-color','#fff');
+			            bod.innerHTML = '<img class="empty_img" src="../../img/empty_11.jpg" alt="">';
+			        }
+		    	
+		    }else{
+		    	$('body').css('background-color','#fff');
+	            bod.innerHTML = '<img class="empty_img" src="../../img/empty_1.jpg" alt="">';
+		    }	       
+		    }
+		});
+	}
+	function messageone(goals,smallAge,bigAge){
+		showLoadingimg();
+		$.ajax({
+		    type: "GET",
+		    url: SERVER_ROOT_PATH + "/xyf/xyfUser/wx/getMyFateUsers.htm",
+		    data:{goals:goals,smallAge:smallAge,bigAge:bigAge},
+		    dataType: "json",
+		    success: function (result) {
+		    console.log(result);
+		    hideLoadingimg();
+		    var bod = document.querySelector('.youyuan_num');
+		    if(result.success){	
+			        if(result.obj){
+			        	bod.innerHTML = '';
+			        	$('body').css('background-color','#f2f2f2');
+			            for (var i = 0; i < result.obj.length; i++) {
+			                var list = document.createElement('section');
+			                list.className = 'youyuan-person';
+			                if(result.obj[i].loveSongsCount){
+			                	result.obj[i].loveSongsCount = result.obj[i].loveSongsCount;
+			                }else{
+			                	result.obj[i].loveSongsCount = 0;
+			                }
+			                if(result.obj[i].lateListenedSongsCount){
+			                	result.obj[i].lateListenedSongsCount = result.obj[i].lateListenedSongsCount;
+			                }else{
+			                	result.obj[i].lateListenedSongsCount = 0;
+			                }
+			                result.obj[i].fateRate = Number(result.obj[i].fateRate).toFixed(2);
+			          
+			                if(result.obj[i].distance === 0.0){
+			                	result.obj[i].distance = 0.01;
+			                }
+			                
+			                if(result.obj[i].distance){
+			                	result.obj[i].distance = Number(result.obj[i].distance).toFixed(2);
+			                }else{
+			                	result.obj[i].distance = 100;
+			                }
+			                		 list.innerHTML = ' <div class="value-Num"><img class="headphoto" src=' + result.obj[i].otherUser.headimage + ' alt="" data-userid=' + result.obj[i].otherUser.userId + ' onclick="photo_img($(this))"><div><img src="../../img/love01.png" alt=""><span>' + result.obj[i].fateRate + '%</span></div></div>'
+			                           + '<div class="value-content">'
+			                           + '<div>'
+			                           + '<div class="value-person">'
+			                           + '<div>' + result.obj[i].otherUser.nickName + '</div>'
+			                           + '<div><i class="icon iconfont icon-ditu1"></i><span>' + result.obj[i].distance + 'KM</span></div>'
+			                           + '</div>'
+			                           + '<div class="value-sw">'
+			                           + ((result.obj[i].otherUser.gender == 1)?'<span class="value-sB"><i class="icon iconfont icon-nan"></i><span>' + result.obj[i].otherUser.age + '</span></span>':'<span class="value-sG"><i class="icon iconfont icon-iconfontshouyezhuyetubiao07"></i><span>' + result.obj[i].otherUser.age + '</span></span>')
+			                           + '<span class="value-swhere">' + result.obj[i].otherUser.address + '</span>'
+			                           + '</div>'
+			                           + '</div>'
+			                           + '<div class="value-songs">'
+			                           + '<div>你们有<span>' + result.obj[i].loveNum + '</span>' + result.obj[i].loveMsg + '</div>'
+			                           + '<div>你们有<span>' + result.obj[i].listenNum + '</span>' + result.obj[i].listenMsg + '</div>'
+			                           + '<div class="value-what">'
+			                           + ((result.obj[i].gzStatus == 1)?'<div onclick="attentioned($(this))" data-userid=' + result.obj[i].otherUser.userId + '><i class="icon iconfont icon-duihao"></i><span>已关注</span></div>':'<div onclick="addattention($(this))" data-userid=' + result.obj[i].otherUser.userId + '><i class="icon iconfont icon-jiahao"></i><span>关注</span></div>')
+				                         + '<div class="si_xin" data-userid=' + result.obj[i].otherUser.userId + ' onclick="si_xin($(this))"><i class="icon iconfont icon-xiaoxi"></i><span>私信</span></div>'
+			                           + '</div>'
+			                           + '</div>'
+			                           + '</div>';		                				                		
+			                bod.appendChild(list);
+			            }
+			           
+			           $('.paixu-select div').attr('onclick','paixu($(this))');
+
+			        }else{
+			        	$('body').css('background-color','#fff');
+			            bod.innerHTML = '<img class="empty_img" src="../../img/empty_11.jpg" alt="">';
+			        }
+		    	
+		    }else{
+		    	$('body').css('background-color','#fff');
+	            bod.innerHTML = '<img class="empty_img" src="../../img/empty_1.jpg" alt="">';
+		    }	       
+		    }
+		});
+	}
+
+
+	    function shangxia() {
+	        if(jiantou == 1){
+	            $('.yuanfen-paixu .icon').removeClass('icon-xiangxia').addClass('icon-xiangshang');
+	            jiantou = 0
+	        }else {
+	            $('.yuanfen-paixu .icon').removeClass('icon-xiangshang').addClass('icon-xiangxia');
+	            jiantou = 1
+	        }
+	    }
+	    var jiantou = 1;
+	    $('.yuanfen-paixu').click(function () {
+	        event.stopPropagation();
+	        
+	        $('.zhe_zhao').addClass('zdy-dis');
+	        shangxia();
+	        $('.paixu-select').toggleClass('selectdiv-show');
+	    });
+	    
+	    function paixu(th){
+	        $('.paixu-select div').attr('onclick','');
+	        showLoadingimg();
+	        	event.stopPropagation();
+	            var secleted = th;
+	            secleted.addClass('paixu-selectdiv').siblings().removeClass('paixu-selectdiv');
+	            setTimeout(function () {
+	                $('.paixu-selected').html(secleted.html());
+	                $('.paixu-select').removeClass('selectdiv-show');
+	                shangxia();
+	            },200)
+	            var typewhat = secleted.attr('data-type');
+	            $.ajax({
+	                type: "GET",
+	                url: SERVER_ROOT_PATH + "/xyf/xyfUser/wx/fateUserSort.htm",
+	                data:{type:typewhat},
+	                dataType: "json",
+	                success: function (result) {
+	                    $('.paixu-select div').attr('onclick','paixu($(this))');
+	                    hideLoadingimg();
+	                	console.log(result);
+	            	    if(result.success){
+	    		        if(result.obj){
+						var bod = document.querySelector('.youyuan_num');
+	    		        	bod.innerHTML = '';
+	    		        	$('body').css('background-color','#f2f2f2');
+	    		            for (var i = 0; i < result.obj.length; i++) {
+	    		                var list = document.createElement('section');
+	    		                list.className = 'youyuan-person';
+	    		                if(result.obj[i].loveSongsCount){
+	    		                	result.obj[i].loveSongsCount = result.obj[i].loveSongsCount;
+	    		                }else{
+	    		                	result.obj[i].loveSongsCount = 0;
+	    		                }
+	    		                if(result.obj[i].lateListenedSongsCount){
+	    		                	result.obj[i].lateListenedSongsCount = result.obj[i].lateListenedSongsCount;
+	    		                }else{
+	    		                	result.obj[i].lateListenedSongsCount = 0;
+	    		                }
+	    		                result.obj[i].fateRate = Number(result.obj[i].fateRate).toFixed(2);
+	    		          
+	    		                if(result.obj[i].distance === 0.0){
+	    		                	result.obj[i].distance = 0.01;
+	    		                }
+	    		                
+	    		                if(result.obj[i].distance){
+	    		                	result.obj[i].distance = Number(result.obj[i].distance).toFixed(2);
+	    		                }else{
+	    		                	result.obj[i].distance = 100;
+	    		                }
+	    		                list.innerHTML = ' <div class="value-Num"><img class="headphoto" src=' + result.obj[i].otherUser.headimage + ' alt="" data-userid=' + result.obj[i].otherUser.userId + ' onclick="photo_img($(this))"><div><img src="../../img/love01.png" alt=""><span>' + result.obj[i].fateRate + '%</span></div></div>'
+		                           + '<div class="value-content">'
+		                           + '<div>'
+		                           + '<div class="value-person">'
+		                           + '<div>' + result.obj[i].otherUser.nickName + '</div>'
+		                           + '<div><i class="icon iconfont icon-ditu1"></i><span>' + result.obj[i].distance + 'KM</span></div>'
+		                           + '</div>'
+		                           + '<div class="value-sw">'
+		                           + ((result.obj[i].otherUser.gender == 1)?'<span class="value-sB"><i class="icon iconfont icon-nan"></i><span>' + result.obj[i].otherUser.age + '</span></span>':'<span class="value-sG"><i class="icon iconfont icon-iconfontshouyezhuyetubiao07"></i><span>' + result.obj[i].otherUser.age + '</span></span>')
+		                           + '<span class="value-swhere">' + result.obj[i].otherUser.address + '</span>'
+		                           + '</div>'
+		                           + '</div>'
+		                           + '<div class="value-songs">'
+		                           + '<div>你们有<span>' + result.obj[i].loveNum + '</span>' + result.obj[i].loveMsg + '</div>'
+		                           + '<div>你们有<span>' + result.obj[i].listenNum + '</span>' + result.obj[i].listenMsg + '</div>'
+		                           + '<div class="value-what">'
+		                           + ((result.obj[i].gzStatus == 1)?'<div onclick="attentioned($(this))" data-userid=' + result.obj[i].otherUser.userId + '><i class="icon iconfont icon-duihao"></i><span>已关注</span></div>':'<div onclick="addattention($(this))" data-userid=' + result.obj[i].otherUser.userId + '><i class="icon iconfont icon-jiahao"></i><span>关注</span></div>')
+			                         + '<div class="si_xin" data-userid=' + result.obj[i].otherUser.userId + ' onclick="si_xin($(this))"><i class="icon iconfont icon-xiaoxi"></i><span>私信</span></div>'
+		                           + '</div>'
+		                           + '</div>'
+		                           + '</div>';		   
+	    		                bod.appendChild(list);
+	    		            }
+	    		        }else{
+	    		        	$('body').css('background-color','#fff');
+	    		            bod.innerHTML = '<img class="empty_img" src="../../img/empty_11.jpg" alt="">';
+	    		        }
+	    	    	
+	    	    }else{
+	    	    	$('body').css('background-color','#fff');
+	             bod.innerHTML = '<img class="empty_img" src="../../img/empty_1.jpg" alt="">';
+	    	    }
+	                }
+	            });
+	    }
+	    $('body').click(function () {
+	    	if(!jiantou == 1){
+	    		shangxia();
+		        $('.paixu-select').removeClass('selectdiv-show')
+	    	}
+	    	
+	    })
+	function si_xin(th){	 
+         	localStorage.setItem('talksomeone',th.attr('data-userid'));               
+             window.parent.location.href='../liaoyixai/talking.html'; 
+    }
+    function photo_img(th){	
+            localStorage.setItem('someonezhuye',th.attr('data-userid'));
+            window.parent.location.href='../friend/friendcenter.html';
+    }
+
+     function attentioned(th) {
+        th.attr('onclick','addattention($(this))').html('<i class="icon iconfont icon-jiahao"></i><span>关注</span>');
+        console.log(th.attr('data-userid'));
+        $.ajax({
+            type: "GET",
+            url: SERVER_ROOT_PATH + "/xyf/xyfGz/wx/cancelGz.htm",
+            data: {gzUserId:th.attr('data-userid')},
+            dataType: "json",
+            success: function (result) {
+            	console.log('66655')
+            }
+
+        });
+    }
+    function addattention(th) {
+        th.attr('onclick','attentioned($(this))').html('<i class="icon iconfont icon-duihao"></i><span>已关注</span>')
+        console.log(th.data('userid'));
+        $.ajax({
+            type: "GET",
+            url: SERVER_ROOT_PATH + "/xyf/xyfGz/wx/GzUser.htm",
+            data: {gzUserId:th.attr('data-userid')},
+            dataType: "json",
+            success: function (result) {
+            	console.log('66644455')
+            }
+        });
+    }
+    $('.kou_ling').click(function () {
+        window.parent.location.href = '../ceshi/kouling.html';
+    });
+    
+    /** 聊一下脚本 **/
+    function liaoyixia(){
+    	$.ajax({
+    	    type: "GET",
+    	    url: SERVER_ROOT_PATH + "/xyf/xyfChat/wx/myChatList.htm",
+    	    dataType: "json",
+    	    success: function (result) {
+    	        var ul = document.querySelector('.list-ul');
+    	        if(result.obj){
+    	        var myDate = new Date();
+    	        var year = myDate.getYear()
+    	        var year = year < 2000 ? year + 1900 : year
+    	        var yy = year.toString().substr(2, 2);
+    	        var mon = myDate.getMonth()+1;
+    	        if(mon < 10){
+    	        	mon = '0' + mon;
+    	        }
+    	        console.log(yy + '-' + mon + '-' + myDate.getDate())      
+    	        for (var i = 0; i < result.obj.length; i++) {       
+    	            if(result.obj[i].dayTime == yy + '-' + mon + '-' + myDate.getDate()){
+    	                result.obj[i].dayTime = '今天';
+    	            }
+
+    	            var list = document.createElement('li');
+    	            list.className = 'list-li talkingwith';
+    	            list.setAttribute('data-userid',result.obj[i].userId); 
+    	                list.innerHTML = '<div class="con"><img src=' + result.obj[i].headImage + ' alt="">'
+    	                        + '<section class="liao-peopel">'
+    	                        + '<div><span class="liao-name">' + result.obj[i].nickName + '</span><span class="liao-time">' + result.obj[i].dayTime + '&nbsp;' + result.obj[i].hourTime + '</span></div>'
+    	                        + ((result.obj[i].unreadnum)?'<div><span class="liao-content">' + result.obj[i].msg + '</span><span class="liao-num">' + result.obj[i].unreadnum + '</span></div></section></div>':'<div><span class="liao-content">' + result.obj[i].msg + '</span><span></span></div></section></div>')
+    	                        + '<div class="btn"><div><span class="lahei">拉黑</span><span class="del">删除</span></div></div>';
+    	            ul.appendChild(list);
+    	        }
+    	        }else{
+    	        	ul.innerHTML = '<img class="empty_img" src="../../img/empty_2.jpg" alt="">';
+    	        	
+    	        }
+    	                event.stopPropagation();
+    	                event.preventDefault();
+    	                $('.list-li').touchWipe({itemDelete: '.btn'});
+    	    
+    	                var x,y,X,Y,moved,lis;
+    	            lis = document.querySelectorAll('.list-li');
+    	            for(i=0; i<lis.length; i++){
+
+    	                lis[i].addEventListener('touchstart',function(event){
+    	                    moved = false ; // moved用于判断是否滑动
+    	                    x = event.targetTouches[0].screenX ;
+    	                    y = event.targetTouches[0].screenY ;
+    	                });
+    	                lis[i].addEventListener('touchmove',function(event){
+    	                    if(moved) return;
+    	                    X = event.targetTouches[0].screenX ;
+    	                    Y = event.targetTouches[0].screenY ;
+    	                    if(X-x != 0 || Y-y !=0) moved = true
+    	                });
+    	                lis[i].addEventListener('touchend',function(){
+    	                    if(!moved) // 如果没有滑动就执行
+    	                    {
+    	                        localStorage.setItem('talksomeone',this.getAttribute('data-userid'));               
+    	                        window.parent.location.href='talking2.html'; 
+    	                    }
+    	                })
+    	            }
+
+    	            $('.lahei').bind('touchend',function () {
+    	                event.stopPropagation();
+    	                var userid = $(this).parents('.list-li').attr('data-userid');
+    	                console.log(userid);
+    	                var delth = $(this).parents('.list-li');
+
+    	                $.ajax({
+    	                    type: "GET",
+    	                    url: SERVER_ROOT_PATH + "/xyf/xyfRelate/wx/getLastChatInfo.htm",
+    	                    data: {toUserId:userid},
+    	                    dataType: "json",
+    	                    success: function (result) {
+    	                    	
+    	                    	console.log(result);
+    	                        if(result.success){
+    	                        	delth.remove();
+    	                        	
+    	                        }
+
+    	                    }
+
+    	                });
+
+    	            });
+    	            $('.del').bind('touchend',function () {
+    	                event.stopPropagation();
+    	                var userid = $(this).parents('.list-li').attr('data-userid');
+    	                console.log(userid);
+    	                var delth = $(this).parents('.list-li');
+    	                $.ajax({
+    	                    type: "GET",
+    	                    url: SERVER_ROOT_PATH + "/xyf/xyfChat/wx/deleteChatInfo.htm",
+    	                    data: {fromUserId:userid},
+    	                    dataType: "json",
+    	                    success: function (result) {
+    	                    	console.log(result);
+    	                        if(result.success){
+    	                        	delth.remove();
+    	                        
+    	                        }
+    	                    }
+    	                });
+    	            });         
+    	    }
+    	});
+    	}
+    /** 个人中心脚本 **/
+    $('.icon-ai61').click(function () {
+    	window.parent.location.href = 'editmessage.html'
+    })
+    $('.myguan').click(function () {
+    	window.parent.location.href = 'myattention.html'
+    })
+     $('.myfen').click(function () {
+    	 window.parent.location.href = 'attentionme.html'
+    })
+    $('.icon-xiayiye').click(function () {
+    	window.parent.location.href = 'mymusicquan.html'
+    })
+    /** 聊天脚本 **/
+            var say = '<span class="article-span">请输入...</span>';
+    $("#form_article").click(function(){
+            event.stopPropagation();         
+            articlspan();
+            document.querySelector('body').scrollTop = document.querySelector('body').scrollHeight;
+            closebq();
+        });
+        var togglebq = 1;
+        $('#form_article').keyup(function () {
+            fasong();
+        });
+        $('.icon-smile').click(function () {
+            event.stopPropagation();
+            if (togglebq) {
+                $('.page_emotion dd').css('display', 'inline-block');
+                $('.nav_emotion').css('display', 'block');
+                var high = $('.talking-content').css('height');
+                $('.talking-content').css('height', high.replace('px', '') - 130 + 'px');
+                togglebq = 0;
+            } else {
+                closebq();
+
+            }
+            articlempty()
+        });
+        $('.sendtalking').click(function () {
+            event.stopPropagation();
+            articlempty();
+
+        })
+        $('body').click(function () {
+            event.stopPropagation();
+            closebq();
+            articlempty();
+        })
+     function closebq() {
+            togglebq = 1;
+
+            $('.talking-content').css('height', '82.5vh');
+            $('.page_emotion dd').css('display', 'none');
+            $('.nav_emotion').css('display', 'none');
+        }
+     function fasong() {
+	 
+        if($('#form_article').html()){
+            $('.sendtalking').addClass('value-send').attr('onclick','sendmessage()');
+        }else {
+            $('.sendtalking').removeClass('value-send').attr('onclick','');
+        }
+    }
+    function sendmessage() {
+    	var tasomeone = localStorage.getItem('talksomeone');
+    	$('.sendtalking').removeClass('value-send').attr('onclick','');
+        event.stopPropagation();
+        var len = document.querySelector('#form_article').innerHTML.length;
+        console.log(len);
+        if(len>1000){
+        	alert('输入内容与表情过多')
+        }else{
+        	$.ajax({
+                type: "POST",
+                url: SERVER_ROOT_PATH + "/xyf/xyfChat/wx/saveChatInfo.htm",
+                data: {toUserId:tasomeone,msg:document.querySelector('#form_article').innerHTML},
+                dataType: "json",
+                success: function (result) {
+                    if(result.success){
+                        var di = document.createElement('div');
+                        di.className = 'talking-mine';
+                        var sec = document.createElement('section');
+                        sec.innerHTML = document.querySelector('#form_article').innerHTML;
+                        di.appendChild(sec);
+                        document.querySelector('.talking-content').appendChild(di);
+                        document.querySelector('.talking-content').scrollTop = document.querySelector('.talking-content').scrollHeight;
+                        $('#form_article').html('');
+                        fasong();
+                        articlempty();
+                    }else {
+                        alert('发送失败');
+                    }
+
+
+                }
+            });
+        }
+        
+}
+    function articlempty() {
+        if ($("#form_article").html() === "") {
+            $("#form_article").html(say);
+        }
+    }
+    function articlspan() {
+        if($("#form_article").html() == say){
+            $("#form_article").html("");
+        }
+    }
+    
+    /** 个人信息脚本 **/
+    function photoclose() {
+        $('.touxiangselect').css('display','none');
+        $('.tianxie-message').show();
+    }
+    $('.touxiang-photo').click(function () {
+        $('.tianxie-message').hide();
+        $('.touxiangselect').css('display','flex');
+        $('.touxiangselect').html(' <img class="closephoto" src="../../img/close-area.png" alt="" onclick="photoclose()">'
+                 + '<div class="div"><div><img src="../../img/photo24/photo1.jpg" alt=""></div><div><img src="../../img/photo24/photo2.jpg" alt=""></div><div><img src="../../img/photo24/photo3.jpg" alt=""></div><div><img src="../../img/photo24/photo4.jpg" alt=""></div></div>'
+                + '<div class="div"><div><img src="../../img/photo24/photo5.jpg" alt=""></div><div><img src="../../img/photo24/photo6.jpg" alt=""></div><div><img src="../../img/photo24/photo7.jpg" alt=""></div><div><img src="../../img/photo24/photo8.jpg" alt=""></div></div>'
+                + '<div class="div"><div><img src="../../img/photo24/photo9.jpg" alt=""></div><div><img src="../../img/photo24/photo10.jpg" alt=""></div><div><img src="../../img/photo24/photo11.jpg" alt=""></div><div><img src="../../img/photo24/photo12.jpg" alt=""></div></div>'
+                + '<div class="div"><div><img src="../../img/photo24/photo13.jpg" alt=""></div><div><img src="../../img/photo24/photo14.jpg" alt=""></div><div><img src="../../img/photo24/photo15.jpg" alt=""></div><div><img src="../../img/photo24/photo16.jpg" alt=""></div></div>'
+                + '<div class="div"><div><img src="../../img/photo24/photo17.jpg" alt=""></div><div><img src="../../img/photo24/photo18.jpg" alt=""></div><div><img src="../../img/photo24/photo19.jpg" alt=""></div><div><img src="../../img/photo24/photo20.jpg" alt=""></div></div>'
+                + '<div class="touxiang-submit">完成</div>')
+        $('.div div img').click(function () {
+            $('.photo-selected').remove();
+            $(this).parent('div').append("<span class='icon iconfont icon-duihao photo-selected'></span>");
+            $('.touxiang-photo').attr('changesrc',$(this).attr('src'))
+        });
+        $('.touxiang-submit').click(function () {
+            $('.touxiang-photo').attr('src',$('.touxiang-photo').attr('changesrc'));
+            photoclose()
+        });
+
+    });
+
+  
+    $('.select-sex>div').click(function () {
+        $(this).addClass('selected-sex').siblings().removeClass('selected-sex');
+    });

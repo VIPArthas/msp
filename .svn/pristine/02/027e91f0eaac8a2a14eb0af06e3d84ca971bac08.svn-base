@@ -1,0 +1,47 @@
+package com.wh.dao.msp;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import com.wh.base.BaseMapper;
+import com.wh.exception.DAOException;
+import com.wh.mspentity.MspPhoto;
+
+@Repository
+public interface MspPhotoMapper extends BaseMapper<MspPhoto, String> {
+	int deleteByPrimaryKey(String id);
+
+	int insert(MspPhoto record);
+
+	int insertSelective(MspPhoto record);
+
+	MspPhoto selectByPrimaryKey(String id);
+
+	int updateByPrimaryKeySelective(MspPhoto record);
+
+	int updateByPrimaryKey(MspPhoto record);
+
+	/**
+	 * 随手拍展示
+	 * 
+	 * @param type
+	 *            1热门, 2最新 默认1
+	 * @return
+	 */
+	List<Map<String, Object>> showList(@Param(value = "type") Integer type) throws DAOException;
+
+	/**
+	 * 根据 photo主键id 获取 photo及user 信息
+	 * 
+	 * @param photoId
+	 * @return
+	 */
+	Map<String, Object> getShowInfoByPhotoId(@Param(value = "photoId") String photoId) throws DAOException;
+
+	int updatePageviewNum(@Param(value = "photoId") String photoId)throws DAOException;
+
+	
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title>课程安排</title>
+		<script src="/resource/msp/wx/js/jquery-3.1.1.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="/resource/msp/wx/css/index.css" />
+		<script type="text/javascript">
+		$(document).ready(function(){
+			$.ajax({
+				type:"get",
+				url:"/msp/mspOracle/wx/kcap.htm",
+				dataType:"json",
+				success:function(data){
+			     var setData=function(baseData,n){
+			    	 switch(parseInt(baseData.JCZ.substr(2,2))){
+					  case 1:
+						  var oh=$("#sw").find("td").eq(n),ot=oh.html();
+						  oh.html(ot+baseData.KCAP)
+					  break;
+					  case 2:
+						  var oh=$("#sw").next().find("td").eq(n-1),ot=oh.html();
+						  oh.html(ot+baseData.KCAP)
+					  break;
+					  case 3:
+						  var oh=$("#xw").find("td").eq(n),ot=oh.html();
+						  oh.html(ot+baseData.KCAP);
+					  break;
+					  case 4:
+						  var oh=$("#xw").next().find("td").eq(n-1),ot=oh.html();
+						  oh.html(ot+baseData.KCAP)
+					  break;
+					  case 5:
+						  var oh=$("#ws").find("td").eq(n),ot=oh.html();
+						  oh.html(ot+baseData.KCAP)
+					  break;
+					  }
+			     }
+				 for(var i=0;i<data.obj.length;i++){
+					 switch(parseInt(data.obj[i].JCZ.substr(1,1))){
+					 case 1:
+						 setData(data.obj[i],1);
+					 break;
+					 case 2:
+						 setData(data.obj[i],2);
+					 break;
+					 case 3:
+						 setData(data.obj[i],3);
+					 break;
+					 case 4:
+						 setData(data.obj[i],4);
+					 break;
+					 case 5:
+						 setData(data.obj[i],5);
+					 break;
+					 case 6:
+						 setData(data.obj[i],6);
+					 break;
+					 case 7:
+						 setData(data.obj[i],7); 
+					 break;
+					 }
+				 }
+				}
+			})
+		 });
+		</script>
+	</head>
+	<body style="background-color:#fff;overflow-x:auto;">
+	<div class="kcap">
+	<table cellpadding="0" cellspacing="1" id="xsjf">
+	<thead>
+	<tr>
+	<th width="200">时间</th>
+	<th width="400">周一</th>
+	<th width="400">周二</th>
+	<th width="400">周三</th>
+	<th width="400">周四</th>
+	<th width="400">周五</th>
+	<th width="400">周六</th>
+	<th width="400">周日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr id="sw"><td rowspan="2">上午</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+	<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+	<tr id="xw"><td rowspan="2">下午</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+	<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+	<tr id="ws"><td>晚上</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+	</tbody>
+	<tfoot>
+	</tfoot>
+	</table>
+	</div>
+	</body>
+</html>

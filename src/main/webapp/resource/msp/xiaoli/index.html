@@ -1,0 +1,77 @@
+<html lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport"	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+<link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="/resource/wmh/wx/commons/css/font2/iconfont/iconfont.css" rel="stylesheet" />
+<link href="/resource/wmh/web/commons/css/bootstrap-year-calendar.min.css" rel="stylesheet" />
+<link href="/resource/wmh/web/commons/css/sendsuishoup.css" rel="stylesheet" />
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/resource/wmh/web/commons/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="/resource/wmh/web/commons/js/bootstrap-year-calendar.min.js"></script>
+<script type="text/javascript" src="/resource/wmh/web/commons/js/bootstrap-popover.js"></script>
+<script type="text/javascript" src="/resource/wmh/web/commons/js/select.js"></script>
+<title>校历</title>
+<script>
+	$(document).ready(function() {
+		function CurentTime() {
+			var now = new Date();
+			var year = now.getFullYear(); //年
+			var month = now.getMonth() + 1; //月
+			var day = now.getDate(); //日   
+			var clock = year + "-";
+			clock += month + "-";
+			if (day < 10)
+				clock += "0";
+			clock += day + "";
+			return clock;
+		}
+		$(".form-control").val(CurentTime());
+	})
+</script>
+
+</head>
+<body>
+
+	<div class="tabs">
+		<div class="row">
+			<div class="col-md-2 col-sm-3 co-xs-6">校历</div>
+			<div class="col-md-10 col-sm-9 co-xs-6"></div>
+		</div>
+	</div>
+	<div class="xiaoli">
+		<div class="setTerm">
+			<select tabindex="4" class="dropdown">
+				<option value="" class="label" value="">Month</option>
+				<option value="1">January</option>
+				<option value="2">February</option>
+				<option value="3">March</option>
+				<option value="April">April</option>
+				<option value="5">May</option>
+			</select> <a href="javascript:void(0)" id="save" class="fa">&#xe600;保存</a>
+			<div class="set-term">
+				<ul>
+					<li>
+						<div class="input-group input-daterange" data-provide="datepicker">
+							第一学期： <input type="text" class="form-control" value=""> <span
+								class="input-group-addon">至</span> <input type="text"
+								class="form-control" value="">
+						</div>
+					</li>
+					<li>
+						<div class="input-group input-daterange" data-provide="datepicker">
+							第二学期： <input type="text" class="form-control" value=""> <span
+								class="input-group-addon">至</span> <input type="text"
+								class="form-control" value="">
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+</html>

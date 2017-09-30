@@ -1,0 +1,56 @@
+*{
+	padding: 0;
+	margin: 0;
+	font-size: 0;
+	font-family: "微软雅黑";
+}
+html,body{
+	width: 100%;
+    height: 100%;
+	overflow-x: hidden;
+	background:#f8f8f8;
+}
+h1,h2,h3,h4,h5,h6{
+	font-weight:normal;
+}
+.tianjiawrap{
+	width: 100%;
+	height: 100%;
+	background:#f8f8f8;
+}
+.tianjiatop{
+	width: 100%;
+}
+.tianjiatop>p{
+	font-size: 0.24rem;
+	color: #999999;
+	margin-left: 0.4rem;
+	margin-top: 0.4rem;
+}
+.tianjiatop>input{
+	width: 5.36rem;
+	height: 0.68rem;
+	color: #555555;
+	font-size: 0.26rem;
+	margin-left: 0.4rem;
+	margin-top: 0.12rem;
+	padding-left: 0.24rem;
+}
+.tianjiabiaoqian{
+	width: 5.6rem;
+	margin: auto;
+}
+.changyongbiaoqian{
+	padding-left: 0.28rem;
+	padding-right: 0.28rem;
+}
+input{
+	outline:none;
+	border: 0.02rem solid #EEEEEE;
+	} 
+
+
+
+
+
+

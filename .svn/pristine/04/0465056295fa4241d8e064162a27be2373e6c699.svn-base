@@ -1,0 +1,49 @@
+$(document).ready(function(){
+//初始化部门人员数据
+	$.ajax({
+		type:"get",
+		dataType:"json",
+		cache:false,
+		url:urlPix+"/msp/mspUser/web/showAddressBook.htm",
+		async:false,
+		data:{
+		start:1,
+		length:10
+		},
+	    success:function(data){
+	    $("<li data-id="+data.obj.id+"><i class='fa ud'>&#xe758;</i><span data-switch='on' name='child'><i class='fa'>&#xe60e;</i>"+data.obj.name+"</span></li>").appendTo($(".result-list").eq(0));
+	    }
+	});
+var isclick=true;
+$(".result-list li").on("click","i.ud",function(){
+	if(isclick){
+	 $(this).css("transform","rotate(0)");
+	 var parentLi=$(this).parent();
+	 var childId=parentLi.data("id");
+	 var dataModel={};
+		$.ajax({
+			 type:"get",
+			 dataType:"json",
+			 cache:false,
+			 url:urlPix+"/msp/mspUser/web/showAddressBook.htm",
+			 async:false,
+			 data:{
+			 depID:childId,
+			 },
+			 success:function(data){
+				 dataModel=data;
+			 }
+		 });
+		if(dataModel.obj.childDepList!=null){
+			 var ChildList="<ul>"
+			 for(var i=0;i<dataModel.obj.childDepList.length;i++){
+				 ChildList+="<li data-id='"+dataModel.obj.childDepList[i].id+"'><span data-switch='on' name='child'><i class='fa'>&#xe63b;</i>"+dataModel.obj.childDepList[i].name+"</span></li>"
+				 innerUserData(dataModel.attributes.muList);
+			 }
+			 ChildList+="</ul>";
+			 $(ChildList).appendTo(parentLi);
+			 }
+	}
+	 
+})
+})

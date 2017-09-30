@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wh.dao.wmh.WmhFaultRelateMapper" >
+  <resultMap id="BaseResultMap" type="com.wh.entity.WmhFaultRelate" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="area_id" property="areaId" jdbcType="INTEGER" />
+    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+    <result column="goods_id" property="goodsId" jdbcType="INTEGER" />
+    <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+    <result column="resperson_id" property="respersonId" jdbcType="VARCHAR" />
+    <result column="resperson_name" property="respersonName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, area_id, area_name, goods_id, goods_name, resperson_id, resperson_name, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from wmh_fault_relate
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from wmh_fault_relate
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wh.entity.WmhFaultRelate" >
+    insert into wmh_fault_relate (id, area_id, area_name, 
+      goods_id, goods_name, resperson_id, 
+      resperson_name, create_time)
+    values (#{id,jdbcType=INTEGER}, #{areaId,jdbcType=INTEGER}, #{areaName,jdbcType=VARCHAR}, 
+      #{goodsId,jdbcType=INTEGER}, #{goodsName,jdbcType=VARCHAR}, #{respersonId,jdbcType=VARCHAR}, 
+      #{respersonName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wh.entity.WmhFaultRelate" >
+    insert into wmh_fault_relate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="areaId != null" >
+        area_id,
+      </if>
+      <if test="areaName != null" >
+        area_name,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="goodsName != null" >
+        goods_name,
+      </if>
+      <if test="respersonId != null" >
+        resperson_id,
+      </if>
+      <if test="respersonName != null" >
+        resperson_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="areaId != null" >
+        #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="areaName != null" >
+        #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsName != null" >
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="respersonId != null" >
+        #{respersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="respersonName != null" >
+        #{respersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wh.entity.WmhFaultRelate" >
+    update wmh_fault_relate
+    <set >
+      <if test="areaId != null" >
+        area_id = #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="areaName != null" >
+        area_name = #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsName != null" >
+        goods_name = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="respersonId != null" >
+        resperson_id = #{respersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="respersonName != null" >
+        resperson_name = #{respersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wh.entity.WmhFaultRelate" >
+    update wmh_fault_relate
+    set area_id = #{areaId,jdbcType=INTEGER},
+      area_name = #{areaName,jdbcType=VARCHAR},
+      goods_id = #{goodsId,jdbcType=INTEGER},
+      goods_name = #{goodsName,jdbcType=VARCHAR},
+      resperson_id = #{respersonId,jdbcType=VARCHAR},
+      resperson_name = #{respersonName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <!-- 故障维修负责人条件 -->
+  	<sql id="sql_where">
+		<where>
+			<if test="areaId != null">
+			and	area_id = #{areaId,jdbcType=INTEGER}
+			</if>
+			<if test="goodsId != null">
+			and	 goods_id = #{goodsId,jdbcType=INTEGER}
+			</if>
+			<if test="respersonId != null" >
+     and   resperson_id = #{respersonId,jdbcType=VARCHAR}
+      		</if>
+      <if test="respersonName != null" >
+      and  resperson_name = #{respersonName,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+     and   create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+		</where>
+	</sql>
+
+	<!-- 故障维修负责人list -->
+	<select id="findList" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from wmh_fault_relate 
+		<include refid="sql_where" />
+	</select>
+
+    	<!-- 故障维修负责人条件 返回map类型 -->
+	<sql id="sql_where1">
+		<where>
+			<if test="respersonName != null">
+				resperson_name like "%"#{respersonName}"%"	
+			</if>
+		</where>
+	</sql>
+  
+	<!-- 故障维修负责人条件 返回map类型 -->
+	<select id="findfaultUserList" resultType="java.util.Map" parameterType="java.lang.String">
+ 
+ SELECT 
+  * 
+FROM
+  `wmh_fault_relate` 
+WHERE resperson_id IS NOT NULL 
+  AND resperson_id != '' 
+  AND resperson_name IS NOT NULL 
+  AND resperson_name != '' 
+  <include refid="sql_where1" />
+ORDER BY area_id 
+
+	</select>
+
+	<!--故障维修负责人数量 -->
+	<select id="countList1" resultType="int">
+	 SELECT 
+  count(1)
+FROM
+  `wmh_fault_relate` 
+WHERE resperson_id IS NOT NULL 
+  AND resperson_id != '' 
+  AND resperson_name IS NOT NULL 
+  AND resperson_name != '' 
+		<include refid="sql_where1" />
+	</select>
+
+  
+</mapper>

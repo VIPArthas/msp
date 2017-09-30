@@ -1,0 +1,14 @@
+package com.wh.service.msp;
+
+
+import com.wh.mspentity.MspAttachements;
+
+
+import com.wh.service.base.BaseService;
+
+
+public interface MspAttachementsService extends BaseService<MspAttachements, Integer> {
+
+
+
+}

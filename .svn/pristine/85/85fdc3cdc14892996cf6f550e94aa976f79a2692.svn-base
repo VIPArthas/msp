@@ -1,0 +1,13 @@
+package com.wh.service.msp;
+
+
+import com.wh.mspentity.MspPhoto;
+
+import com.wh.service.base.BaseService;
+
+
+public interface MspPhotoService extends BaseService<MspPhoto, String> {
+
+
+
+}

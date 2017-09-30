@@ -1,0 +1,59 @@
+package com.wh.mspentity;
+
+import java.util.Date;
+
+import com.wh.util.BaseModel;
+
+/**
+ * jdbc 测试用 user类
+ * @author Leo
+ *
+ */
+public class User extends BaseModel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Integer id;
+
+	private String userName;
+
+	private String userPassword;
+
+	private Date userBirth;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserPassword() {
+		return userPassword;
+	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
+	}
+
+	public Date getUserBirth() {
+		return userBirth;
+	}
+
+	public void setUserBirth(Date userBirth) {
+		this.userBirth = userBirth;
+	}
+
+}

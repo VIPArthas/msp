@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title>成绩查询</title>
+		<script src="/resource/msp/wx/js/jquery-3.1.1.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="/resource/msp/wx/css/index.css" />
+		<script type="text/javascript">
+		$(document).ready(function(){
+			$.ajax({
+				type:"get",
+				url:"/msp/mspOracle/wx/cjcx.htm",
+				dataType:"json",
+				success:function(data){
+					if(data.obj!=null){
+					var trHTML,bz,time;
+					for(var i=0;i<data.obj.length;i++){
+						data.obj[i].DJZKSCJ==null?bz="":bz=data.obj[i].DJZKSCJ;
+						trHTML+="<tr><td><div>"+data.obj[i].XN+"</div></td><td>"+data.obj[i].MC+"</td><td>"+data.obj[i].KCMC+"</td><td>"+data.obj[i].BFZKSCJ+"</td><td>"+bz+"</td><td>"+data.obj[i].SFTG+"</td><td>"+data.obj[i].XF+"</td><td>"+data.obj[i].JD+"</td></tr>"
+					}
+					$("#xsjf tbody").append(trHTML);
+					trHTML="";
+					}else{
+						$("#xsjf tfoot").html("<tr><td colspan='6'>暂无数据</td></tr>")
+					}
+				}
+			});
+			$("#zt").change(function(){
+				$.ajax({
+					type:"get",
+					url:"/msp/mspOracle/wx/cjcx.htm",
+					dataType:"json",
+					data:{
+						lb:$("#key").val(),
+						xn:$("#zt").val()
+					},
+					success:function(data){
+						$("#xsjf tbody").html("");
+						$("#xsjf tfoot").html("");
+						if(data.obj!=null){
+						var trHTML,bz,time;
+						for(var i=0;i<data.obj.length;i++){
+							data.obj[i].DJZKSCJ==null?bz="":bz=data.obj[i].DJZKSCJ;
+							trHTML+="<tr><td><div>"+data.obj[i].XN+"</div></td><td>"+data.obj[i].MC+"</td><td>"+data.obj[i].KCMC+"</td><td>"+data.obj[i].BFZKSCJ+"</td><td>"+bz+"</td><td>"+data.obj[i].SFTG+"</td><td>"+data.obj[i].XF+"</td><td>"+data.obj[i].JD+"</td></tr>"
+						}
+						$("#xsjf tbody").append(trHTML);
+						//$("#xsjf tfoot").html("<tr><td colspan='2'>合计</td><td>"+data.attributes.YJJE+"</td><td>"+data.attributes.SJJE+"</td><td>"+data.attributes.JMJE+"</td><td>"+data.attributes.QFJE+"</td></tr>")
+						trHTML="";
+						}else{
+							$("#xsjf tfoot").html("<tr><td colspan='9'>暂无数据</td></tr>")
+						}
+					}
+				});
+			})
+		 });
+		</script>
+	</head>
+	<body style="background-color:#fff;">
+	<div class="search-aide">考试类别：<input type="text" id="key" />学年：<select id="zt"><option value="2017">2017</option><option value="2016">2016</option><option value="2015">2015</option><option value="2014">2014</option><option value="2013">2013</option></select>
+	<!-- <br />
+	<a href="javascript:void(0)" id="search">查询</a> -->
+	</div>
+	<table cellpadding="0" cellspacing="1" id="xsjf" class="cjcx">
+	<thead>
+	<tr>
+	<th>学年</th>
+	<th>学期</th>
+	<th>课程</th>
+	<th>百分制成绩</th>
+	<th>等级制成绩</th>
+	<th>是否通过</th>
+	<th>学分</th>
+	<th>绩点</th>
+	</tr>
+	</thead>
+	<tbody></tbody>
+	<tfoot>
+	</tfoot>
+	</table>
+	</body>
+</html>

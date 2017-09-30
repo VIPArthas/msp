@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title>学生缴费</title>
+		<script src="/resource/msp/wx/js/jquery-3.1.1.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="/resource/msp/wx/css/index.css" />
+		<script type="text/javascript">
+		$(document).ready(function(){
+			$.ajax({
+				type:"get",
+				url:"/msp/mspOracle/wx/tsjy.htm",
+				dataType:"json",
+				success:function(data){
+					if(data.obj!=null){
+					var trHTML,bz,time;
+					for(var i=0;i<data.obj.length;i++){
+						data.obj[i].JHBZ=="I"?bz="<span style='color:green;'>已还</span>":"<span style='color:red;'>未还</span>";
+						trHTML+="<tr><td><div>"+data.obj[i].TSMC+"</div></td><td>"+data.obj[i].JSRQ.substr(0,10)+"</td><td>"+data.obj[i].YHRQ.substr(0,10)+"</td><td>"+data.obj[i].XHRQ.substr(0,10)+"</td><td>"+bz+"</td></tr>"
+					}
+					$("#xsjf tbody").append(trHTML);
+					trHTML="";
+					}else{
+						$("#xsjf tfoot").html("<tr><td colspan='6'>暂无数据</td></tr>")
+					}
+				}
+			});
+			$("#search").click(function(){
+				$.ajax({
+					type:"get",
+					url:"/msp/mspOracle/wx/tsjy.htm",
+					dataType:"json",
+					data:{
+						bookName:$("#key").val(),
+						bookStatus:$("#zt").val()
+					},
+					success:function(data){
+						$("#xsjf tbody").html("");
+						$("#xsjf tfoot").html("");
+						if(data.obj!=null){
+						var trHTML,bz,time;
+						for(var i=0;i<data.obj.length;i++){
+							data.obj[i].JHBZ=="I"?bz="<span style='color:green;'>已还</span>":"<span style='color:red;'>未还</span>";
+							trHTML+="<tr><td><div>"+data.obj[i].TSMC+"</div></td><td>"+data.obj[i].JSRQ.substr(0,10)+"</td><td>"+data.obj[i].YHRQ.substr(0,10)+"</td><td>"+data.obj[i].XHRQ.substr(0,10)+"</td><td>"+bz+"</td></tr>"
+						}
+						$("#xsjf tbody").append(trHTML);
+						//$("#xsjf tfoot").html("<tr><td colspan='2'>合计</td><td>"+data.attributes.YJJE+"</td><td>"+data.attributes.SJJE+"</td><td>"+data.attributes.JMJE+"</td><td>"+data.attributes.QFJE+"</td></tr>")
+						trHTML="";
+						}else{
+							$("#xsjf tfoot").html("<tr><td colspan='6'>暂无数据</td></tr>")
+						}
+					}
+				});
+			})
+		 });
+		</script>
+	</head>
+	<body style="background-color:#fff;">
+	<div class="search-aide">图书名称：<input type="text" id="key" />图书状态：<select id="zt"><option value="I">已还</option><option value="0">未还</option></select>
+	<br />
+	<a href="javascript:void(0)" id="search">查询</a>
+	</div>
+	<table cellpadding="0" cellspacing="1" id="xsjf" class="tsjy">
+	<thead>
+	<tr>
+	<th>图书名称</th>
+	<th>借书日期</th>
+	<th>应还日期</th>
+	<th>实还日期</th>
+	<th>借还标志</th>
+	</tr>
+	</thead>
+	<tbody></tbody>
+	<tfoot>
+	</tfoot>
+	</table>
+	</body>
+</html>

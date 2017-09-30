@@ -1,0 +1,55 @@
+﻿*{
+    padding: 0;
+    margin: 0;
+    font-family: "微软雅黑";
+}
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    background: #f3f3f3;
+}
+h1,h2,h3,h4,h5,h6{
+    font-weight:normal;
+    margin: 0;
+}
+input{
+    outline:none;
+}
+.top{
+    background: url(../img/bj..jpg) repeat;
+    height: 0.84rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    display: -webkit-flex;
+    -webkit-justify-content: space-between;
+    -webkit-align-items: center;
+}
+.date{color: white;font-size: 0.26rem;margin-left: 0.28rem;}
+.date input{background-color: transparent;border: none;color: white;
+    font-family: '微软雅黑';font-size: 0.26rem;width:1.85rem;z-index: 1000;position: absolute; }
+.date span{position: relative;left: 1.6rem;font-size: 0.28rem}
+.classroom{color: white;font-size: 0.26rem;margin-right: 0.28rem}
+.classroom span{margin-left: 0.14rem;}
+.classNum{display: none;border-radius: 0.04rem;border-left: 1px solid #efefef; border-right: 1px solid #efefef;position: absolute;background-color: white;color: #666666;text-align: center;right: 0.05rem;box-shadow: 0 10px 20px #ccc;}
+.classNum div{width: 1.68rem;line-height: 0.6rem;font-size: 0.26rem;border-bottom:1px solid #efefef; border-radius: 0.04rem;}
+
+
+section{display: flex;flex-direction: column;display: -webkit-flex;-webkit-flex-direction: column;}
+section>div{display: flex;justify-content: space-between;display: -webkit-flex;-webkit-justify-content: space-between;text-align: center}
+section>div>div:first-child{width: 1.3rem;background-color: #f3f3f3;font-size: 0.24rem;}
+section>div>div:nth-child(2){width: 2.67rem;}
+section>div>div:nth-child(3){width: 2.67rem;}
+section>div>div:last-child{width: 1.38rem;}
+section>div:first-child div{background-color: #f3f3f3;color: #666666;font-size: 0.26rem;line-height: 0.68rem}
+section>div:first-child>div:first-child{border-right: 1px solid white;border-bottom: 1px solid white;font-size: 0.26rem;}
+
+.empteclass{background-color: white}
+.empteclass div span{font-size: 0.2rem;border-radius: 0.05rem;}
+.empteclass div{height: 0.8rem;line-height: 0.8rem}
+.empteclass>div:first-child{padding-top: 0.3rem}
+.empty{color: white;background-color: #13cea9;padding:calc(0.08rem + 1px) calc(0.2rem + 1px) }
+.max{color: #a8a8a8;border: 1px solid #a8a8a8;padding:0.08rem 0.2rem;}
+.empteclass>div>span:first-child{margin-right: 0.08rem;}
+.empteclass>div>span:last-child{margin-left: 0.08rem;}

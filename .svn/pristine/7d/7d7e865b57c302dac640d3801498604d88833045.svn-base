@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>网易云音乐登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../../css/font/iconfont.css">
+    <script type="text/javascript" src="../../js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="../../js/rem.js?v=11"></script>
+	    <link rel="stylesheet" href="../../css/css.css">
+            <script type="text/javascript" src="../../js/path.js"></script>
+    
+</head>
+<body style="height: 100%">
+<section class="loginbj">
+    <div class="loginmessage">
+        <div class="select-login">
+          <!--   <div class="loginactive ZM">账号登录</div> -->
+            <div class="loginactive ID">ID登录</div>
+            <div class="LJ">分享歌曲</div>
+        </div>
+       <!--  <section class="logincontent">
+            <input type="text" id="wangyizh" placeholder="请输入账号">
+            <input type="password" id="wangyimm" placeholder="请输入密码">
+            <div class="loginzm" >绑定</div>
+        </section> -->
+        <section class="logincontentid">
+            <input type="text" id="wangyiid" placeholder="请输入ID">
+            <div class="loginid">绑定</div>
+        </section>
+        <section class="logincontentlj">
+            <textarea id="wangyilj" placeholder="请在此处粘贴你要分享的歌曲链接"></textarea>
+            <div class="loginlj loginsubmit">提交</div>
+        </section>
+    </div>
+</section>
+</body>
+</html>
+<script type="text/javascript" src="../../js/load.js"></script>
+<script>
+
+$('.select-login div').click(function () {
+    $(this).addClass('loginactive').siblings().removeClass('loginactive');
+    if($('.ZM').hasClass('loginactive')){
+        $('.logincontent').css('display','flex');
+        $('.logincontentid').css('display','none');
+        $('.logincontentlj').css('display','none');
+    }else if($('.ID').hasClass('loginactive')){
+        $('.logincontentid').css('display','flex');
+        $('.logincontent').css('display','none');
+        $('.logincontentlj').css('display','none');
+
+    }else if($('.LJ').hasClass('loginactive')){
+        $('.logincontentid').css('display','none');
+        $('.logincontent').css('display','none');
+        $('.logincontentlj').css('display','flex');
+    }
+});
+        var zmm = 1;
+        $('.loginzm').click(function () {
+        	 console.log('666');
+        	 if(zmm){
+        		 
+        		 zmm = 0;
+                 var wangyiId = $('#wangyizh').val();
+                 var wangyiPassword = $('#wangyimm').val();
+          
+                 if (!wangyiId) {
+                	 zmm = 0;
+                     alert('账号不能为空');
+                 } else if (!wangyiPassword) {
+                	 zmm = 0;
+                     alert('密码不能为空')
+                 } else {
+                	 showLoading();
+                	 time1 = setTimeout(function(){
+              		     hideLoading();
+                 		 window.location.href = 'bangding.html';
+              		},3000)
+                  $.ajax({
+                         type: "GET",
+                         url: SERVER_ROOT_PATH + "/xyf/xyfUser/wx/accountBind.htm",
+                         data: {wangyiAccount: wangyiId, wangyiPassword: wangyiPassword,wangyiStatus:1},
+                         dataType: "json",
+                         success: function (result) {
+                         	if(result.success){
+                        		window.clearTimeout(time1)
+                         		hideLoading();                         		
+                         		window.location.href = 'bangding.html';
+                         	}else{
+                         		zmm = 1; 
+                        		window.clearTimeout(time1)
+                         		hideLoading();
+                         		alert(result.msg);
+                         	}
+                             
+                         }
+                        
+                     }); 
+               
+                 }
+        	 }
+
+        });
+        var idd = 1;
+
+        $('.loginid').click(function () {
+        	if(idd){
+        		idd = 0;
+        		var id = $('#wangyiid').val();
+                if (!id) {
+                	idd = 1;
+                    alert('ID不能为空');
+                }else {
+                	if(/^[0-9]+$/.test(id) && id.length<11 && id.length>5){
+                       	showLoading();
+                   	 time1 = setTimeout(function(){
+                 		     hideLoading();
+                    		 window.location.href = 'bangding.html';
+                 		},3000)
+                       $.ajax({
+                           type: "POST",
+                           url: SERVER_ROOT_PATH + "/xyf/xyfUser/wx/getUserByWangyiId.htm",
+                           data: {wangyiId:id},
+                           dataType: "json",
+                           success: function (result) {
+                           	if(result.success){
+                           		window.clearTimeout(time1)
+                           		hideLoading();
+                           		window.location.href = 'bangding.html';
+                           	}else{
+                           		
+                           		idd = 1;
+                           		window.clearTimeout(time1)
+                           		hideLoading();
+                           		alert(result.msg);
+                           	}           
+                           }
+                         
+
+                       });
+                	}else{
+                		idd = 1;
+                		alert('请输入正确的ID')
+                	}
+ 
+                   
+                }
+        	}
+            
+        })
+        
+        var ljj = 1;
+        $('.loginsubmit').click(function () {
+        	if(ljj){
+        		ljj = 0;
+                var lj = $('#wangyilj').val();
+                console.log(lj);
+                if (!lj) {
+                	ljj = 1;
+                    alert('链接不能为空');
+                }else {
+                	var id = lj.split('');
+                    for(var i=id.length-1; i>0; i--){
+                        if(id[i] == '='){
+                            var inn = i;
+                        }
+                    }
+                    var idlj = lj.slice(inn+1);
+                    var jianjie = idlj.split('');
+                    console.log(jianjie);
+                    for(var j=jianjie.length-1; j>0; j--){
+                        if(jianjie[j] == '('){
+                            var ins = j;
+                        }
+                    }
+                    var jl = idlj.slice(0,ins-1);
+                    if(/^[0-9]+$/.test(jl) && jl.length<11 && jl.length>5){
+                    	showLoading();
+                    	 time1 = setTimeout(function(){
+                   		     hideLoading();
+                      		 window.location.href = 'bangding.html';
+                   		},3000) 
+                    	$.ajax({
+                            type: "POST",
+                            url: SERVER_ROOT_PATH + "/xyf/xyfUser/wx/getUserByWangyiId.htm",
+                            data: {wangyiId:jl},
+                            dataType: "json",
+                            success: function (result) {
+                            	if(result.success){  
+                            		window.clearTimeout(time1)
+                            		 hideLoading();
+                               		 window.location.href = 'bangding.html';
+                            		
+                            	}else{
+                            		ljj = 1;
+                            		window.clearTimeout(time1)
+                            		hideLoading();
+                            		alert(result.msg);
+                            	}
+                               
+                               
+                            }
+            	})
+            	
+                    }else{
+                    	ljj = 1;
+                    	alert('歌曲分享链接不正确');
+                    }
+
+                }
+                   
+            }
+        });
+</script>

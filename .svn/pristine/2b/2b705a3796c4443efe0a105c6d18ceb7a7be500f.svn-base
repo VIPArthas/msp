@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>参数列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../../css/font/iconfont.css">
+    <script type="text/javascript" src="../../js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="../../js/rem.js"></script>
+	    <link rel="stylesheet" href="../../css/ceshi.css">
+    <script type="text/javascript" src="../../js/path.js"></script>
+</head>
+<body>
+<p>校缘缘分值参数配置</p>
+<section>
+    <div>
+        <div class="canshutype"><span>最近共同听过的</span><input id="listensong" type="text"></div>
+        <div class="canshutype"><span>共用喜欢的</span><input id="likesong" type="text"></div>
+        <div class="canshuvalue">
+            <div><span>歌曲相同且歌手相同</span><input id="oneone" type="text"></div>
+            <div><span>歌曲相同但歌手不同</span><input id="onezreo" type="text"></div>
+            <div><span>歌曲不同但歌手相同</span><input id="zreoone" type="text"></div>
+        </div>
+    </div>
+</section>
+<div class="chongh_zhi">查看重置参数后的缘分值</div>
+</body>
+</html>
+
+<script>
+$.ajax({
+    type: "GET",
+    url: SERVER_ROOT_PATH + "/xyf/xyfParam/wx/getFateParam.htm",
+    dataType: "json",
+    success: function (result) {
+        if(result.success){
+        	if(result.obj){
+        		$('#listensong').val(result.obj.param4);
+        		$('#likesong').val(result.obj.param5);
+        		$('#oneone').val(result.obj.param1);
+        		$('#onezreo').val(result.obj.param2);
+        		$('#zreoone').val(result.obj.param3);
+
+        	}
+     
+        }
+
+    }
+});
+
+
+    $('.chongh_zhi').click(function () {
+        var likesong = $('#likesong').val();
+        var oneone = $('#oneone').val();
+        var onezreo = $('#onezreo').val();
+        var zreoone = $('#zreoone').val();
+        var listensong = $('#listensong').val();
+        $.ajax({
+            type: "POST",
+            url: SERVER_ROOT_PATH + "/xyf/xyfParam/wx/setFateParam.htm",
+            data: {param4:listensong,param5:likesong,param1:oneone,param2:onezreo,param3:zreoone},
+            dataType: "json",
+            success: function (result) {
+                if(result.success){
+                	
+                    window.location.href = 'yuanfenlist.html';
+                }
+
+            }
+        });
+    })
+
+
+</script>
